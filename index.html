@@ -68,7 +68,16 @@ a{color:inherit}
 .mode{position:fixed;top:1.1rem;left:50%;transform:translateX(-50%);z-index:10;
   display:flex;align-items:center;background:color-mix(in srgb,var(--surface) 82%,transparent);
   backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:999px;padding:4px;
-  font-family:var(--mono);font-size:.74rem;letter-spacing:.08em}
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;
+  transform-origin:50% 0;
+  transition:transform .4s cubic-bezier(.3,.9,.3,1),background .4s,backdrop-filter .4s,border-color .4s}
+/* iPhone-style: shrinks + frosts as you scroll; text stays crisp (only the backdrop blurs) */
+.mode.shrunk{transform:translateX(-50%) scale(.78);
+  backdrop-filter:blur(22px) saturate(1.3);
+  background:color-mix(in srgb,var(--surface) 55%,transparent)}
+.mode:hover,.mode:focus-within{transform:translateX(-50%) scale(1.06);
+  backdrop-filter:blur(10px);
+  background:color-mix(in srgb,var(--surface) 88%,transparent)}
 .mode button{appearance:none;border:0;background:none;color:var(--dim);padding:.5em 1.1em;
   border-radius:999px;font:inherit;cursor:pointer;position:relative;z-index:1;transition:color .35s}
 .mode button.on{color:var(--acc-ink)}
@@ -165,13 +174,50 @@ h2{margin:0 0 1.6rem;font-size:clamp(1.7rem,4.5vw,2.5rem);font-weight:800;letter
 footer{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;color:var(--dim);
   text-align:center;padding:2rem 1rem 2.6rem;border-top:1px solid var(--line)}
 
+/* desktop dot nav — right edge */
+.dotnav{position:fixed;right:1.1rem;top:50%;transform:translateY(-50%);z-index:10;
+  display:flex;flex-direction:column;gap:.9rem}
+.dotnav a{display:flex;align-items:center;justify-content:flex-end;gap:.55rem;
+  text-decoration:none;height:14px}
+.dotnav .lbl{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--dim);
+  opacity:0;transform:translateX(6px);transition:opacity .25s,transform .25s;white-space:nowrap;
+  background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--line);
+  border-radius:999px;padding:.3em .8em;backdrop-filter:blur(8px)}
+.dotnav .dot{width:8px;height:8px;border-radius:50%;flex:none;
+  background:color-mix(in srgb,var(--dim) 55%,transparent);transition:background .25s,transform .25s}
+.dotnav a:hover .lbl,.dotnav a:focus-visible .lbl{opacity:1;transform:none}
+.dotnav a:hover .dot,.dotnav a:focus-visible .dot{background:var(--acc);transform:scale(1.5)}
+.dotnav a.on .dot{background:var(--acc);transform:scale(1.3)}
+@media (max-width:760px){ .dotnav{display:none} }
+
+/* mobile hamburger — app style, shrinks on scroll */
+.hamb{display:none;position:fixed;top:1.1rem;left:1.1rem;z-index:12;width:44px;height:44px;
+  border:1px solid var(--line);border-radius:14px;cursor:pointer;
+  background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(10px);
+  transform-origin:0 0;transition:transform .4s cubic-bezier(.3,.9,.3,1),background .4s;
+  align-items:center;justify-content:center;flex-direction:column;gap:5px;padding:0}
+.hamb span{display:block;width:18px;height:2px;border-radius:2px;background:var(--text);
+  transition:transform .3s,opacity .3s}
+.hamb.shrunk{transform:scale(.78)}
+.hamb.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamb.open span:nth-child(2){opacity:0}
+.hamb.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mnav{position:fixed;inset:0;z-index:11;display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:center;gap:.4rem;padding:2rem 2.2rem;
+  background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(22px);
+  opacity:0;pointer-events:none;transition:opacity .3s}
+.mnav.open{opacity:1;pointer-events:auto}
+.mnav a{text-decoration:none;font-size:1.5rem;font-weight:700;letter-spacing:-.01em;
+  padding:.35em 0;color:var(--text)}
+.mnav a .no{font-family:var(--mono);font-size:.6em;color:var(--acc);margin-right:.8em;font-weight:400}
+@media (max-width:760px){ .hamb{display:flex} }
+
 /* iPad-style pointer */
 @media (hover:hover) and (pointer:fine){
   body,a,button,#wafer{cursor:none}
   #ipadCursor{position:fixed;left:0;top:0;z-index:999;pointer-events:none;
     width:22px;height:22px;border-radius:50%;
-    background:color-mix(in srgb,var(--text) 22%,transparent);
-    backdrop-filter:blur(1px);
+    background:color-mix(in srgb,var(--text) 18%,transparent);
     transition:border-radius .18s;will-change:transform,width,height}
 }
 #ipadCursor{display:none}
@@ -184,6 +230,26 @@ footer{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;color:var(-
   <button id="btnEng" class="on" role="tab" aria-selected="true">⚙ ENGINEERING</button>
   <button id="btnPlan" role="tab" aria-selected="false">▦ PLANNING</button>
 </div>
+
+<nav class="dotnav" aria-label="Sections">
+  <a href="#about"><span class="lbl">ABOUT</span><span class="dot"></span></a>
+  <a href="#experience"><span class="lbl">EXPERIENCE</span><span class="dot"></span></a>
+  <a href="#projects"><span class="lbl">TOOL SET</span><span class="dot"></span></a>
+  <a href="#academic"><span class="lbl">ACADEMIC</span><span class="dot"></span></a>
+  <a href="#skills"><span class="lbl">SKILLS</span><span class="dot"></span></a>
+  <a href="#education"><span class="lbl">EDUCATION</span><span class="dot"></span></a>
+  <a href="#contact"><span class="lbl">CONTACT</span><span class="dot"></span></a>
+</nav>
+<button class="hamb" aria-label="選單 Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+<nav class="mnav" aria-label="Sections menu">
+  <a href="#about"><span class="no">01</span>ABOUT</a>
+  <a href="#experience"><span class="no">02</span>EXPERIENCE</a>
+  <a href="#projects"><span class="no">03</span>TOOL SET</a>
+  <a href="#academic"><span class="no">04</span>ACADEMIC</a>
+  <a href="#skills"><span class="no">05</span>SKILLS</a>
+  <a href="#education"><span class="no">06</span>EDUCATION</a>
+  <a href="#contact"><span class="no">07</span>CONTACT</a>
+</nav>
 
 <header class="hero">
   <canvas id="stars" aria-hidden="true"></canvas>
@@ -513,7 +579,31 @@ wc.addEventListener('click',e=>{const d=pickDie(e); if(d>=0&&dies[d].inside) die
 addEventListener('scroll',()=>{
   const h=innerHeight, s=Math.min(scrollY/h,1);
   scrollZoom=1+s*0.13; panY=s*0.3;   // capped so the disc never exceeds the canvas edge
+  document.querySelector('.mode').classList.toggle('shrunk',scrollY>60);
+  document.querySelector('.hamb').classList.toggle('shrunk',scrollY>60);
 },{passive:true});
+
+/* mobile menu */
+const hamb=document.querySelector('.hamb'), mnav=document.querySelector('.mnav');
+hamb.addEventListener('click',()=>{
+  const open=!mnav.classList.contains('open');
+  mnav.classList.toggle('open',open); hamb.classList.toggle('open',open);
+  hamb.setAttribute('aria-expanded',open);
+});
+mnav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  mnav.classList.remove('open'); hamb.classList.remove('open');
+  hamb.setAttribute('aria-expanded','false');
+}));
+
+/* dot nav active-section highlight */
+const dotLinks=[...document.querySelectorAll('.dotnav a')];
+const secObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting) return;
+    dotLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));
+  });
+},{rootMargin:'-40% 0px -55% 0px'});
+dotLinks.forEach(a=>{const s=document.querySelector(a.getAttribute('href')); if(s) secObs.observe(s);});
 
 function project(x,y,W,cx,cy){
   // rotate in wafer plane, then squash by tilt
@@ -627,6 +717,20 @@ if(matchMedia('(hover:hover) and (pointer:fine)').matches){
       snap=null;                            // hovered interactive element
   addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;
     snap=e.target.closest ? e.target.closest('a,button') : null;});
+  // magnetic buttons: the control leans toward the cursor, the highlight rides with it
+  document.querySelectorAll('a,button').forEach(el=>{
+    if(el.closest('.mnav')) return;
+    el.addEventListener('pointermove',e=>{
+      const r=el.getBoundingClientRect();
+      const dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
+      el.style.transition='transform .08s linear';
+      el.style.transform=`translate(${dx*0.24}px,${dy*0.24}px)`;
+    });
+    el.addEventListener('pointerleave',()=>{
+      el.style.transition='transform .5s cubic-bezier(.2,.8,.3,1.25)';
+      el.style.transform='';
+    });
+  });
   addEventListener('pointerdown',()=>{cur.style.opacity='.55';});
   addEventListener('pointerup',()=>{cur.style.opacity='';});
   document.addEventListener('mouseleave',()=>{cur.style.opacity='0';});
