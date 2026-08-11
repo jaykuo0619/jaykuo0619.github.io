@@ -121,6 +121,8 @@ h2{margin:0 0 1.6rem;font-size:clamp(1.7rem,4.5vw,2.5rem);font-weight:800;letter
 :root[data-persona="planner"] .job li.p-eng{opacity:.42}
 :root[data-persona="engineer"] .job li.p-eng{order:-1}
 :root[data-persona="planner"] .job li.p-plan{order:-1}
+:root[data-persona="engineer"] .job li.p-plan{order:1}
+:root[data-persona="planner"] .job li.p-eng{order:1}
 .job li b{color:var(--text);font-weight:600}
 
 /* projects */
@@ -162,6 +164,18 @@ h2{margin:0 0 1.6rem;font-size:clamp(1.7rem,4.5vw,2.5rem);font-weight:800;letter
 .btn:not(.primary):hover,.btn:focus-visible{border-color:var(--acc);color:var(--acc);outline:none}
 footer{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;color:var(--dim);
   text-align:center;padding:2rem 1rem 2.6rem;border-top:1px solid var(--line)}
+
+/* iPad-style pointer */
+@media (hover:hover) and (pointer:fine){
+  body,a,button,#wafer{cursor:none}
+  #ipadCursor{position:fixed;left:0;top:0;z-index:999;pointer-events:none;
+    width:22px;height:22px;border-radius:50%;
+    background:color-mix(in srgb,var(--text) 22%,transparent);
+    backdrop-filter:blur(1px);
+    transition:border-radius .18s;will-change:transform,width,height}
+}
+#ipadCursor{display:none}
+@media (hover:hover) and (pointer:fine){ #ipadCursor{display:block} }
 @media (max-width:760px){ .about-grid{grid-template-columns:1fr} }
 </style>
 
@@ -301,6 +315,10 @@ footer{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;color:var(-
       <h3>Email Automation Tool</h3>
       <p>Outlook draft-generation tool that assembles recurring report mails automatically — recipients, subject, and formatted content built straight from the data.</p>
       <div class="win">→ reporting mail on autopilot</div></div>
+    <div class="card"><span class="tag">MEETING OPS</span>
+      <h3>Host Widget</h3>
+      <p>A control widget for the morning meeting's host — switch between discussion topics instantly, keeping the daily production meeting fast and on track.</p>
+      <div class="win">→ smoother morning meetings</div></div>
   </div>
 </section>
 
@@ -600,6 +618,35 @@ const io=new IntersectionObserver(es=>{
   }
 },{threshold:.18});
 document.querySelectorAll('.reveal').forEach(s=>io.observe(s));
+
+/* ---- iPad-style cursor ---- */
+if(matchMedia('(hover:hover) and (pointer:fine)').matches){
+  const cur=document.createElement('div'); cur.id='ipadCursor'; document.body.appendChild(cur);
+  let px=innerWidth/2,py=innerHeight/2,     // pointer
+      cxp=px,cyp=py,cw=22,ch=22,            // current rect
+      snap=null;                            // hovered interactive element
+  addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;
+    snap=e.target.closest ? e.target.closest('a,button') : null;});
+  addEventListener('pointerdown',()=>{cur.style.opacity='.55';});
+  addEventListener('pointerup',()=>{cur.style.opacity='';});
+  document.addEventListener('mouseleave',()=>{cur.style.opacity='0';});
+  document.addEventListener('mouseenter',()=>{cur.style.opacity='';});
+  (function tick(){
+    let tx,ty,tw,th,tr;
+    if(snap){
+      const r=snap.getBoundingClientRect(), pad=5;
+      tx=r.left-pad; ty=r.top-pad; tw=r.width+pad*2; th=r.height+pad*2;
+      tr=Math.min(14,th/2);
+      // subtle parallax inside the snapped highlight, like iPadOS
+      tx+=(px-(r.left+r.width/2))*0.06; ty+=(py-(r.top+r.height/2))*0.06;
+    } else { tw=22; th=22; tx=px-11; ty=py-11; tr=11; }
+    cxp+=(tx-cxp)*.28; cyp+=(ty-cyp)*.28; cw+=(tw-cw)*.28; ch+=(th-ch)*.28;
+    cur.style.transform=`translate(${cxp}px,${cyp}px)`;
+    cur.style.width=cw+'px'; cur.style.height=ch+'px';
+    cur.style.borderRadius=(snap?Math.min(14,ch/2):ch/2)+'px';
+    requestAnimationFrame(tick);
+  })();
+}
 
 refreshPalette();
 setPersona(location.hash==='#planner'?'planner':'engineer',false);
