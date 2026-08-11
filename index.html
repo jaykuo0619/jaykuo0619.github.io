@@ -494,7 +494,7 @@ wc.addEventListener('pointerleave',()=>{panTarget=0;tiltTargetX=0.62;hoverDie=-1
 wc.addEventListener('click',e=>{const d=pickDie(e); if(d>=0&&dies[d].inside) dies[d].lit=!dies[d].lit;});
 addEventListener('scroll',()=>{
   const h=innerHeight, s=Math.min(scrollY/h,1);
-  scrollZoom=1+s*0.35; panY=s*0.3;
+  scrollZoom=1+s*0.13; panY=s*0.3;   // capped so the disc never exceeds the canvas edge
 },{passive:true});
 
 function project(x,y,W,cx,cy){
@@ -507,7 +507,7 @@ function pickDie(e){
   const r=wc.getBoundingClientRect();
   const px=(e.clientX-r.left)*devicePixelRatio,
         py=(e.clientY-r.top)*devicePixelRatio;
-  const cx=wc.width/2, cy=wc.height/2, W=wc.width*0.42*scrollZoom;
+  const cx=wc.width/2, cy=wc.height/2, W=wc.width*0.40*scrollZoom;
   // inverse transform
   const ux=(px-cx)/W, uy=(py-cy)/(W*tiltX);
   const c=Math.cos(-rot),s=Math.sin(-rot);
@@ -534,7 +534,7 @@ function draw(t){
   if(!reduced) rot+=0.0022;
   tiltX+=(tiltTargetX-tiltX)*0.06;
   panY+=(panTarget-panY)*0.06;
-  const W=wc.width*0.42*scrollZoom, cx=wc.width/2+panY*wc.width*0.15, cy=wc.height/2;
+  const W=wc.width*0.40*scrollZoom, cx=wc.width/2+panY*wc.width*0.15, cy=wc.height/2;
   g.clearRect(0,0,wc.width,wc.height);
 
   // under-glow (drawn as a circle so no rectangular edge can show)
