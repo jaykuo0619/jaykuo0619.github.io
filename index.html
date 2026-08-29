@@ -7,7 +7,7 @@
   --paper:#FFFFFF; --card:#F7F8F9; --line:#E3E6E9; --ink:#232729; --dim:#6C7478;
   --pine:#A8323E; --pine-soft:#F6E9EA; --sand:#8A9499; --pine-ink:#FFFFFF;
   --band-bg:#242A2E; --band-ink:#F2F4F5;
-  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(30,42,66,.16);
+  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(26,36,60,.32);
   --serif:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI","Noto Sans",Arial,sans-serif;
   --sans:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI","Noto Sans",Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
@@ -16,16 +16,16 @@
   :root{ --paper:#141719; --card:#1C2124; --line:#2E3439; --ink:#EDEFF0; --dim:#959DA2;
          --pine:#D06E78; --pine-soft:#332225; --sand:#8A9499; --pine-ink:#1A0F11;
          --band-bg:#1B2023; --band-ink:#EDEFF0;
-         --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.34); }
+         --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.55); }
 }
 :root[data-theme="light"]{ --paper:#FFFFFF; --card:#F7F8F9; --line:#E3E6E9; --ink:#232729; --dim:#6C7478;
   --pine:#A8323E; --pine-soft:#F6E9EA; --sand:#8A9499; --pine-ink:#FFFFFF;
   --band-bg:#242A2E; --band-ink:#F2F4F5;
-  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(30,42,66,.16); }
+  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(26,36,60,.32); }
 :root[data-theme="dark"]{ --paper:#141719; --card:#1C2124; --line:#2E3439; --ink:#EDEFF0; --dim:#959DA2;
   --pine:#D06E78; --pine-soft:#332225; --sand:#8A9499; --pine-ink:#1A0F11;
   --band-bg:#1B2023; --band-ink:#EDEFF0;
-  --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.34); }
+  --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.55); }
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -97,6 +97,12 @@ h1 em{font-style:normal;color:var(--pine)}
 .bnote{margin-top:.9rem;font-size:.9rem;line-height:1.7;color:var(--dim);text-align:center;
   min-height:3em;text-wrap:balance}
 .bnote b{color:var(--ink)}
+.playbtn{font-family:var(--mono);font-size:.66rem;letter-spacing:.15em;cursor:pointer;
+  border:1px solid var(--line);background:var(--paper);color:var(--dim);
+  border-radius:2px;padding:.6em 1.1em;transition:border-color .2s,color .2s}
+.playbtn:hover,.playbtn:focus-visible{border-color:var(--pine);color:var(--pine);outline:none}
+#sunIco{fill:#D9A23C}
+#moonIco{fill:var(--dim)}
 
 /* sections */
 section{padding:3.4rem 0;border-top:1px solid var(--line)}
@@ -255,6 +261,8 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
           L40 330 C 40 320 41 310 44 301 Z"/>
         <!-- day/night terminator shading (computed live) -->
         <path id="nightPath" fill="var(--night)" stroke="none" pointer-events="none" d=""/>
+        <text id="sunIco" y="26" font-size="15" text-anchor="middle" style="display:none">☀</text>
+        <text id="moonIco" y="26" font-size="13" text-anchor="middle" style="display:none">☾</text>
         <!-- great-circle route: hugs the north Pacific like the real TPE→PDX track -->
         <path class="arc" d="M46 249 C 160 110 290 12 425 8 C 550 5 730 22 824 77"/>
         <!-- the daily flight -->
@@ -290,6 +298,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
           <div class="clock"><span class="t" id="twT">08:00</span><label>HSINCHU 新竹</label></div>
           <div class="gap" aria-hidden="true">⇄</div>
           <div class="clock"><span class="t" id="waT">17:00</span><label id="waL">CAMAS, WA · PREV. DAY</label></div>
+          <button id="playBtn" class="playbtn" type="button">⏸ PAUSE</button>
         </div>
         <input type="range" id="tSlider" min="0" max="23.5" step="0.5" value="8.5"
           aria-label="Hsinchu hour of day">
@@ -434,7 +443,7 @@ const NOTES=[
   [10,16.5,"<b>Taiwan's working day, Camas's quiet hours.</b> While your fab runs the night shift, I'm reconciling demand and output so your morning opens clean."],
   [17,23.5,"<b>Evening in Hsinchu — morning in Camas.</b> This is our live sync window, the hour of my day I enjoy most. It's the hour I'd like to bring on-site."]
 ];
-let userSet=false;
+let userSet=false, playing=!matchMedia('(prefers-reduced-motion: reduce)').matches;
 function fmt(h){
   const hh=Math.floor(h), mm=Math.round((h-hh)*60);
   return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
@@ -457,6 +466,14 @@ function drawNight(utcHours,dayOfYear){
   const closeY=decl>0?360:-30;                                       // night closes toward the dark pole
   d+='L840 '+closeY+'L0 '+closeY+'Z';
   nightPath.setAttribute('d',d);
+  // sun over the subsolar longitude, moon over the antisolar one
+  placeIco('sunIco',subLon); placeIco('moonIco',subLon+180);
+}
+function placeIco(id,lon){
+  const el=document.getElementById(id);
+  const dlon=((lon-LON0)%360+360)%360;
+  if(dlon<=126){ el.setAttribute('x',(dlon*PXLON).toFixed(1)); el.style.display=''; }
+  else el.style.display='none';
 }
 function nightForHsinchu(h){
   const now=zoneNow('Asia/Taipei');
@@ -472,6 +489,21 @@ function render(h){
   nightForHsinchu(h);
 }
 slider.addEventListener('input',()=>{userSet=true;render(+slider.value);});
+/* autoplay: the day advances on its own until paused */
+const playBtn=document.getElementById('playBtn');
+function setPlay(p){
+  playing=p;
+  playBtn.textContent=p?'⏸ PAUSE':'▶ PLAY';
+  playBtn.setAttribute('aria-label',p?'Pause the day cycle':'Play the day cycle');
+}
+playBtn.addEventListener('click',()=>setPlay(!playing));
+setPlay(playing);
+setInterval(()=>{
+  if(!playing) return;
+  userSet=true;
+  let v=+slider.value+0.5; if(v>23.5) v=0;
+  slider.value=v; render(v);
+},900);
 function tickLive(){
   const tw=zoneNow('Asia/Taipei'), wa=zoneNow('America/Los_Angeles');
   const p=n=>String(n).padStart(2,'0');
