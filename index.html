@@ -7,7 +7,7 @@
   --paper:#FFFFFF; --card:#F7F8F9; --line:#E3E6E9; --ink:#232729; --dim:#6C7478;
   --pine:#A8323E; --pine-soft:#F6E9EA; --sand:#8A9499; --pine-ink:#FFFFFF;
   --band-bg:#242A2E; --band-ink:#F2F4F5;
-  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(26,36,60,.32);
+  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(26,36,60,.32); --day:rgba(255,255,255,.6);
   --serif:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI","Noto Sans",Arial,sans-serif;
   --sans:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI","Noto Sans",Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
@@ -16,16 +16,16 @@
   :root{ --paper:#141719; --card:#1C2124; --line:#2E3439; --ink:#EDEFF0; --dim:#959DA2;
          --pine:#D06E78; --pine-soft:#332225; --sand:#8A9499; --pine-ink:#1A0F11;
          --band-bg:#1B2023; --band-ink:#EDEFF0;
-         --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.55); }
+         --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.55); --day:rgba(205,225,255,.09); }
 }
 :root[data-theme="light"]{ --paper:#FFFFFF; --card:#F7F8F9; --line:#E3E6E9; --ink:#232729; --dim:#6C7478;
   --pine:#A8323E; --pine-soft:#F6E9EA; --sand:#8A9499; --pine-ink:#FFFFFF;
   --band-bg:#242A2E; --band-ink:#F2F4F5;
-  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(26,36,60,.32); }
+  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(26,36,60,.32); --day:rgba(255,255,255,.6); }
 :root[data-theme="dark"]{ --paper:#141719; --card:#1C2124; --line:#2E3439; --ink:#EDEFF0; --dim:#959DA2;
   --pine:#D06E78; --pine-soft:#332225; --sand:#8A9499; --pine-ink:#1A0F11;
   --band-bg:#1B2023; --band-ink:#EDEFF0;
-  --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.55); }
+  --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.55); --day:rgba(205,225,255,.09); }
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -260,6 +260,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
         <path class="land" d="M44 301 C 48 300 52 300 55 302 C 54 312 53 322 54 330
           L40 330 C 40 320 41 310 44 301 Z"/>
         <!-- day/night terminator shading (computed live) -->
+        <path id="dayPath" fill="var(--day)" stroke="none" pointer-events="none" d=""/>
         <path id="nightPath" fill="var(--night)" stroke="none" pointer-events="none" d=""/>
         <text id="sunIco" y="26" font-size="15" text-anchor="middle" style="display:none">☀</text>
         <text id="moonIco" y="26" font-size="13" text-anchor="middle" style="display:none">☾</text>
@@ -449,7 +450,7 @@ function fmt(h){
   return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
 }
 /* ---- day/night terminator ---- */
-const nightPath=document.getElementById('nightPath');
+const nightPath=document.getElementById('nightPath'), dayPath=document.getElementById('dayPath');
 const LON0=114, PXLON=840/126, LAT0=55, PXLAT=330/40;
 function drawNight(utcHours,dayOfYear){
   const rad=Math.PI/180;
@@ -464,8 +465,8 @@ function drawNight(utcHours,dayOfYear){
     d+=(d?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);
   }
   const closeY=decl>0?360:-30;                                       // night closes toward the dark pole
-  d+='L840 '+closeY+'L0 '+closeY+'Z';
-  nightPath.setAttribute('d',d);
+  nightPath.setAttribute('d',d+'L840 '+closeY+'L0 '+closeY+'Z');
+  dayPath.setAttribute('d',d+'L840 '+(330-closeY)+'L0 '+(330-closeY)+'Z'); // sunlit side, closed to the lit pole
   // sun over the subsolar longitude, moon over the antisolar one
   placeIco('sunIco',subLon); placeIco('moonIco',subLon+180);
 }
