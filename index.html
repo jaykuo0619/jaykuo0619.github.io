@@ -7,7 +7,7 @@
   --paper:#FFFFFF; --card:#F7F8F9; --line:#E3E6E9; --ink:#232729; --dim:#6C7478;
   --pine:#A8323E; --pine-soft:#F6E9EA; --sand:#8A9499; --pine-ink:#FFFFFF;
   --band-bg:#242A2E; --band-ink:#F2F4F5;
-  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4;
+  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(30,42,66,.16);
   --serif:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI","Noto Sans",Arial,sans-serif;
   --sans:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI","Noto Sans",Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
@@ -16,16 +16,16 @@
   :root{ --paper:#141719; --card:#1C2124; --line:#2E3439; --ink:#EDEFF0; --dim:#959DA2;
          --pine:#D06E78; --pine-soft:#332225; --sand:#8A9499; --pine-ink:#1A0F11;
          --band-bg:#1B2023; --band-ink:#EDEFF0;
-         --sea:#181D20; --land:#232A2E; --coast:#3A444A; }
+         --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.34); }
 }
 :root[data-theme="light"]{ --paper:#FFFFFF; --card:#F7F8F9; --line:#E3E6E9; --ink:#232729; --dim:#6C7478;
   --pine:#A8323E; --pine-soft:#F6E9EA; --sand:#8A9499; --pine-ink:#FFFFFF;
   --band-bg:#242A2E; --band-ink:#F2F4F5;
-  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; }
+  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; --night:rgba(30,42,66,.16); }
 :root[data-theme="dark"]{ --paper:#141719; --card:#1C2124; --line:#2E3439; --ink:#EDEFF0; --dim:#959DA2;
   --pine:#D06E78; --pine-soft:#332225; --sand:#8A9499; --pine-ink:#1A0F11;
   --band-bg:#1B2023; --band-ink:#EDEFF0;
-  --sea:#181D20; --land:#232A2E; --coast:#3A444A; }
+  --sea:#181D20; --land:#232A2E; --coast:#3A444A; --night:rgba(0,0,0,.34); }
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -253,6 +253,8 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
         <!-- Luzon tip -->
         <path class="land" d="M44 301 C 48 300 52 300 55 302 C 54 312 53 322 54 330
           L40 330 C 40 320 41 310 44 301 Z"/>
+        <!-- day/night terminator shading (computed live) -->
+        <path id="nightPath" fill="var(--night)" stroke="none" pointer-events="none" d=""/>
         <!-- great-circle route: hugs the north Pacific like the real TPE→PDX track -->
         <path class="arc" d="M46 249 C 160 110 290 12 425 8 C 550 5 730 22 824 77"/>
         <!-- the daily flight -->
@@ -289,7 +291,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
           <div class="gap" aria-hidden="true">⇄</div>
           <div class="clock"><span class="t" id="waT">17:00</span><label id="waL">CAMAS, WA · PREV. DAY</label></div>
         </div>
-        <input type="range" id="tSlider" min="0" max="23" step="1" value="8"
+        <input type="range" id="tSlider" min="0" max="23.5" step="0.5" value="8.5"
           aria-label="Hsinchu hour of day">
         <div class="bnote" id="bNote"></div>
       </div>
@@ -427,18 +429,47 @@ function offsetHours(){ // Hsinchu minus Camas, accounts for DST
 }
 const OFF=offsetHours();
 const NOTES=[
-  [0,6,"<b>Deep night in Hsinchu, mid-day in Camas.</b> The fab never sleeps — and a good plan means nobody has to lose sleep over it either."],
-  [7,9,"<b>My 08:00 stand-up.</b> Fab Daily Status is already refreshed — Camas is closing out its afternoon, and my numbers reach your desk before you head home."],
-  [10,16,"<b>Taiwan's working day, Camas's quiet hours.</b> While your fab runs the night shift, I'm reconciling demand and output so your morning opens clean."],
-  [17,23,"<b>Evening in Hsinchu — morning in Camas.</b> This is our live sync window, the hour of my day I enjoy most. It's the hour I'd like to bring on-site."]
+  [0,6.5,"<b>Deep night in Hsinchu, mid-day in Camas.</b> The fab never sleeps — and a good plan means nobody has to lose sleep over it either."],
+  [7,9.5,"<b>My day starts at 08:30.</b> Fab Daily Status is already refreshed — Camas is closing out its afternoon, and my numbers reach your desk before you head home."],
+  [10,16.5,"<b>Taiwan's working day, Camas's quiet hours.</b> While your fab runs the night shift, I'm reconciling demand and output so your morning opens clean."],
+  [17,23.5,"<b>Evening in Hsinchu — morning in Camas.</b> This is our live sync window, the hour of my day I enjoy most. It's the hour I'd like to bring on-site."]
 ];
 let userSet=false;
-function fmt(h){return String(h).padStart(2,'0')+':00';}
+function fmt(h){
+  const hh=Math.floor(h), mm=Math.round((h-hh)*60);
+  return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
+}
+/* ---- day/night terminator ---- */
+const nightPath=document.getElementById('nightPath');
+const LON0=114, PXLON=840/126, LAT0=55, PXLAT=330/40;
+function drawNight(utcHours,dayOfYear){
+  const rad=Math.PI/180;
+  const decl=-23.44*Math.cos(2*Math.PI*(dayOfYear+10)/365);          // solar declination
+  const subLon=(12-utcHours)*15;                                     // subsolar longitude, °E
+  const tanD=Math.tan(decl*rad)||1e-9;
+  let d='';
+  for(let lon=LON0;lon<=240;lon+=3){
+    const ha=(lon-subLon)*rad;
+    const lat=Math.atan(-Math.cos(ha)/tanD)/rad;                     // terminator latitude
+    const x=(lon-LON0)*PXLON, y=(LAT0-lat)*PXLAT;
+    d+=(d?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+  }
+  const closeY=decl>0?360:-30;                                       // night closes toward the dark pole
+  d+='L840 '+closeY+'L0 '+closeY+'Z';
+  nightPath.setAttribute('d',d);
+}
+function nightForHsinchu(h){
+  const now=zoneNow('Asia/Taipei');
+  const start=new Date(now.getFullYear(),0,0);
+  const doy=Math.floor((now-start)/864e5);
+  drawNight(((h-8)%24+24)%24,doy);                                   // Taipei = UTC+8
+}
 function render(h){
   const w=((h-OFF)%24+24)%24;
   twT.textContent=fmt(h); waT.textContent=fmt(w);
   waL.textContent='CAMAS, WA'+(h-OFF<0?' · PREV. DAY':'');
   for(const [a,b,txt] of NOTES){ if(h>=a&&h<=b){ note.innerHTML=txt; break; } }
+  nightForHsinchu(h);
 }
 slider.addEventListener('input',()=>{userSet=true;render(+slider.value);});
 function tickLive(){
@@ -446,7 +477,10 @@ function tickLive(){
   const p=n=>String(n).padStart(2,'0');
   liveNow.textContent='NOW · HSINCHU '+p(tw.getHours())+':'+p(tw.getMinutes())
     +' · CAMAS '+p(wa.getHours())+':'+p(wa.getMinutes());
-  if(!userSet){ slider.value=tw.getHours(); render(tw.getHours()); }
+  if(!userSet){
+    const h=tw.getHours()+(tw.getMinutes()>=30?0.5:0);
+    slider.value=h; render(h);
+  }
 }
 tickLive(); setInterval(tickLive,30000);
 })();
