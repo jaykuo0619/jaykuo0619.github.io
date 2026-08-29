@@ -4,25 +4,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root{
-  --paper:#F7F6F1; --card:#FFFFFF; --line:#E3E1D7; --ink:#1C2A24; --dim:#68766D;
-  --pine:#1E5C43; --pine-soft:#DCE9E1; --sand:#B0793F; --pine-ink:#FFFFFF;
-  --serif:"Iowan Old Style","Palatino","Book Antiqua",Georgia,serif;
-  --sans:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI",Arial,sans-serif;
+  --paper:#FFFFFF; --card:#F7F8F9; --line:#E3E6E9; --ink:#232729; --dim:#6C7478;
+  --pine:#C8102E; --pine-soft:#FBE9EC; --sand:#8A9499; --pine-ink:#FFFFFF;
+  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4;
+  --serif:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI","Noto Sans",Arial,sans-serif;
+  --sans:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI","Noto Sans",Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){
-  :root{ --paper:#111915; --card:#18231D; --line:#2A3A31; --ink:#E9EFE9; --dim:#93A398;
-         --pine:#63B58C; --pine-soft:#1E3229; --sand:#CD9A62; --pine-ink:#0C1812; }
+  :root{ --paper:#141719; --card:#1C2124; --line:#2E3439; --ink:#EDEFF0; --dim:#959DA2;
+         --pine:#F04A5E; --pine-soft:#3A1A20; --sand:#8A9499; --pine-ink:#1A0508;
+         --sea:#181D20; --land:#232A2E; --coast:#3A444A; }
 }
-:root[data-theme="light"]{ --paper:#F7F6F1; --card:#FFFFFF; --line:#E3E1D7; --ink:#1C2A24; --dim:#68766D;
-  --pine:#1E5C43; --pine-soft:#DCE9E1; --sand:#B0793F; --pine-ink:#FFFFFF; }
-:root[data-theme="dark"]{ --paper:#111915; --card:#18231D; --line:#2A3A31; --ink:#E9EFE9; --dim:#93A398;
-  --pine:#63B58C; --pine-soft:#1E3229; --sand:#CD9A62; --pine-ink:#0C1812; }
+:root[data-theme="light"]{ --paper:#FFFFFF; --card:#F7F8F9; --line:#E3E6E9; --ink:#232729; --dim:#6C7478;
+  --pine:#C8102E; --pine-soft:#FBE9EC; --sand:#8A9499; --pine-ink:#FFFFFF;
+  --sea:#F2F5F7; --land:#E7EAEC; --coast:#C9CFD4; }
+:root[data-theme="dark"]{ --paper:#141719; --card:#1C2124; --line:#2E3439; --ink:#EDEFF0; --dim:#959DA2;
+  --pine:#F04A5E; --pine-soft:#3A1A20; --sand:#8A9499; --pine-ink:#1A0508;
+  --sea:#181D20; --land:#232A2E; --coast:#3A444A; }
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
-  line-height:1.65;-webkit-font-smoothing:antialiased}
+  line-height:1.65;-webkit-font-smoothing:antialiased;
+  border-top:3px solid var(--pine)}
 a{color:var(--pine);text-decoration-thickness:1px;text-underline-offset:3px}
 a:hover{text-decoration-thickness:2px}
 ::selection{background:var(--pine);color:var(--pine-ink)}
@@ -39,35 +44,43 @@ a:hover{text-decoration-thickness:2px}
 .hero{padding:5.5rem 0 3.5rem}
 .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.3em;color:var(--dim);
   text-transform:uppercase;margin-bottom:1.3rem}
-h1{margin:0 0 1.4rem;font-family:var(--serif);font-weight:500;
-  font-size:clamp(2.1rem,5.6vw,3.4rem);line-height:1.18;letter-spacing:-.012em;text-wrap:balance}
-h1 em{font-style:italic;color:var(--pine)}
+h1{margin:0 0 1.4rem;font-family:var(--serif);font-weight:700;
+  font-size:clamp(2rem,5.2vw,3.15rem);line-height:1.16;letter-spacing:-.022em;text-wrap:balance}
+h1 em{font-style:normal;color:var(--pine)}
 .lede{font-size:1.08rem;max-width:60ch;color:color-mix(in srgb,var(--ink) 88%,var(--dim));margin:0}
 .lede b{font-weight:600}
 
-/* route */
-.route{margin:3.2rem 0 0;padding:1.6rem 0 .4rem;border-top:1px solid var(--line)}
-.route svg{width:100%;height:auto;display:block}
-.route text{font-family:var(--mono);font-size:11px;letter-spacing:.18em;fill:var(--dim)}
-.route .city{fill:var(--ink);font-size:12.5px;font-weight:600}
-.route .arc{stroke:var(--pine);stroke-width:1.6;fill:none;stroke-dasharray:4 6;stroke-linecap:round}
+/* route map */
+.route{margin:3.2rem 0 0}
+.route svg{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:3px;
+  background:var(--sea)}
+.route text{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;fill:var(--dim)}
+.route .city{fill:var(--ink);font-size:12px;font-weight:700;letter-spacing:.1em}
+.route .land{fill:var(--land);stroke:var(--coast);stroke-width:1}
+.route .grat{stroke:var(--line);stroke-width:.6;opacity:.7}
+.route .arc{stroke:var(--pine);stroke-width:1.8;fill:none;stroke-dasharray:5 7;stroke-linecap:round}
 @media (prefers-reduced-motion:no-preference){
-  .route .arc{animation:dash 30s linear infinite}
-  @keyframes dash{to{stroke-dashoffset:-300}}
+  .route .arc{animation:dash 26s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-312}}
 }
 .route .dot{fill:var(--pine)}
-.route .plane{fill:var(--sand)}
+.route .ring{fill:none;stroke:var(--pine);stroke-width:1.2;opacity:.5}
+.route .leader{stroke:var(--dim);stroke-width:.8;opacity:.6}
+.route .caption{display:flex;justify-content:space-between;gap:1rem;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;color:var(--dim);
+  padding:.7rem .2rem 0}
 
 /* sections */
 section{padding:3.4rem 0;border-top:1px solid var(--line)}
-h2{margin:0 0 1.7rem;font-family:var(--serif);font-weight:500;font-size:1.7rem;letter-spacing:-.008em}
+h2{margin:0 0 1.7rem;font-family:var(--serif);font-weight:700;font-size:1.55rem;letter-spacing:-.015em}
 h2 .num{font-family:var(--mono);font-size:.62em;color:var(--dim);letter-spacing:.2em;
   vertical-align:.18em;margin-right:.9em}
 p{margin:0 0 1rem;max-width:66ch}
 
 /* why cards */
 .why{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.why .w{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.5rem 1.4rem}
+.why .w{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:1.5rem 1.4rem;
+  border-top:2px solid var(--pine)}
 .why .w .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.24em;color:var(--pine);
   text-transform:uppercase;display:block;margin-bottom:.7rem}
 .why .w h3{margin:0 0 .55rem;font-size:1.04rem;font-weight:650;letter-spacing:-.005em}
@@ -107,7 +120,7 @@ p{margin:0 0 1rem;max-width:66ch}
 .contact{padding-bottom:5rem}
 .cta-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.6rem}
 .btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-decoration:none;
-  padding:.85em 1.5em;border-radius:8px;border:1px solid var(--line);color:var(--ink);
+  padding:.85em 1.5em;border-radius:2px;border:1px solid var(--line);color:var(--ink);
   transition:border-color .2s,background .2s,color .2s}
 .btn.primary{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
 .btn.primary:hover{filter:brightness(1.08)}
@@ -133,19 +146,58 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
     <p class="lede">I'm Jay Kuo, a Production Control Integration Planner at TSMC headquarters.
     From the central planning floor I see every fab's demand, output, and commitments —
     and <b>I align with Fab 11's planning team every working day</b>. When a fab planner
-    opportunity opens in Camas, I want to be the easiest hire you'll ever make.</p>
+    opportunity opens in Camas, I hope to bring that daily partnership on-site —
+    already knowing the team, the systems, and the numbers.</p>
 
-    <div class="route" aria-label="Hsinchu to Camas">
-      <svg viewBox="0 0 840 150">
-        <path class="arc" d="M60 118 C 260 18, 580 18, 780 112"/>
-        <circle class="dot" cx="60" cy="118" r="5"/>
-        <circle class="dot" cx="780" cy="112" r="5"/>
-        <circle class="plane" cx="420" cy="43" r="4"/>
-        <text class="city" x="60" y="140" text-anchor="start">HSINCHU · TSMC HQ</text>
-        <text x="60" y="93" text-anchor="start">TODAY · CENTRAL PC</text>
-        <text class="city" x="780" y="134" text-anchor="end">CAMAS, WA · FAB 11</text>
-        <text x="780" y="87" text-anchor="end">NEXT · FAB PLANNER</text>
+    <div class="route" aria-label="Map: Hsinchu, Taiwan to Camas, Washington across the Pacific">
+      <svg viewBox="0 0 840 330">
+        <!-- graticule -->
+        <g class="grat">
+          <line x1="0" y1="66" x2="840" y2="66"/><line x1="0" y1="132" x2="840" y2="132"/>
+          <line x1="0" y1="198" x2="840" y2="198"/><line x1="0" y1="264" x2="840" y2="264"/>
+          <line x1="120" y1="0" x2="120" y2="330"/><line x1="240" y1="0" x2="240" y2="330"/>
+          <line x1="360" y1="0" x2="360" y2="330"/><line x1="480" y1="0" x2="480" y2="330"/>
+          <line x1="600" y1="0" x2="600" y2="330"/><line x1="720" y1="0" x2="720" y2="330"/>
+        </g>
+        <!-- East Asia: China coast + Korea/Japan hints, left edge -->
+        <path class="land" d="M0 0 L96 0 C 90 22 74 34 78 56 C 82 74 66 84 70 104
+          C 74 122 58 132 62 152 C 66 172 50 186 54 206 C 58 228 42 244 46 266
+          C 50 288 36 306 40 330 L0 330 Z"/>
+        <!-- Japan arc hint -->
+        <path class="land" d="M150 22 C 168 34 178 54 182 76 C 185 92 180 104 170 108
+          C 162 96 154 76 150 58 C 147 44 146 32 150 22 Z"/>
+        <!-- Taiwan -->
+        <path class="land" d="M96 196 C 112 202 122 220 124 244 C 125 262 118 282 106 292
+          C 96 286 88 266 87 244 C 87 224 89 206 96 196 Z"/>
+        <!-- North America: WA/OR/CA coast, right edge -->
+        <path class="land" d="M840 0 L700 0 C 706 18 694 30 700 48 C 706 64 696 76 702 92
+          C 707 106 698 118 704 134 C 710 152 700 164 706 182 C 712 200 702 214 708 232
+          C 714 252 704 266 710 284 C 716 302 708 316 712 330 L840 330 Z"/>
+        <!-- Columbia River hint at the WA/OR border -->
+        <path class="leader" d="M703 96 C 726 100 748 96 770 102" fill="none"/>
+        <!-- Vancouver Island hint -->
+        <path class="land" d="M676 30 C 688 38 694 50 692 62 C 682 58 672 46 670 36 C 672 31 673 29 676 30 Z"/>
+        <!-- great-circle route -->
+        <path class="arc" d="M104 218 C 240 40, 560 6, 706 88"/>
+        <!-- Hsinchu -->
+        <circle class="ring" cx="104" cy="218" r="9"/>
+        <circle class="dot" cx="104" cy="218" r="4"/>
+        <line class="leader" x1="112" y1="224" x2="150" y2="248"/>
+        <text class="city" x="156" y="252">HSINCHU · TSMC HQ</text>
+        <text x="156" y="268">TODAY · CENTRAL PRODUCTION CONTROL</text>
+        <!-- Camas -->
+        <circle class="ring" cx="706" cy="88" r="9"/>
+        <circle class="dot" cx="706" cy="88" r="4"/>
+        <line class="leader" x1="698" y1="94" x2="632" y2="130"/>
+        <text class="city" x="626" y="136" text-anchor="end">CAMAS, WA · FAB 11</text>
+        <text x="626" y="152" text-anchor="end">NEXT · FAB PLANNER</text>
+        <!-- ocean label -->
+        <text x="420" y="230" text-anchor="middle" opacity=".75">P A C I F I C&#160;&#160;O C E A N</text>
       </svg>
+      <div class="caption">
+        <span>DAILY SYNC · HSINCHU 08:00 = CAMAS 17:00 (PREV. DAY)</span>
+        <span>ONE PLAN, TWO SHORES</span>
+      </div>
     </div>
   </header>
 
