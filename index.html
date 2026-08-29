@@ -27,7 +27,7 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
   line-height:1.65;-webkit-font-smoothing:antialiased;
-  border-top:3px solid var(--pine)}
+  border-top:3px solid var(--pine);overflow-x:clip}
 a{color:var(--pine);text-decoration-thickness:1px;text-underline-offset:3px}
 a:hover{text-decoration-thickness:2px}
 ::selection{background:var(--pine);color:var(--pine-ink)}
@@ -96,6 +96,14 @@ p{margin:0 0 1rem;max-width:66ch}
 .tools .d{font-size:.88rem;color:var(--dim);margin-top:.2rem;line-height:1.6}
 @media (max-width:700px){ .tools{grid-template-columns:1fr} }
 
+/* statement band */
+.band{background:var(--pine);color:var(--pine-ink);margin:0 calc(50% - 50vw);padding:3.4rem 0}
+.band .inner{max-width:840px;margin:0 auto;padding:0 1.5rem}
+.band p{margin:0;font-weight:700;font-size:clamp(1.3rem,3.4vw,1.9rem);line-height:1.45;
+  letter-spacing:-.015em;max-width:none;text-wrap:balance}
+.band .sub{margin-top:1rem;font-family:var(--mono);font-weight:400;font-size:.72rem;
+  letter-spacing:.22em;opacity:.85}
+
 /* timeline */
 .xp{margin:0;padding:0;list-style:none}
 .xp li{display:grid;grid-template-columns:150px 1fr;gap:1.5rem;padding:1.05rem 0;
@@ -141,13 +149,14 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
   </div>
 
   <header class="hero">
-    <div class="eyebrow">Production Control · TSMC HQ · Hsinchu, Taiwan</div>
+    <div class="eyebrow">Production Control · TSMC · Hsinchu, Taiwan</div>
     <h1>Already planning with Fab&nbsp;11 —<br>just from <em>6,000 miles away</em>.</h1>
-    <p class="lede">I'm Jay Kuo, a Production Control Integration Planner at TSMC headquarters.
-    From the central planning floor I see every fab's demand, output, and commitments —
-    and <b>I align with Fab 11's planning team every working day</b>. When a fab planner
-    opportunity opens in Camas, I hope to bring that daily partnership on-site —
-    already knowing the team, the systems, and the numbers.</p>
+    <p class="lede">I'm Jay Kuo, a Production Control Integration Planner at TSMC. Central
+    planning taught me to love the big picture — every fab's demand, output, and promises
+    on one screen. But the part of my day I genuinely look forward to is
+    <b>the sync with Fab 11's planning team, every working day</b>. When a fab planner
+    opportunity opens in Camas, I want to bring that energy on-site — already knowing
+    the team, the systems, and the numbers.</p>
 
     <div class="route" aria-label="Map: Hsinchu, Taiwan to Camas, Washington across the Pacific">
       <svg viewBox="0 0 840 330">
@@ -215,7 +224,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
         <circle class="ring" cx="46" cy="249" r="8"/>
         <circle class="dot" cx="46" cy="249" r="3.5"/>
         <line class="leader" x1="54" y1="253" x2="120" y2="276"/>
-        <text class="city" x="126" y="280">HSINCHU · TSMC HQ</text>
+        <text class="city" x="126" y="280">HSINCHU · TAIWAN</text>
         <text x="126" y="296">TODAY · CENTRAL PRODUCTION CONTROL</text>
         <!-- Camas -->
         <circle class="ring" cx="824" cy="77" r="8"/>
@@ -242,26 +251,29 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
     <div class="why">
       <div class="w"><span class="k">Zero ramp-up</span>
         <h3>I'm already in your meetings.</h3>
-        <p>Cross-fab alignment with Fab 11 planners is part of my daily cadence — demand and
-        output syncs across the 15-hour gap. I know the people, the rhythm, and the systems
-        before day one.</p></div>
+        <p>Aligning demand and output with Fab 11's planners across the 15-hour gap isn't a
+        chore on my calendar — it's the meeting I prepare hardest for. I know the people,
+        the cadence, and the systems. My day one would feel like day three hundred.</p></div>
       <div class="w"><span class="k">Breadth → depth</span>
         <h3>Central view, fab instincts.</h3>
-        <p>At HQ I own the weekly backend Output Plan and the daily Fab Daily Status across
-        Fab, UMG, and Customer views. I know how one fab's plan ripples through the whole
-        network — and how HQ will read Fab 11's numbers.</p></div>
+        <p>I own the weekly backend Output Plan and the daily Fab Daily Status across Fab,
+        UMG, and Customer views — so I know exactly how one fab's numbers ripple through
+        the whole network, and what central planning will ask Fab 11 next. I'd love to be
+        answering from your side for once.</p></div>
       <div class="w"><span class="k">Washington-ready</span>
         <h3>Half my degrees are from your state.</h3>
         <p>MSc from the University of Washington, MSc in CS from Georgia Tech, fluent English
-        (TOEFL 107), and daily experience working with English-speaking partners. Relocating
-        to the Pacific Northwest is the plan, not a compromise.</p></div>
+        (TOEFL 107), daily collaboration in English. The Pacific Northwest isn't a compromise
+        I'd accept — it's a move I've been building toward.</p></div>
     </div>
   </section>
 
   <section id="tools" class="reveal">
     <h2><span class="num">02</span>What I'd bring in my toolbox</h2>
-    <p>I automate the planning floor I work on. Every tool below is in production use by my
-    team today — built with Excel VBA, SQL, and self-serve HTML reporting.</p>
+    <p>I can't watch a planner copy data by hand without itching to automate it — every hour
+    spent pulling numbers is an hour not spent planning. So I build. Every tool below is in
+    production use by my team today, built with Excel VBA, SQL, and self-serve HTML reporting —
+    and every one of them would come to Camas with me.</p>
     <ul class="tools">
       <li><div class="t">Auto Output Plan Generator <span class="m">~6 h/week saved</span></div>
         <div class="d">VBA tool that auto-queries SQL to build the weekly backend Output Plan — faster and more accurate than the manual pull it replaced.</div></li>
@@ -282,11 +294,20 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
     </ul>
   </section>
 
+  <div class="band">
+    <div class="inner">
+      <p>A fab's plan is its heartbeat — it beats weeks ahead
+      of the line. The best hour of my workday already crosses
+      the Pacific. I'd like to follow it.</p>
+      <div class="sub">HSINCHU 新竹 → CAMAS, WASHINGTON</div>
+    </div>
+  </div>
+
   <section id="xp" class="reveal">
     <h2><span class="num">03</span>Track record</h2>
     <ul class="xp">
       <li><div class="when">JUL 2024 — NOW</div>
-        <div><div class="role">Production Control Integration Planner <span class="org">· TSMC HQ, Hsinchu</span></div>
+        <div><div class="role">Production Control Integration Planner <span class="org">· TSMC, Hsinchu</span></div>
         <div class="note">Central planning: weekly backend Output Plan, daily Fab Daily Status, daily cross-fab
         alignment including Fab 11, and a suite of automation tools standardizing team reporting.
         Partnered with an external consultant firm in English on data assessments and backend process flow.</div></div></li>
@@ -317,8 +338,9 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
 
   <section id="contact" class="contact reveal">
     <h2><span class="num">05</span>Let's talk before the req opens</h2>
-    <p>I'd welcome a conversation about Fab 11's planning roadmap — what the team needs next,
-    and where I can help from day one. My detailed résumés are below.</p>
+    <p>Few things would excite me more than helping plan Fab 11's next chapter — the fab
+    where TSMC's American story started. I'd genuinely welcome a conversation about what
+    your team needs next, and where I could help from day one. My detailed résumés are below.</p>
     <div class="cta-row">
       <a class="btn primary" href="mailto:kuohungyi5@gmail.com">EMAIL JAY</a>
       <a class="btn" href="https://linkedin.com/in/jaykuo0619" target="_blank" rel="noopener">LINKEDIN</a>
