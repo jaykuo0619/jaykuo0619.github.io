@@ -1,759 +1,254 @@
 <!doctype html>
 <meta charset="utf-8">
-<title>Jay Kuo — Engineering & Planning</title>
+<title>Jay Kuo — Production Control Planner</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root{
-  --bg:#070C14; --surface:#0E1622; --line:#1D2A3D; --text:#E6ECF5; --dim:#8FA0B8;
-  --acc:#3FD9EC; --acc2:#8F7BFF; --acc-ink:#062A30;
-  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
-  --sans:"Helvetica Neue",Helvetica,"Segoe UI",Arial,sans-serif;
+  --paper:#F7F6F1; --card:#FFFFFF; --line:#E3E1D7; --ink:#1C2A24; --dim:#68766D;
+  --pine:#1E5C43; --pine-soft:#DCE9E1; --sand:#B0793F; --pine-ink:#FFFFFF;
+  --serif:"Iowan Old Style","Palatino","Book Antiqua",Georgia,serif;
+  --sans:-apple-system,"Helvetica Neue",Helvetica,"Segoe UI",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 }
-:root[data-persona="planner"]{ --acc:#FFB454; --acc2:#3BD394; --acc-ink:#301D04; }
-@media (prefers-color-scheme: light){
-  :root{ --bg:#EEF1F6; --surface:#FFFFFF; --line:#D4DCE8; --text:#101826; --dim:#5A6A80;
-         --acc:#0797A8; --acc2:#6A55E8; --acc-ink:#FFFFFF; }
-  :root[data-persona="planner"]{ --acc:#C77A10; --acc2:#0F9B66; --acc-ink:#FFFFFF; }
+@media (prefers-color-scheme: dark){
+  :root{ --paper:#111915; --card:#18231D; --line:#2A3A31; --ink:#E9EFE9; --dim:#93A398;
+         --pine:#63B58C; --pine-soft:#1E3229; --sand:#CD9A62; --pine-ink:#0C1812; }
 }
-:root[data-theme="dark"]{ --bg:#070C14; --surface:#0E1622; --line:#1D2A3D; --text:#E6ECF5; --dim:#8FA0B8;
-  --acc:#3FD9EC; --acc2:#8F7BFF; --acc-ink:#062A30; }
-:root[data-theme="dark"][data-persona="planner"]{ --acc:#FFB454; --acc2:#3BD394; --acc-ink:#301D04; }
-:root[data-theme="light"]{ --bg:#EEF1F6; --surface:#FFFFFF; --line:#D4DCE8; --text:#101826; --dim:#5A6A80;
-  --acc:#0797A8; --acc2:#6A55E8; --acc-ink:#FFFFFF; }
-:root[data-theme="light"][data-persona="planner"]{ --acc:#C77A10; --acc2:#0F9B66; --acc-ink:#FFFFFF; }
+:root[data-theme="light"]{ --paper:#F7F6F1; --card:#FFFFFF; --line:#E3E1D7; --ink:#1C2A24; --dim:#68766D;
+  --pine:#1E5C43; --pine-soft:#DCE9E1; --sand:#B0793F; --pine-ink:#FFFFFF; }
+:root[data-theme="dark"]{ --paper:#111915; --card:#18231D; --line:#2A3A31; --ink:#E9EFE9; --dim:#93A398;
+  --pine:#63B58C; --pine-soft:#1E3229; --sand:#CD9A62; --pine-ink:#0C1812; }
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
-     transition:background .6s,color .6s;overflow-x:hidden}
-a{color:inherit}
-::selection{background:var(--acc);color:var(--acc-ink)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--pine);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{text-decoration-thickness:2px}
+::selection{background:var(--pine);color:var(--pine-ink)}
 
-/* ---------- hero ---------- */
-.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;
-      align-items:center;justify-content:center;padding:5.5rem 1.25rem 3rem;overflow:hidden}
-#stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.wafer-wrap{position:relative;width:min(78vmin,560px);aspect-ratio:1;margin-top:-1rem}
-#wafer{width:100%;height:100%;display:block;cursor:crosshair}
-.hero-id{position:relative;text-align:center;margin-top:-9.5rem;pointer-events:none;z-index:2}
-.hero-id h1{margin:0;font-size:clamp(3rem,10vw,6.5rem);font-weight:600;letter-spacing:-.025em;
-  line-height:.95;text-wrap:balance;
-  text-shadow:0 2px 30px color-mix(in srgb,var(--bg) 70%,transparent)}
-.hero-id h1 .ampersand{color:var(--acc);transition:color .6s;font-weight:300}
-.subrow{display:inline-flex;gap:.45em;align-items:baseline;font-size:.30em;letter-spacing:.02em;font-weight:600}
-.subrow .pw,.subrow .ampersand{transition:opacity .6s,color .6s,text-shadow .6s,
-  transform .6s cubic-bezier(.65,0,.35,1);will-change:transform}
-@media (prefers-reduced-motion:reduce){.subrow .pw,.subrow .ampersand{transition:none}}
-:root[data-persona="engineer"] .pw-eng,
-:root[data-persona="planner"] .pw-plan{color:var(--text);opacity:1;
-  text-shadow:0 0 18px color-mix(in srgb,var(--acc) 55%,transparent)}
-:root[data-persona="engineer"] .pw-plan,
-:root[data-persona="planner"] .pw-eng{color:var(--dim);opacity:.38;
-  text-shadow:2px 3px 6px color-mix(in srgb,var(--bg) 80%,transparent)}
-.tagline{position:relative;height:1.9em;width:100%;max-width:680px;margin-top:1rem;font-family:var(--mono);
-  font-size:clamp(.8rem,2.4vw,1.05rem);color:var(--dim);letter-spacing:.06em}
-.tagline span{position:absolute;inset:0;text-align:center;opacity:0;transform:translateY(8px);
-  transition:opacity .45s,transform .45s}
-.tagline span.on{opacity:1;transform:none}
-.tagline b{color:var(--acc);font-weight:600;transition:color .6s}
+.wrap{max-width:840px;margin:0 auto;padding:0 1.5rem}
 
-/* traveler strip */
-.strip{position:relative;z-index:2;margin-top:1.6rem;display:flex;flex-wrap:wrap;gap:.5rem 1.75rem;
-  justify-content:center;font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:var(--dim)}
-.strip a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px;transition:color .2s,border-color .2s}
-.strip a:hover,.strip a:focus-visible{color:var(--acc);border-color:var(--acc);outline:none}
-.strip .lot{color:var(--acc);transition:color .6s}
+/* top bar */
+.top{display:flex;justify-content:space-between;align-items:baseline;padding:1.6rem 0 0}
+.top .name{font-family:var(--mono);font-size:.78rem;letter-spacing:.22em}
+.top a{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-decoration:none}
+.top a:hover{text-decoration:underline}
 
-/* mode switch */
-.mode{position:fixed;top:1.1rem;left:50%;transform:translateX(-50%);z-index:10;
-  display:flex;align-items:center;background:color-mix(in srgb,var(--surface) 82%,transparent);
-  backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:999px;padding:4px;
-  font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;
-  transform-origin:50% 0;
-  transition:transform .4s cubic-bezier(.3,.9,.3,1),background .4s,backdrop-filter .4s,border-color .4s}
-/* iPhone-style: shrinks + frosts as you scroll; text stays crisp (only the backdrop blurs) */
-.mode.shrunk{transform:translateX(-50%) scale(.78);
-  backdrop-filter:blur(22px) saturate(1.3);
-  background:color-mix(in srgb,var(--surface) 55%,transparent)}
-.mode:hover,.mode:focus-within{transform:translateX(-50%) scale(1.06);
-  backdrop-filter:blur(10px);
-  background:color-mix(in srgb,var(--surface) 88%,transparent)}
-.mode button{appearance:none;border:0;background:none;color:var(--dim);padding:.5em 1.1em;
-  border-radius:999px;font:inherit;cursor:pointer;position:relative;z-index:1;transition:color .35s}
-.mode button.on{color:var(--acc-ink)}
-.mode .pill{position:absolute;top:4px;bottom:4px;border-radius:999px;background:var(--acc);
-  transition:left .35s cubic-bezier(.6,0,.2,1),width .35s cubic-bezier(.6,0,.2,1),background .6s}
-.mode button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+/* hero */
+.hero{padding:5.5rem 0 3.5rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.3em;color:var(--dim);
+  text-transform:uppercase;margin-bottom:1.3rem}
+h1{margin:0 0 1.4rem;font-family:var(--serif);font-weight:500;
+  font-size:clamp(2.1rem,5.6vw,3.4rem);line-height:1.18;letter-spacing:-.012em;text-wrap:balance}
+h1 em{font-style:italic;color:var(--pine)}
+.lede{font-size:1.08rem;max-width:60ch;color:color-mix(in srgb,var(--ink) 88%,var(--dim));margin:0}
+.lede b{font-weight:600}
 
-.scroll-cue{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);
-  font-family:var(--mono);font-size:.68rem;letter-spacing:.3em;color:var(--dim);opacity:.7}
+/* route */
+.route{margin:3.2rem 0 0;padding:1.6rem 0 .4rem;border-top:1px solid var(--line)}
+.route svg{width:100%;height:auto;display:block}
+.route text{font-family:var(--mono);font-size:11px;letter-spacing:.18em;fill:var(--dim)}
+.route .city{fill:var(--ink);font-size:12.5px;font-weight:600}
+.route .arc{stroke:var(--pine);stroke-width:1.6;fill:none;stroke-dasharray:4 6;stroke-linecap:round}
 @media (prefers-reduced-motion:no-preference){
-  .scroll-cue{animation:cue 2.4s ease-in-out infinite}
-  @keyframes cue{50%{transform:translate(-50%,6px);opacity:.35}}
+  .route .arc{animation:dash 30s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-300}}
 }
-@media (max-width:560px){ .hero-id{margin-top:-6.5rem} }
+.route .dot{fill:var(--pine)}
+.route .plane{fill:var(--sand)}
 
-/* ---------- sections ---------- */
-main{position:relative;z-index:1}
-section{max-width:1060px;margin:0 auto;padding:5rem 1.5rem}
-.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;color:var(--acc);
-  text-transform:uppercase;margin-bottom:.9rem;transition:color .6s}
-h2{margin:0 0 1.6rem;font-size:clamp(1.7rem,4.5vw,2.5rem);font-weight:800;letter-spacing:-.02em;text-wrap:balance}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
-.reveal.in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+/* sections */
+section{padding:3.4rem 0;border-top:1px solid var(--line)}
+h2{margin:0 0 1.7rem;font-family:var(--serif);font-weight:500;font-size:1.7rem;letter-spacing:-.008em}
+h2 .num{font-family:var(--mono);font-size:.62em;color:var(--dim);letter-spacing:.2em;
+  vertical-align:.18em;margin-right:.9em}
+p{margin:0 0 1rem;max-width:66ch}
 
-/* about + stats */
-.about-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:3rem;align-items:start}
-.about-grid p{margin:0 0 1rem;line-height:1.75;max-width:62ch;color:color-mix(in srgb,var(--text) 88%,var(--dim))}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
-.stat{background:var(--surface);padding:1.4rem 1.2rem}
-.stat .num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:2rem;font-weight:700;
-  color:var(--acc);transition:color .6s}
-.stat .lbl{font-size:.78rem;color:var(--dim);margin-top:.35rem;line-height:1.4}
+/* why cards */
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.why .w{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.5rem 1.4rem}
+.why .w .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.24em;color:var(--pine);
+  text-transform:uppercase;display:block;margin-bottom:.7rem}
+.why .w h3{margin:0 0 .55rem;font-size:1.04rem;font-weight:650;letter-spacing:-.005em}
+.why .w p{font-size:.9rem;color:var(--dim);margin:0;line-height:1.7}
+@media (max-width:700px){ .why{grid-template-columns:1fr} }
+
+/* tools list */
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:0 2.4rem;margin:0;padding:0;list-style:none}
+.tools li{padding:.95rem 0;border-bottom:1px solid var(--line)}
+.tools .t{font-weight:650;letter-spacing:-.005em}
+.tools .t .m{font-family:var(--mono);font-size:.7rem;color:var(--sand);letter-spacing:.06em;
+  margin-left:.6em;font-weight:400}
+.tools .d{font-size:.88rem;color:var(--dim);margin-top:.2rem;line-height:1.6}
+@media (max-width:700px){ .tools{grid-template-columns:1fr} }
 
 /* timeline */
-.tl{position:relative;margin:0;padding:0;list-style:none}
-.tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
-  background:linear-gradient(var(--acc),var(--line));transition:background .6s}
-.job{position:relative;padding:0 0 2.8rem 2.2rem}
-.job::before{content:"";position:absolute;left:0;top:6px;width:12px;height:12px;border-radius:50%;
-  background:var(--bg);border:3px solid var(--acc);transition:border-color .6s}
-.job h3{margin:0;font-size:1.15rem;font-weight:700}
-.job .meta{font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;color:var(--dim);margin:.3rem 0 .9rem}
-.job ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.55rem}
-.job li{position:relative;padding-left:1.1rem;line-height:1.6;font-size:.95rem;
-  color:color-mix(in srgb,var(--text) 82%,var(--dim));transition:opacity .45s,color .45s}
-.job li::before{content:"–";position:absolute;left:0;color:var(--acc);transition:color .6s}
-/* persona emphasis: tagged bullets lead, off-persona dims */
-:root[data-persona="engineer"] .job li.p-plan,
-:root[data-persona="planner"] .job li.p-eng{opacity:.42}
-:root[data-persona="engineer"] .job li.p-eng{order:-1}
-:root[data-persona="planner"] .job li.p-plan{order:-1}
-:root[data-persona="engineer"] .job li.p-plan{order:1}
-:root[data-persona="planner"] .job li.p-eng{order:1}
-.job li b{color:var(--text);font-weight:600}
-
-/* projects */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.1rem}
-.card{background:var(--surface);border:1px solid var(--line);padding:1.4rem;display:flex;
-  flex-direction:column;gap:.6rem;transition:border-color .25s,transform .25s}
-.card:hover{border-color:var(--acc);transform:translateY(-3px)}
-.card .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;color:var(--acc);transition:color .6s}
-.card h3{margin:0;font-size:1.02rem;font-weight:700;line-height:1.35}
-.card p{margin:0;font-size:.87rem;line-height:1.6;color:var(--dim)}
-.card .win{margin-top:auto;padding-top:.6rem;font-family:var(--mono);font-size:.78rem;color:var(--acc2)}
-
-/* skills */
-.skillgroups{display:flex;flex-direction:column;gap:1.3rem}
-.sg .sg-name{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;color:var(--dim);
-  text-transform:uppercase;margin-bottom:.6rem}
-.chips{display:flex;flex-wrap:wrap;gap:.5rem}
-.chip{font-size:.82rem;padding:.4em .9em;border:1px solid var(--line);border-radius:2px;
-  background:var(--surface);transition:border-color .5s,color .5s,opacity .5s}
-:root[data-persona="engineer"] .sg.g-eng .chip{border-color:var(--acc);color:var(--acc)}
-:root[data-persona="planner"] .sg.g-plan .chip{border-color:var(--acc);color:var(--acc)}
+.xp{margin:0;padding:0;list-style:none}
+.xp li{display:grid;grid-template-columns:150px 1fr;gap:1.5rem;padding:1.05rem 0;
+  border-bottom:1px solid var(--line)}
+.xp .when{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--dim);padding-top:.25rem}
+.xp .role{font-weight:650}
+.xp .org{color:var(--dim);font-weight:400}
+.xp .note{font-size:.88rem;color:var(--dim);margin-top:.15rem;line-height:1.65}
+@media (max-width:600px){ .xp li{grid-template-columns:1fr;gap:.2rem} }
 
 /* education */
-.edu{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
-.edu .row{background:var(--surface);padding:1.2rem 1.4rem;display:flex;flex-wrap:wrap;gap:.4rem 1.5rem;
-  justify-content:space-between;align-items:baseline}
-.edu .row .deg{font-weight:700}
-.edu .row .when{font-family:var(--mono);font-size:.74rem;color:var(--dim)}
-.edu .row .note{flex-basis:100%;font-size:.84rem;color:var(--dim);line-height:1.5}
+.edu-row{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:baseline;padding:.95rem 0;
+  border-bottom:1px solid var(--line)}
+.edu-row .deg{font-weight:650}
+.edu-row .when{font-family:var(--mono);font-size:.7rem;color:var(--dim);margin-left:auto}
+.edu-row .note{flex-basis:100%;font-size:.86rem;color:var(--dim);line-height:1.6}
+.tagwa{display:inline-block;font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;
+  background:var(--pine-soft);color:var(--pine);border-radius:999px;padding:.25em .8em;
+  margin-left:.6em;vertical-align:.15em}
 
 /* contact */
-.contact{text-align:center;padding-bottom:6rem}
-.contact .big{font-size:clamp(1.4rem,4vw,2.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:2rem}
-.cta-row{display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center}
-.btn{font-family:var(--mono);font-size:.82rem;letter-spacing:.08em;text-decoration:none;
-  padding:.9em 1.6em;border:1px solid var(--line);border-radius:2px;transition:all .25s}
-.btn.primary{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
-.btn.primary:hover{filter:brightness(1.12)}
-.btn:not(.primary):hover,.btn:focus-visible{border-color:var(--acc);color:var(--acc);outline:none}
-footer{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;color:var(--dim);
-  text-align:center;padding:2rem 1rem 2.6rem;border-top:1px solid var(--line)}
+.contact{padding-bottom:5rem}
+.cta-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.6rem}
+.btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-decoration:none;
+  padding:.85em 1.5em;border-radius:8px;border:1px solid var(--line);color:var(--ink);
+  transition:border-color .2s,background .2s,color .2s}
+.btn.primary{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:not(.primary):hover,.btn:focus-visible{border-color:var(--pine);color:var(--pine);outline:none}
 
-/* desktop dot nav — right edge */
-.dotnav{position:fixed;right:1.1rem;top:50%;transform:translateY(-50%);z-index:10;
-  display:flex;flex-direction:column;gap:.9rem}
-.dotnav a{display:flex;align-items:center;justify-content:flex-end;gap:.55rem;
-  text-decoration:none;height:14px}
-.dotnav .lbl{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--dim);
-  opacity:0;transform:translateX(6px);transition:opacity .25s,transform .25s;white-space:nowrap;
-  background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--line);
-  border-radius:999px;padding:.3em .8em;backdrop-filter:blur(8px)}
-.dotnav .dot{width:8px;height:8px;border-radius:50%;flex:none;
-  background:color-mix(in srgb,var(--dim) 55%,transparent);transition:background .25s,transform .25s}
-.dotnav a:hover .lbl,.dotnav a:focus-visible .lbl{opacity:1;transform:none}
-.dotnav a:hover .dot,.dotnav a:focus-visible .dot{background:var(--acc);transform:scale(1.5)}
-.dotnav a.on .dot{background:var(--acc);transform:scale(1.3)}
-@media (max-width:760px){ .dotnav{display:none} }
+footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;color:var(--dim)}
 
-/* mobile hamburger — app style, shrinks on scroll */
-.hamb{display:none;position:fixed;top:1.1rem;left:1.1rem;z-index:12;width:44px;height:44px;
-  border:1px solid var(--line);border-radius:14px;cursor:pointer;
-  background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(10px);
-  transform-origin:0 0;transition:transform .4s cubic-bezier(.3,.9,.3,1),background .4s;
-  align-items:center;justify-content:center;flex-direction:column;gap:5px;padding:0}
-.hamb span{display:block;width:18px;height:2px;border-radius:2px;background:var(--text);
-  transition:transform .3s,opacity .3s}
-.hamb.shrunk{transform:scale(.78)}
-.hamb.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.hamb.open span:nth-child(2){opacity:0}
-.hamb.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.mnav{position:fixed;inset:0;z-index:11;display:flex;flex-direction:column;
-  align-items:flex-start;justify-content:center;gap:.4rem;padding:2rem 2.2rem;
-  background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(22px);
-  opacity:0;pointer-events:none;transition:opacity .3s}
-.mnav.open{opacity:1;pointer-events:auto}
-.mnav a{text-decoration:none;font-size:1.5rem;font-weight:700;letter-spacing:-.01em;
-  padding:.35em 0;color:var(--text)}
-.mnav a .no{font-family:var(--mono);font-size:.6em;color:var(--acc);margin-right:.8em;font-weight:400}
-@media (max-width:760px){ .hamb{display:flex} }
-
-/* iPad-style pointer */
-@media (hover:hover) and (pointer:fine){
-  body,a,button,#wafer{cursor:none}
-  #ipadCursor{position:fixed;left:0;top:0;z-index:999;pointer-events:none;
-    width:22px;height:22px;border-radius:50%;
-    background:color-mix(in srgb,var(--text) 18%,transparent);
-    transition:border-radius .18s;will-change:transform,width,height}
-}
-#ipadCursor{display:none}
-@media (hover:hover) and (pointer:fine){ #ipadCursor{display:block} }
-@media (max-width:760px){ .about-grid{grid-template-columns:1fr} }
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 </style>
 
-<div class="mode" role="tablist" aria-label="Persona">
-  <div class="pill" id="modePill"></div>
-  <button id="btnEng" class="on" role="tab" aria-selected="true">⚙ ENGINEERING</button>
-  <button id="btnPlan" role="tab" aria-selected="false">▦ PLANNING</button>
-</div>
-
-<nav class="dotnav" aria-label="Sections">
-  <a href="#about"><span class="lbl">ABOUT</span><span class="dot"></span></a>
-  <a href="#experience"><span class="lbl">EXPERIENCE</span><span class="dot"></span></a>
-  <a href="#projects"><span class="lbl">TOOL SET</span><span class="dot"></span></a>
-  <a href="#academic"><span class="lbl">ACADEMIC</span><span class="dot"></span></a>
-  <a href="#skills"><span class="lbl">SKILLS</span><span class="dot"></span></a>
-  <a href="#education"><span class="lbl">EDUCATION</span><span class="dot"></span></a>
-  <a href="#contact"><span class="lbl">CONTACT</span><span class="dot"></span></a>
-</nav>
-<button class="hamb" aria-label="選單 Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-<nav class="mnav" aria-label="Sections menu">
-  <a href="#about"><span class="no">01</span>ABOUT</a>
-  <a href="#experience"><span class="no">02</span>EXPERIENCE</a>
-  <a href="#projects"><span class="no">03</span>TOOL SET</a>
-  <a href="#academic"><span class="no">04</span>ACADEMIC</a>
-  <a href="#skills"><span class="no">05</span>SKILLS</a>
-  <a href="#education"><span class="no">06</span>EDUCATION</a>
-  <a href="#contact"><span class="no">07</span>CONTACT</a>
-</nav>
-
-<header class="hero">
-  <canvas id="stars" aria-hidden="true"></canvas>
-  <div class="wafer-wrap"><canvas id="wafer" aria-label="Interactive silicon wafer — click dies to light a yield map"></canvas></div>
-  <div class="hero-id">
-    <h1>JAY KUO<br><span class="subrow"><span class="pw pw-eng">ENGINEERING</span><span class="ampersand">&amp;</span><span class="pw pw-plan">PLANNING</span></span></h1>
-  </div>
-  <div class="tagline">
-    <span id="tagEng" class="on">I build the <b>automation</b> that runs the fab's numbers.</span>
-    <span id="tagPlan">I plan the <b>output</b> a fab promises — and keeps.</span>
-  </div>
-  <div class="strip">
-    <span class="lot">LOT&nbsp;JK-0619</span>
-    <a href="tel:+886933462476">0933-462-476</a>
+<div class="wrap">
+  <div class="top">
+    <span class="name">JAY KUO 郭泓毅</span>
     <a href="mailto:kuohungyi5@gmail.com">kuohungyi5@gmail.com</a>
-    <a href="https://linkedin.com/in/jaykuo0619" target="_blank" rel="noopener">linkedin.com/in/jaykuo0619</a>
   </div>
-  <div class="scroll-cue">SCROLL</div>
-</header>
 
-<main>
-<section id="about" class="reveal">
-  <div class="eyebrow">01 · Process Spec</div>
-  <h2>One person, two process flows.</h2>
-  <div class="about-grid">
-    <div>
-      <p>I'm a Production Control Integration Planner in <b>TSMC</b>'s Manufacturing Planning
-      Integration Division, working on <b>3D Fabrics production planning</b>, with dual master's
-      degrees in Computer Science (Georgia Tech) and Information Management (University of
-      Washington). Fabs run on two things: a plan the business can trust, and the data plumbing
-      that keeps that plan honest. I do both.</p>
-      <p>As an <b>engineer</b>, I build the automation — VBA tools that query SQL directly, multi-database
-      pipelines, self-serve HTML reports — that removes hours of manual work from every week.
-      As a <b>planner</b>, I own the weekly backend Output Plan and the daily Fab Daily Status, turning
-      that plumbing into decisions on lots, pull-ins, and wafer starts.</p>
-      <p>My TSMC story started as an intern during a warehouse-automation rollout — and grew
-      into building the tools the planning floor runs on. Flip the switch above — same wafer,
-      two ways to read the map.</p>
+  <header class="hero">
+    <div class="eyebrow">Production Control · TSMC HQ · Hsinchu, Taiwan</div>
+    <h1>Already planning with Fab&nbsp;11 —<br>just from <em>6,000 miles away</em>.</h1>
+    <p class="lede">I'm Jay Kuo, a Production Control Integration Planner at TSMC headquarters.
+    From the central planning floor I see every fab's demand, output, and commitments —
+    and <b>I align with Fab 11's planning team every working day</b>. When a fab planner
+    opportunity opens in Camas, I want to be the easiest hire you'll ever make.</p>
+
+    <div class="route" aria-label="Hsinchu to Camas">
+      <svg viewBox="0 0 840 150">
+        <path class="arc" d="M60 118 C 260 18, 580 18, 780 112"/>
+        <circle class="dot" cx="60" cy="118" r="5"/>
+        <circle class="dot" cx="780" cy="112" r="5"/>
+        <circle class="plane" cx="420" cy="43" r="4"/>
+        <text class="city" x="60" y="140" text-anchor="start">HSINCHU · TSMC HQ</text>
+        <text x="60" y="93" text-anchor="start">TODAY · CENTRAL PC</text>
+        <text class="city" x="780" y="134" text-anchor="end">CAMAS, WA · FAB 11</text>
+        <text x="780" y="87" text-anchor="end">NEXT · FAB PLANNER</text>
+      </svg>
     </div>
-    <div class="stats">
-      <div class="stat"><div class="num" data-count="6" data-suffix="h">0</div><div class="lbl">manual effort cut per week by the auto-generated Output Plan</div></div>
-      <div class="stat"><div class="num" data-count="2.4" data-suffix="×" data-dec="1">0</div><div class="lbl">projected candidate-pool increase, Early Wafer Start verification</div></div>
-      <div class="stat"><div class="num" data-count="25" data-suffix="%">0</div><div class="lbl">team productivity gain from SQL dashboards at TIER</div></div>
-      <div class="stat"><div class="num" data-count="70" data-suffix="%">0</div><div class="lbl">efficiency gain from the vendor-approval workflow at Merck</div></div>
+  </header>
+
+  <section id="why" class="reveal">
+    <h2><span class="num">01</span>Why I fit Fab 11</h2>
+    <div class="why">
+      <div class="w"><span class="k">Zero ramp-up</span>
+        <h3>I'm already in your meetings.</h3>
+        <p>Cross-fab alignment with Fab 11 planners is part of my daily cadence — demand and
+        output syncs across the 15-hour gap. I know the people, the rhythm, and the systems
+        before day one.</p></div>
+      <div class="w"><span class="k">Breadth → depth</span>
+        <h3>Central view, fab instincts.</h3>
+        <p>At HQ I own the weekly backend Output Plan and the daily Fab Daily Status across
+        Fab, UMG, and Customer views. I know how one fab's plan ripples through the whole
+        network — and how HQ will read Fab 11's numbers.</p></div>
+      <div class="w"><span class="k">Washington-ready</span>
+        <h3>Half my degrees are from your state.</h3>
+        <p>MSc from the University of Washington, MSc in CS from Georgia Tech, fluent English
+        (TOEFL 107), and daily experience working with English-speaking partners. Relocating
+        to the Pacific Northwest is the plan, not a compromise.</p></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="experience" class="reveal">
-  <div class="eyebrow">02 · Run History</div>
-  <h2>Experience</h2>
-  <ol class="tl">
-    <li class="job">
-      <h3>TSMC — Production Control Integration Planner</h3>
-      <div class="meta">HSINCHU, TAIWAN · JUL 2024 – PRESENT</div>
-      <ul>
-        <li class="p-eng">Engineered a VBA-driven <b>Fab Daily Status pipeline</b> integrating multiple databases with daily refresh — multi-dimensional analysis across Customer view, Fab view, and more.</li>
-        <li class="p-eng">Built an Excel VBA tool that auto-queries SQL to generate the weekly backend <b>Output Plan</b>, cutting ~6 hours of manual effort per week while improving accuracy.</li>
-        <li class="p-eng">Created a team-accessible <b>"Pull-In Ratio" HTML report</b> — a self-serve, browser-based view of pull-in performance for every user.</li>
-        <li class="p-eng">Deployed a suite of VBA automation tools across team workflows, standardizing reporting and raising efficiency.</li>
-        <li class="p-plan">Own the weekly backend <b>Output Plan</b> — the schedule commitment the fab plans against.</li>
-        <li class="p-plan">Deliver the daily <b>Fab Daily Status</b> as a single source of truth for planning decisions.</li>
-        <li class="p-plan">Partnered with an external consultant firm in English to clarify data assessments and backend process flow.</li>
-        <li>Led verification for the <b>Early Wafer Start Candidate</b> project, surfacing key issues projected to increase the candidate pool 2.4×.</li>
-        <li>Drove the <b>Lot Plan revamp</b> with IT, FPC, and APC teams to rebuild the CR3 modification tool.</li>
-      </ul>
-    </li>
-    <li class="job">
-      <h3>TSMC — Production Control Integration Planning Intern</h3>
-      <div class="meta">HSINCHU, TAIWAN · JUL 2023 – SEP 2023</div>
-      <ul>
-        <li>Applied KMeans clustering for product-pattern analysis, improving ASRS picking efficiency; represented the department in the final intern competition.</li>
-      </ul>
-    </li>
-    <li class="job">
-      <h3>Taiwan Institute of Economic Research — Data Analyst</h3>
-      <div class="meta">TAIPEI, TAIWAN · SEP 2021 – AUG 2022</div>
-      <ul>
-        <li class="p-eng">Aggregated 1,000+ biweekly data points via SQL and interactive dashboards, boosting team productivity by 25%.</li>
-        <li class="p-eng">Applied Naïve Bayes sentiment analysis across 6 large datasets; led quantitative-analysis training for 12+ researchers supporting a renowned monthly publication.</li>
-        <li class="p-plan">Evaluated economic data for Taiwan's SME market to support growth forecasting, reducing researcher workload by 20%.</li>
-      </ul>
-    </li>
-    <li class="job">
-      <h3>Merck &amp; Co., Inc. — Global Procurement Intern</h3>
-      <div class="meta">TAIPEI, TAIWAN · SEP 2019 – AUG 2020</div>
-      <ul>
-        <li class="p-plan">Built a self-service vendor-purchasing approval workflow — orders 70% more efficient, 25% faster to complete.</li>
-        <li class="p-eng">Redesigned 6 procurement websites with UX improvements (−30% team workload) and cut operational expenses 15% through data-driven process changes.</li>
-        <li>Mentored 3 interns in Python, JavaScript, web design, business analysis, and optimization.</li>
-      </ul>
-    </li>
-  </ol>
-</section>
+  <section id="tools" class="reveal">
+    <h2><span class="num">02</span>What I'd bring in my toolbox</h2>
+    <p>I automate the planning floor I work on. Every tool below is in production use by my
+    team today — built with Excel VBA, SQL, and self-serve HTML reporting.</p>
+    <ul class="tools">
+      <li><div class="t">Auto Output Plan Generator <span class="m">~6 h/week saved</span></div>
+        <div class="d">VBA tool that auto-queries SQL to build the weekly backend Output Plan — faster and more accurate than the manual pull it replaced.</div></li>
+      <li><div class="t">Fab Daily Status Pipeline</div>
+        <div class="d">Multi-database integration refreshed daily; one source of truth across Customer, Fab, and more dimensions.</div></li>
+      <li><div class="t">Demand &amp; Output Dashboard <span class="m">Fab / UMG / Customer</span></div>
+        <div class="d">Self-serve HTML dashboard — any stakeholder reads the same numbers from their own angle.</div></li>
+      <li><div class="t">Pull-In Ratio Report</div>
+        <div class="d">Browser-based pull-in performance view for the whole team — no more manual data requests.</div></li>
+      <li><div class="t">Early Wafer Start Verification <span class="m">candidate pool ×2.4</span></div>
+        <div class="d">Led verification-code development that surfaced key issues and expanded the projected candidate pool 2.4×.</div></li>
+      <li><div class="t">Lot Plan Revamp (CR3)</div>
+        <div class="d">Drove the CR3 modification-tool rebuild with IT, FPC, and APC teams.</div></li>
+      <li><div class="t">Meeting Host Widget</div>
+        <div class="d">Lets the morning-meeting host switch between topics instantly — small tool, smoother meetings.</div></li>
+      <li><div class="t">Email Automation</div>
+        <div class="d">Outlook drafts for recurring report mails assembled automatically from the data.</div></li>
+    </ul>
+  </section>
 
-<section id="projects" class="reveal">
-  <div class="eyebrow">03 · Tool Set</div>
-  <h2>Things I've shipped on the line.</h2>
-  <div class="cards">
-    <div class="card"><span class="tag">VBA · SQL · MULTI-DB</span>
-      <h3>Fab Daily Status Pipeline</h3>
-      <p>Daily-refreshing pipeline that fuses several databases into one multi-dimensional fab view — Customer view, Fab view, and beyond — a single source of truth for planning.</p>
-      <div class="win">→ one report, every dimension</div></div>
-    <div class="card"><span class="tag">VBA · SQL AUTOMATION</span>
-      <h3>Auto Output Plan Generator</h3>
-      <p>Excel VBA tool that queries SQL directly and assembles the weekly backend Output Plan without manual pulls.</p>
-      <div class="win">→ ~6 h/week saved, higher accuracy</div></div>
-    <div class="card"><span class="tag">HTML · SELF-SERVE BI</span>
-      <h3>Pull-In Ratio Report</h3>
-      <p>Browser-based, team-accessible report of pull-in performance — planners self-serve instead of requesting manual data pulls.</p>
-      <div class="win">→ every user, zero waiting</div></div>
-    <div class="card"><span class="tag">VERIFICATION · ANALYSIS</span>
-      <h3>Early Wafer Start Candidate</h3>
-      <p>Led verification-code development that surfaced key issues in candidate selection for earlier wafer starts.</p>
-      <div class="win">→ candidate pool projected 2.4×</div></div>
-    <div class="card"><span class="tag">CROSS-TEAM · IT/FPC/APC</span>
-      <h3>Lot Plan Revamp (CR3)</h3>
-      <p>Drove the rebuild of the CR3 modification tool with IT, FPC, and APC teams — reworking how lot plans get modified.</p>
-      <div class="win">→ cross-functional delivery</div></div>
-    <div class="card"><span class="tag">ML · KMEANS</span>
-      <h3>ASRS Picking Optimization</h3>
-      <p>KMeans product-pattern clustering to improve automated storage &amp; retrieval picking efficiency; department finalist, intern competition.</p>
-      <div class="win">→ pattern-driven picking</div></div>
-    <div class="card"><span class="tag">HTML · SELF-SERVE BI</span>
-      <h3>Demand &amp; Output Report Dashboard</h3>
-      <p>Browser-based dashboard for demand and output tracking, switchable between Fab view, UMG view, and Customer view — one report, every stakeholder's angle.</p>
-      <div class="win">→ three views, one source of truth</div></div>
-    <div class="card"><span class="tag">VBA · OUTLOOK</span>
-      <h3>Email Automation Tool</h3>
-      <p>Outlook draft-generation tool that assembles recurring report mails automatically — recipients, subject, and formatted content built straight from the data.</p>
-      <div class="win">→ reporting mail on autopilot</div></div>
-    <div class="card"><span class="tag">MEETING OPS</span>
-      <h3>Host Widget</h3>
-      <p>A control widget for the morning meeting's host — switch between discussion topics instantly, keeping the daily production meeting fast and on track.</p>
-      <div class="win">→ smoother morning meetings</div></div>
-  </div>
-</section>
+  <section id="xp" class="reveal">
+    <h2><span class="num">03</span>Track record</h2>
+    <ul class="xp">
+      <li><div class="when">JUL 2024 — NOW</div>
+        <div><div class="role">Production Control Integration Planner <span class="org">· TSMC HQ, Hsinchu</span></div>
+        <div class="note">Central planning: weekly backend Output Plan, daily Fab Daily Status, daily cross-fab
+        alignment including Fab 11, and a suite of automation tools standardizing team reporting.
+        Partnered with an external consultant firm in English on data assessments and backend process flow.</div></div></li>
+      <li><div class="when">JUL — SEP 2023</div>
+        <div><div class="role">Production Control Intern <span class="org">· TSMC</span></div>
+        <div class="note">KMeans product-pattern clustering to improve ASRS picking efficiency; represented the
+        department in the final intern competition.</div></div></li>
+      <li><div class="when">2021 — 2022</div>
+        <div><div class="role">Data Analyst <span class="org">· Taiwan Institute of Economic Research</span></div>
+        <div class="note">SQL pipelines and dashboards (+25% team productivity); Naïve Bayes sentiment analysis;
+        trained 12+ researchers in quantitative methods.</div></div></li>
+      <li><div class="when">2019 — 2020</div>
+        <div><div class="role">Global Procurement Intern <span class="org">· Merck &amp; Co.</span></div>
+        <div class="note">Self-service vendor-approval workflow (+70% efficiency); redesigned six procurement
+        sites; mentored three interns.</div></div></li>
+    </ul>
+  </section>
 
-<section id="academic" class="reveal">
-  <div class="eyebrow">04 · Grad School</div>
-  <h2>Academic &amp; research.</h2>
-  <div class="cards">
-    <div class="card"><span class="tag">GEORGIA TECH · ML</span>
-      <h3>Machine Learning for Trading</h3>
-      <p>Built and evaluated learning-based trading strategies — market simulation, technical indicators, and reinforcement-style learners.</p>
-      <div class="win">→ ML applied to markets</div></div>
-    <div class="card"><span class="tag">GEORGIA TECH · KBAI</span>
-      <h3>AI for Raven's Progressive Matrices</h3>
-      <p>Knowledge-based AI agent solving visual IQ-test analogy problems through figure transformation and semantic reasoning.</p>
-      <div class="win">→ human-like visual reasoning</div></div>
-    <div class="card"><span class="tag">SNOWFLAKE · TABLEAU</span>
-      <h3>Business Intelligence System</h3>
-      <p>End-to-end BI stack: warehouse modeling in Snowflake feeding interactive Tableau dashboards for decision support.</p>
-      <div class="win">→ full-stack BI pipeline</div></div>
-    <div class="card"><span class="tag">DATA SCIENCE · HR</span>
-      <h3>AI Recruiting System</h3>
-      <p>Designed a fairer hiring flow with blind screening, diverse panels, and AI-driven assessments to reduce bias in selection.</p>
-      <div class="win">→ fairness by design</div></div>
-    <div class="card"><span class="tag">CYBERSECURITY</span>
-      <h3>Security Strategy Research</h3>
-      <p>Case-study analysis of APT attacks on semiconductor supply chains and an information-protection strategy: audits, encryption, AI-driven detection.</p>
-      <div class="win">→ defense in depth</div></div>
-    <div class="card"><span class="tag">DATA SCIENCE</span>
-      <h3>User Engagement Analysis</h3>
-      <p>Behavioral analysis of product usage data to identify engagement drivers and retention opportunities.</p>
-      <div class="win">→ insight from behavior</div></div>
-  </div>
-</section>
+  <section id="edu" class="reveal">
+    <h2><span class="num">04</span>Education</h2>
+    <div class="edu-row"><span class="deg">University of Washington — MSc, Information Management</span><span class="tagwa">WASHINGTON STATE</span><span class="when">2022 – 2024</span>
+      <span class="note">Data Science, Business Intelligence, Cybersecurity · Top-5% iSchool merit-based scholarship.</span></div>
+    <div class="edu-row"><span class="deg">Georgia Institute of Technology — MSc, Computer Science</span><span class="when">2023 – 2025</span>
+      <span class="note">Human-Computer Interaction · Machine Learning for Trading, Knowledge-Based AI.</span></div>
+    <div class="edu-row"><span class="deg">National Chengchi University — BSc, International Business</span><span class="when">2016 – 2020</span>
+      <span class="note">School Representative, Asian Economic Seminar (GPAC) · English-taught program.</span></div>
+  </section>
 
-<section id="skills" class="reveal">
-  <div class="eyebrow">05 · Recipe</div>
-  <h2>Skills</h2>
-  <div class="skillgroups">
-    <div class="sg g-eng"><div class="sg-name">Programming &amp; Query</div>
-      <div class="chips"><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">R</span><span class="chip">Excel VBA</span></div></div>
-    <div class="sg g-eng"><div class="sg-name">Automation &amp; Reporting</div>
-      <div class="chips"><span class="chip">VBA Automation</span><span class="chip">HTML Dashboards</span><span class="chip">Multi-DB Integration</span><span class="chip">BI Tools</span></div></div>
-    <div class="sg g-eng"><div class="sg-name">Web &amp; Front-End</div>
-      <div class="chips"><span class="chip">JavaScript</span><span class="chip">ReactJS</span><span class="chip">NextJS</span><span class="chip">HTML/CSS</span><span class="chip">Tailwind CSS</span><span class="chip">GitHub</span></div></div>
-    <div class="sg g-eng"><div class="sg-name">Analytics &amp; ML</div>
-      <div class="chips"><span class="chip">Data Visualization</span><span class="chip">Statistics</span><span class="chip">KMeans</span><span class="chip">Naïve Bayes</span></div></div>
-    <div class="sg g-plan"><div class="sg-name">Planning &amp; Control</div>
-      <div class="chips"><span class="chip">Production Control</span><span class="chip">Output Plan</span><span class="chip">Lot Planning</span><span class="chip">Fab Daily Status</span></div></div>
-    <div class="sg g-plan"><div class="sg-name">Supply Chain &amp; Process</div>
-      <div class="chips"><span class="chip">Supply Chain Coordination</span><span class="chip">Process Optimization</span><span class="chip">Vendor Management</span></div></div>
-    <div class="sg"><div class="sg-name">Collaboration &amp; Languages</div>
-      <div class="chips"><span class="chip">Cross-Functional Collaboration</span><span class="chip">Stakeholder Communication</span><span class="chip">Mandarin (Native)</span><span class="chip">English (Fluent — TOEFL 107)</span><span class="chip">German (Introductory)</span></div></div>
-  </div>
-</section>
+  <section id="contact" class="contact reveal">
+    <h2><span class="num">05</span>Let's talk before the req opens</h2>
+    <p>I'd welcome a conversation about Fab 11's planning roadmap — what the team needs next,
+    and where I can help from day one. My detailed résumés are below.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="mailto:kuohungyi5@gmail.com">EMAIL JAY</a>
+      <a class="btn" href="https://linkedin.com/in/jaykuo0619" target="_blank" rel="noopener">LINKEDIN</a>
+      <a class="btn" href="tel:+886933462476">+886 933-462-476</a>
+      <a class="btn" href="Jay_Kuo_Resume_Planning.pdf" target="_blank" rel="noopener">RÉSUMÉ · PLANNING</a>
+      <a class="btn" href="Jay_Kuo_Resume_Engineering.pdf" target="_blank" rel="noopener">RÉSUMÉ · ENGINEERING</a>
+    </div>
+  </section>
 
-<section id="education" class="reveal">
-  <div class="eyebrow">06 · Qualification</div>
-  <h2>Education</h2>
-  <div class="edu">
-    <div class="row"><span class="deg">Georgia Institute of Technology — MSc, Computer Science</span><span class="when">AUG 2023 – JUL 2025</span>
-      <span class="note">Specialization: Human-Computer Interaction. Coursework: Machine Learning for Trading, Knowledge-Based AI.</span></div>
-    <div class="row"><span class="deg">University of Washington — MSc, Information Management</span><span class="when">SEP 2022 – JUN 2024</span>
-      <span class="note">Specializations: Data Science, Business Intelligence, Cybersecurity. Top-5% iSchool merit-based scholarship.</span></div>
-    <div class="row"><span class="deg">National Chengchi University — BSc, International Business</span><span class="when">SEP 2016 – JUN 2020</span>
-      <span class="note">School Representative, Asian Economic Seminar (GPAC). English-taught program (Statistics, Economics).</span></div>
-  </div>
-</section>
-
-<section id="contact" class="contact reveal">
-  <div class="eyebrow" style="text-align:center">07 · Ship</div>
-  <div class="big">Ready to start the next lot?</div>
-  <div class="cta-row">
-    <a class="btn primary" href="mailto:kuohungyi5@gmail.com">✉ EMAIL ME</a>
-    <a class="btn" href="https://linkedin.com/in/jaykuo0619" target="_blank" rel="noopener">LINKEDIN ↗</a>
-    <a class="btn" href="tel:+886933462476">CALL 0933-462-476</a>
-  </div>
-  <div class="cta-row" style="margin-top:1rem">
-    <a class="btn" href="Jay_Kuo_Resume_Engineering.pdf" target="_blank" rel="noopener">⬇ RESUME · ENGINEERING</a>
-    <a class="btn" href="Jay_Kuo_Resume_Planning.pdf" target="_blank" rel="noopener">⬇ RESUME · PLANNING</a>
-  </div>
-</section>
-</main>
-<footer>JAY KUO · HSINCHU, TAIWAN · DESIGNED &amp; CODED BY JAY KUO · WAFER MAP RENDERED LIVE — CLICK A DIE</footer>
+  <footer>JAY KUO · HSINCHU → CAMAS · DESIGNED &amp; CODED BY JAY KUO</footer>
+</div>
 
 <script>
 (function(){
 "use strict";
-const root=document.documentElement;
-const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/* ---- persona toggle ---- */
-const pill=document.getElementById('modePill'),
-      bE=document.getElementById('btnEng'), bP=document.getElementById('btnPlan');
-function setPersona(p,push){
-  const eng=p!=='planner';
-  root.dataset.persona=eng?'engineer':'planner';
-  bE.classList.toggle('on',eng); bP.classList.toggle('on',!eng);
-  bE.setAttribute('aria-selected',eng); bP.setAttribute('aria-selected',!eng);
-  document.getElementById('tagEng').classList.toggle('on',eng);
-  document.getElementById('tagPlan').classList.toggle('on',!eng);
-  const b=(eng?bE:bP);
-  pill.style.left=b.offsetLeft+'px'; pill.style.width=b.offsetWidth+'px';
-  // smooth word swap: slide ENGINEERING / & / PLANNING to their new spots
-  const we=document.querySelector('.pw-eng'), wa=document.querySelector('.subrow .ampersand'),
-        wp=document.querySelector('.pw-plan');
-  if(we&&wa&&wp){
-    const row=we.parentElement, gap=parseFloat(getComputedStyle(row).columnGap)||0;
-    const ew=we.offsetWidth, aw=wa.offsetWidth, pw=wp.offsetWidth;
-    // symmetric slots either side of the & so it sits at the exact center
-    const M=Math.max(ew,pw);
-    row.style.display='inline-grid';
-    row.style.gridTemplateColumns=M+'px auto '+M+'px';
-    we.style.justifySelf='end'; wp.style.justifySelf='start';
-    // & never moves — the words trade places around it
-    wa.style.transform='';
-    if(eng){ we.style.transform=''; wp.style.transform='scale(.92)'; }
-    else{
-      we.style.transform='translateX('+(ew+aw+2*gap)+'px) scale(.92)';
-      wp.style.transform='translateX('+(-(pw+aw+2*gap))+'px)';
-    }
-    // right-slot word may exceed slot width M? no — M is the max, both fit
-    we.style.transformOrigin='center'; wp.style.transformOrigin='center';
-    // fade the & out while the words fly, back in once they settle
-    if(wa.dataset.p && wa.dataset.p!==root.dataset.persona){
-      wa.style.transition='opacity .18s';
-      wa.style.opacity='0';
-      clearTimeout(wa._t);
-      wa._t=setTimeout(()=>{wa.style.transition='opacity .3s';wa.style.opacity='1';},450);
-    }
-    wa.dataset.p=root.dataset.persona;
-  }
-  if(push!==false) history.replaceState(null,'','#'+(eng?'engineer':'planner'));
-  refreshPalette();
-}
-bE.onclick=()=>setPersona('engineer'); bP.onclick=()=>setPersona('planner');
-addEventListener('resize',()=>setPersona(root.dataset.persona,false));
-
-/* ---- palette read from CSS ---- */
-let ACC='#3FD9EC',ACC2='#8F7BFF',BG='#070C14',DIM='#8FA0B8';
-function refreshPalette(){
-  const cs=getComputedStyle(root);
-  ACC=cs.getPropertyValue('--acc').trim(); ACC2=cs.getPropertyValue('--acc2').trim();
-  BG=cs.getPropertyValue('--bg').trim(); DIM=cs.getPropertyValue('--dim').trim();
-}
-new MutationObserver(refreshPalette).observe(root,{attributes:true,attributeFilter:['data-theme']});
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',refreshPalette);
-
-/* ---- particles ---- */
-const sc=document.getElementById('stars'), sx=sc.getContext('2d');
-let pts=[];
-function sizeStars(){
-  const r=sc.parentElement.getBoundingClientRect();
-  sc.width=r.width*devicePixelRatio; sc.height=r.height*devicePixelRatio;
-  pts=Array.from({length:70},()=>({x:Math.random()*sc.width,y:Math.random()*sc.height,
-    r:(Math.random()*1.4+.4)*devicePixelRatio,v:(Math.random()*.18+.04)*devicePixelRatio,a:Math.random()*.5+.15}));
-}
-addEventListener('resize',sizeStars); sizeStars();
-
-/* ---- wafer ---- */
-const wc=document.getElementById('wafer'), g=wc.getContext('2d');
-const N=19;                       // die grid N x N, like the TSMC logo wafer
-// 黑點分布 approximating the logo illustration (col,row on the 19-grid)
-const LIT=new Set(['9,1','12,2','6,3','13,3','8,4','15,5','4,6','16,7','3,8',
-  '15,9','5,10','16,11','3,12','12,12','8,13','13,13','10,14','7,15','11,15',
-  '9,16','12,16','10,17'].map(s=>s));
-const dies=[];                    // {i,j,x,y,inside,lit}
-let hoverDie=-1;
-function buildDies(){
-  dies.length=0;
-  for(let j=0;j<N;j++)for(let i=0;i<N;i++){
-    const x=(i+0.5)/N*2-1, y=(j+0.5)/N*2-1;
-    const inside=Math.hypot(x,y)<=0.97-0.5/N;
-    dies.push({i,j,x,y,inside,lit:LIT.has(i+','+j)});
-  }
-}
-buildDies();
-function sizeWafer(){
-  const r=wc.getBoundingClientRect();
-  wc.width=r.width*devicePixelRatio; wc.height=r.height*devicePixelRatio;
-}
-addEventListener('resize',sizeWafer); sizeWafer();
-
-let rot=0, tiltX=0.62, tiltTargetX=0.62, panY=0, panTarget=0, scrollZoom=1;
-wc.addEventListener('pointermove',e=>{
-  const r=wc.getBoundingClientRect();
-  panTarget=((e.clientX-r.left)/r.width-0.5)*0.5;
-  tiltTargetX=0.52+((e.clientY-r.top)/r.height)*0.25;
-  hoverDie=pickDie(e);
-});
-wc.addEventListener('pointerleave',()=>{panTarget=0;tiltTargetX=0.62;hoverDie=-1;});
-wc.addEventListener('click',e=>{const d=pickDie(e); if(d>=0&&dies[d].inside) dies[d].lit=!dies[d].lit;});
-addEventListener('scroll',()=>{
-  const h=innerHeight, s=Math.min(scrollY/h,1);
-  scrollZoom=1+s*0.13; panY=s*0.3;   // capped so the disc never exceeds the canvas edge
-  document.querySelector('.mode').classList.toggle('shrunk',scrollY>60);
-  document.querySelector('.hamb').classList.toggle('shrunk',scrollY>60);
-},{passive:true});
-
-/* mobile menu */
-const hamb=document.querySelector('.hamb'), mnav=document.querySelector('.mnav');
-hamb.addEventListener('click',()=>{
-  const open=!mnav.classList.contains('open');
-  mnav.classList.toggle('open',open); hamb.classList.toggle('open',open);
-  hamb.setAttribute('aria-expanded',open);
-});
-mnav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
-  mnav.classList.remove('open'); hamb.classList.remove('open');
-  hamb.setAttribute('aria-expanded','false');
-}));
-
-/* dot nav active-section highlight */
-const dotLinks=[...document.querySelectorAll('.dotnav a')];
-const secObs=new IntersectionObserver(es=>{
-  es.forEach(e=>{
-    if(!e.isIntersecting) return;
-    dotLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));
-  });
-},{rootMargin:'-40% 0px -55% 0px'});
-dotLinks.forEach(a=>{const s=document.querySelector(a.getAttribute('href')); if(s) secObs.observe(s);});
-
-function project(x,y,W,cx,cy){
-  // rotate in wafer plane, then squash by tilt
-  const c=Math.cos(rot),s=Math.sin(rot);
-  const rx=x*c-y*s, ry=x*s+y*c;
-  return [cx+rx*W + panY*0, cy+ry*W*tiltX + 0];
-}
-function pickDie(e){
-  const r=wc.getBoundingClientRect();
-  const px=(e.clientX-r.left)*devicePixelRatio,
-        py=(e.clientY-r.top)*devicePixelRatio;
-  const cx=wc.width/2, cy=wc.height/2, W=wc.width*0.40*scrollZoom;
-  // inverse transform
-  const ux=(px-cx)/W, uy=(py-cy)/(W*tiltX);
-  const c=Math.cos(-rot),s=Math.sin(-rot);
-  const x=ux*c-uy*s, y=ux*s+uy*c;
-  const i=Math.floor((x+1)/2*N), j=Math.floor((y+1)/2*N);
-  if(i<0||j<0||i>=N||j>=N) return -1;
-  return j*N+i;
-}
-function hex2rgba(h,a){
-  h=h.replace('#','');
-  if(h.length===3)h=h.split('').map(c=>c+c).join('');
-  const n=parseInt(h,16);
-  return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;
-}
-function draw(t){
-  /* particles */
-  sx.clearRect(0,0,sc.width,sc.height);
-  for(const p of pts){
-    p.y-=p.v; if(p.y<0)p.y=sc.height;
-    sx.beginPath();sx.arc(p.x,p.y,p.r,0,7);
-    sx.fillStyle=hex2rgba(ACC,p.a*.5);sx.fill();
-  }
-  /* wafer */
-  if(!reduced) rot+=0.0022;
-  tiltX+=(tiltTargetX-tiltX)*0.06;
-  panY+=(panTarget-panY)*0.06;
-  const W=wc.width*0.40*scrollZoom, cx=wc.width/2+panY*wc.width*0.15, cy=wc.height/2;
-  g.clearRect(0,0,wc.width,wc.height);
-
-  // under-glow (drawn as a circle so no rectangular edge can show)
-  let gl=g.createRadialGradient(cx,cy,0,cx,cy,W*1.25);
-  gl.addColorStop(0,hex2rgba(ACC,0.14)); gl.addColorStop(0.65,hex2rgba(ACC,0.05)); gl.addColorStop(1,hex2rgba(ACC,0));
-  g.beginPath(); g.arc(cx,cy,W*1.25,0,7); g.fillStyle=gl; g.fill();
-
-  // wafer disc (ellipse from tilt)
-  g.save(); g.translate(cx,cy); g.scale(1,tiltX);
-  const disc=g.createRadialGradient(-W*0.35,-W*0.35,W*0.1,0,0,W);
-  disc.addColorStop(0,'rgba(160,180,205,0.28)');
-  disc.addColorStop(0.55,'rgba(70,90,115,0.22)');
-  disc.addColorStop(1,'rgba(25,35,50,0.55)');
-  g.beginPath(); g.arc(0,0,W,0,7); g.fillStyle=disc; g.fill();
-  g.lineWidth=2*devicePixelRatio; g.strokeStyle=hex2rgba(ACC,0.75); g.stroke();
-  // notch — punched transparent instead of painted, so no shadow blob
-  g.globalCompositeOperation='destination-out';
-  g.beginPath(); g.arc(0,W,W*0.05,0,7); g.fill();
-  g.globalCompositeOperation='source-over';
-  g.restore();
-
-  // dies — TSMC-logo 紋路: fine square grid, scattered dark cells per the logo layout
-  const cell=2/N;
-  for(let k=0;k<dies.length;k++){
-    const d=dies[k]; if(!d.inside) continue;
-    const corners=[[-1,-1],[1,-1],[1,1],[-1,1]].map(([dx,dy])=>
-      project(d.x+dx*cell/2, d.y+dy*cell/2, W, cx, cy));
-    g.beginPath(); g.moveTo(corners[0][0],corners[0][1]);
-    for(let m=1;m<4;m++) g.lineTo(corners[m][0],corners[m][1]);
-    g.closePath();
-    if(d.lit){ g.fillStyle=hex2rgba(ACC,0.92); g.shadowColor=ACC; g.shadowBlur=10*devicePixelRatio; g.fill(); g.shadowBlur=0; }
-    else if(k===hoverDie){ g.fillStyle=hex2rgba(ACC2,0.45); g.fill(); }
-    g.strokeStyle=hex2rgba(ACC,0.28); g.lineWidth=devicePixelRatio*0.8; g.stroke();
-  }
-
-  // sheen sweep
-  g.save(); g.translate(cx,cy); g.scale(1,tiltX); g.rotate(rot*2);
-  const sh=g.createLinearGradient(-W,0,W,0);
-  sh.addColorStop(0.42,'rgba(255,255,255,0)');
-  sh.addColorStop(0.5,'rgba(255,255,255,0.10)');
-  sh.addColorStop(0.58,'rgba(255,255,255,0)');
-  g.beginPath(); g.arc(0,0,W,0,7); g.fillStyle=sh; g.fill();
-  g.restore();
-
-  requestAnimationFrame(draw);
-}
-/* ---- scroll reveal + stat counters ---- */
 const io=new IntersectionObserver(es=>{
-  for(const e of es){
-    if(!e.isIntersecting) continue;
-    e.target.classList.add('in');
-    e.target.querySelectorAll('.num[data-count]').forEach(el=>{
-      if(el.dataset.done) return; el.dataset.done=1;
-      const target=parseFloat(el.dataset.count), dec=+(el.dataset.dec||0),
-            suf=el.dataset.suffix||'', t0=performance.now(), dur=reduced?0:1400;
-      (function tick(t){
-        const p=dur?Math.min((t-t0)/dur,1):1, ease=1-Math.pow(1-p,3);
-        el.textContent=(target*ease).toFixed(dec)+suf;
-        if(p<1) requestAnimationFrame(tick);
-      })(t0);
-    });
-    io.unobserve(e.target);
-  }
-},{threshold:.18});
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+},{threshold:.12});
 document.querySelectorAll('.reveal').forEach(s=>io.observe(s));
-
-/* ---- iPad-style cursor ---- */
-if(matchMedia('(hover:hover) and (pointer:fine)').matches){
-  const cur=document.createElement('div'); cur.id='ipadCursor'; document.body.appendChild(cur);
-  let px=innerWidth/2,py=innerHeight/2,     // pointer
-      cxp=px,cyp=py,cw=22,ch=22,            // current rect
-      snap=null;                            // hovered interactive element
-  addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;
-    snap=e.target.closest ? e.target.closest('a,button') : null;});
-  // magnetic buttons: the control leans toward the cursor, the highlight rides with it
-  document.querySelectorAll('a,button').forEach(el=>{
-    if(el.closest('.mnav')) return;
-    el.addEventListener('pointermove',e=>{
-      const r=el.getBoundingClientRect();
-      const dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
-      el.style.transition='transform .08s linear';
-      el.style.transform=`translate(${dx*0.24}px,${dy*0.24}px)`;
-    });
-    el.addEventListener('pointerleave',()=>{
-      el.style.transition='transform .5s cubic-bezier(.2,.8,.3,1.25)';
-      el.style.transform='';
-    });
-  });
-  addEventListener('pointerdown',()=>{cur.style.opacity='.55';});
-  addEventListener('pointerup',()=>{cur.style.opacity='';});
-  document.addEventListener('mouseleave',()=>{cur.style.opacity='0';});
-  document.addEventListener('mouseenter',()=>{cur.style.opacity='';});
-  (function tick(){
-    let tx,ty,tw,th,tr;
-    if(snap){
-      const r=snap.getBoundingClientRect(), pad=5;
-      tx=r.left-pad; ty=r.top-pad; tw=r.width+pad*2; th=r.height+pad*2;
-      tr=Math.min(14,th/2);
-      // subtle parallax inside the snapped highlight, like iPadOS
-      tx+=(px-(r.left+r.width/2))*0.06; ty+=(py-(r.top+r.height/2))*0.06;
-    } else { tw=22; th=22; tx=px-11; ty=py-11; tr=11; }
-    cxp+=(tx-cxp)*.28; cyp+=(ty-cyp)*.28; cw+=(tw-cw)*.28; ch+=(th-ch)*.28;
-    cur.style.transform=`translate(${cxp}px,${cyp}px)`;
-    cur.style.width=cw+'px'; cur.style.height=ch+'px';
-    cur.style.borderRadius=(snap?Math.min(14,ch/2):ch/2)+'px';
-    requestAnimationFrame(tick);
-  })();
-}
-
-refreshPalette();
-setPersona(location.hash==='#planner'?'planner':'engineer',false);
-requestAnimationFrame(draw);
 })();
 </script>
