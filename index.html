@@ -151,48 +151,84 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
 
     <div class="route" aria-label="Map: Hsinchu, Taiwan to Camas, Washington across the Pacific">
       <svg viewBox="0 0 840 330">
-        <!-- graticule -->
+        <!-- graticule: 10° of longitude ≈ 66.7px, 10° latitude ≈ 82.5px (equirect., 114°E–126°W / 55°N–15°N) -->
         <g class="grat">
-          <line x1="0" y1="66" x2="840" y2="66"/><line x1="0" y1="132" x2="840" y2="132"/>
-          <line x1="0" y1="198" x2="840" y2="198"/><line x1="0" y1="264" x2="840" y2="264"/>
-          <line x1="120" y1="0" x2="120" y2="330"/><line x1="240" y1="0" x2="240" y2="330"/>
-          <line x1="360" y1="0" x2="360" y2="330"/><line x1="480" y1="0" x2="480" y2="330"/>
-          <line x1="600" y1="0" x2="600" y2="330"/><line x1="720" y1="0" x2="720" y2="330"/>
+          <line x1="0" y1="41" x2="840" y2="41"/><line x1="0" y1="124" x2="840" y2="124"/>
+          <line x1="0" y1="206" x2="840" y2="206"/><line x1="0" y1="289" x2="840" y2="289"/>
+          <line x1="107" y1="0" x2="107" y2="330"/><line x1="240" y1="0" x2="240" y2="330"/>
+          <line x1="373" y1="0" x2="373" y2="330"/><line x1="507" y1="0" x2="507" y2="330"/>
+          <line x1="640" y1="0" x2="640" y2="330"/><line x1="773" y1="0" x2="773" y2="330"/>
         </g>
-        <!-- East Asia: China coast + Korea/Japan hints, left edge -->
-        <path class="land" d="M0 0 L96 0 C 90 22 74 34 78 56 C 82 74 66 84 70 104
-          C 74 122 58 132 62 152 C 66 172 50 186 54 206 C 58 228 42 244 46 266
-          C 50 288 36 306 40 330 L0 330 Z"/>
-        <!-- Japan arc hint -->
-        <path class="land" d="M150 22 C 168 34 178 54 182 76 C 185 92 180 104 170 108
-          C 162 96 154 76 150 58 C 147 44 146 32 150 22 Z"/>
-        <!-- Taiwan -->
-        <path class="land" d="M96 196 C 112 202 122 220 124 244 C 125 262 118 282 106 292
-          C 96 286 88 266 87 244 C 87 224 89 206 96 196 Z"/>
-        <!-- North America: WA/OR/CA coast, right edge -->
-        <path class="land" d="M840 0 L700 0 C 706 18 694 30 700 48 C 706 64 696 76 702 92
-          C 707 106 698 118 704 134 C 710 152 700 164 706 182 C 712 200 702 214 708 232
-          C 714 252 704 266 710 284 C 716 302 708 316 712 330 L840 330 Z"/>
-        <!-- Columbia River hint at the WA/OR border -->
-        <path class="leader" d="M703 96 C 726 100 748 96 770 102" fill="none"/>
-        <!-- Vancouver Island hint -->
-        <path class="land" d="M676 30 C 688 38 694 50 692 62 C 682 58 672 46 670 36 C 672 31 673 29 676 30 Z"/>
-        <!-- great-circle route -->
-        <path class="arc" d="M104 218 C 240 40, 560 6, 706 88"/>
+        <!-- Asian mainland: China coast → Korea → Russian Far East → Sakhalin -->
+        <path class="land" d="M0 272 L1 270 C 10 265 18 261 27 252 C 33 246 35 238 45 223
+          C 50 214 52 205 52 198 C 50 188 41 180 41 175 C 42 165 43 160 43 149
+          C 43 146 55 132 69 125 L76 140 C 78 149 79 158 81 165 C 84 170 87 172 90 171
+          C 96 170 99 167 101 163 L103 144 C 101 140 99 137 100 133 C 104 122 110 108 119 98
+          C 127 91 135 87 143 84 C 150 79 157 73 163 68 C 170 62 175 56 179 50
+          C 182 43 182 36 183 29 C 184 22 186 15 187 10 L188 0 L0 0 Z"/>
+        <!-- Japan: Kyushu–Honshu–Hokkaido arc -->
+        <path class="land" d="M106 191 C 104 184 104 180 106 177 C 110 174 115 173 120 173
+          C 127 172 134 171 140 171 C 147 170 153 168 158 167 C 164 165 168 164 172 163
+          C 176 158 178 153 179 149 C 180 143 180 140 180 138 C 181 129 182 120 183 113
+          C 180 111 177 110 175 110 C 173 116 171 120 168 124 C 163 133 156 143 150 150
+          C 143 158 136 163 130 168 C 124 173 118 178 113 183 C 110 186 108 189 106 191 Z"/>
+        <!-- Hokkaido -->
+        <path class="land" d="M175 108 C 172 102 172 96 174 91 C 178 85 184 82 190 82
+          C 196 83 200 86 199 91 C 196 97 191 101 186 104 C 182 106 178 107 175 108 Z"/>
+        <!-- Sakhalin -->
+        <path class="land" d="M193 30 C 191 20 191 10 193 0 L203 0 C 203 12 202 24 199 34
+          C 197 37 194 34 193 30 Z"/>
+        <!-- Kamchatka tip -->
+        <path class="land" d="M285 34 C 288 26 292 16 296 8 L303 0 L280 0 C 278 8 277 14 279 22
+          C 281 28 283 32 285 34 Z"/>
+        <!-- Kuril chain -->
+        <circle class="land" cx="215" cy="76" r="2"/><circle class="land" cx="232" cy="66" r="2"/>
+        <circle class="land" cx="250" cy="56" r="2"/><circle class="land" cx="267" cy="45" r="2"/>
+        <!-- Aleutian chain -->
+        <circle class="land" cx="392" cy="20" r="2"/><circle class="land" cx="420" cy="15" r="2"/>
+        <circle class="land" cx="450" cy="12" r="2"/><circle class="land" cx="480" cy="13" r="2"/>
+        <circle class="land" cx="508" cy="17" r="2"/><circle class="land" cx="534" cy="12" r="2"/>
+        <!-- Alaska Peninsula nub -->
+        <path class="land" d="M553 0 L573 0 C 570 4 566 8 561 8 C 557 7 554 4 553 0 Z"/>
+        <!-- North America: BC → Washington → Oregon → California -->
+        <path class="land" d="M767 0 L840 0 L840 172 L836 170 C 833 163 830 157 827 152
+          C 826 148 824 145 823 142 C 820 137 817 133 815 130 C 814 126 813 123 813 120
+          C 811 114 810 108 809 101 C 809 99 810 98 810 97 C 812 93 813 89 813 85
+          C 814 81 814 77 814 73 C 812 68 810 63 808 59 C 809 55 812 51 816 49
+          C 818 48 820 48 820 48 C 815 46 809 45 803 45 C 799 41 796 38 793 34
+          C 789 30 786 26 783 22 C 781 18 779 15 777 12 C 773 8 770 4 767 0 Z"/>
+        <!-- Vancouver Island -->
+        <path class="land" d="M780 35 C 785 38 790 41 795 45 C 798 47 800 50 801 53
+          C 797 53 793 51 789 48 C 785 45 781 41 779 38 C 779 36 779 35 780 35 Z"/>
+        <!-- Columbia River to Camas -->
+        <path class="leader" d="M814 73 C 818 75 821 76 824 77" fill="none"/>
+        <!-- Taiwan (true scale) -->
+        <path class="land" d="M51 245 C 53 247 53 251 51 256 C 49 261 47 265 47 268
+          C 46 271 45 273 44 272 C 42 268 41 263 41 258 C 41 254 42 250 44 248
+          C 46 246 49 244 51 245 Z"/>
+        <!-- Luzon tip -->
+        <path class="land" d="M44 301 C 48 300 52 300 55 302 C 54 312 53 322 54 330
+          L40 330 C 40 320 41 310 44 301 Z"/>
+        <!-- great-circle route: hugs the north Pacific like the real TPE→PDX track -->
+        <path class="arc" d="M46 249 C 160 110 290 12 425 8 C 550 5 730 22 824 77"/>
         <!-- Hsinchu -->
-        <circle class="ring" cx="104" cy="218" r="9"/>
-        <circle class="dot" cx="104" cy="218" r="4"/>
-        <line class="leader" x1="112" y1="224" x2="150" y2="248"/>
-        <text class="city" x="156" y="252">HSINCHU · TSMC HQ</text>
-        <text x="156" y="268">TODAY · CENTRAL PRODUCTION CONTROL</text>
+        <circle class="ring" cx="46" cy="249" r="8"/>
+        <circle class="dot" cx="46" cy="249" r="3.5"/>
+        <line class="leader" x1="54" y1="253" x2="120" y2="276"/>
+        <text class="city" x="126" y="280">HSINCHU · TSMC HQ</text>
+        <text x="126" y="296">TODAY · CENTRAL PRODUCTION CONTROL</text>
         <!-- Camas -->
-        <circle class="ring" cx="706" cy="88" r="9"/>
-        <circle class="dot" cx="706" cy="88" r="4"/>
-        <line class="leader" x1="698" y1="94" x2="632" y2="130"/>
-        <text class="city" x="626" y="136" text-anchor="end">CAMAS, WA · FAB 11</text>
-        <text x="626" y="152" text-anchor="end">NEXT · FAB PLANNER</text>
-        <!-- ocean label -->
-        <text x="420" y="230" text-anchor="middle" opacity=".75">P A C I F I C&#160;&#160;O C E A N</text>
+        <circle class="ring" cx="824" cy="77" r="8"/>
+        <circle class="dot" cx="824" cy="77" r="3.5"/>
+        <line class="leader" x1="816" y1="83" x2="738" y2="120"/>
+        <text class="city" x="732" y="124" text-anchor="end">CAMAS, WA · FAB 11</text>
+        <text x="732" y="140" text-anchor="end">NEXT · FAB PLANNER</text>
+        <!-- geography labels -->
+        <text x="60" y="120" opacity=".6">C H I N A</text>
+        <text x="148" y="200" opacity=".6">JAPAN</text>
+        <text x="760" y="30" opacity=".6" text-anchor="end">B.C.</text>
+        <text x="806" y="112" opacity=".6" text-anchor="end">U.S.</text>
+        <text x="420" y="210" text-anchor="middle" opacity=".75">P A C I F I C&#160;&#160;O C E A N</text>
       </svg>
       <div class="caption">
         <span>DAILY SYNC · HSINCHU 08:00 = CAMAS 17:00 (PREV. DAY)</span>
