@@ -11,7 +11,7 @@ aimed at a Fab Planner role at TSMC Fab 11, Camas, WA.
   with an animated TPE→PDX great-circle route and a live day/night terminator computed
   from solar declination, and a dual-clock "time bridge" showing how the Hsinchu and
   Camas workdays interlock.
-- `Jay_Kuo_Resume_Planning.pdf`, `Jay_Kuo_Resume_Engineering.pdf` — detailed résumés.
+- `Jay_Kuo_CV.pdf` — detailed CV.
 
 ## Run locally
 
