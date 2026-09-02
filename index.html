@@ -206,7 +206,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
       <a class="sec" href="#tools">TOOLBOX</a>
       <a class="sec" href="#xp">TRACK RECORD</a>
       <a class="sec" href="#edu">EDUCATION</a>
-      <a class="mailbtn" href="mailto:hykuox@tsmc.com">EMAIL JAY</a>
+      <a class="mailbtn" id="mailBtnTop" href="mailto:hykuox@tsmc.com" title="hykuox@tsmc.com">EMAIL JAY</a>
     </nav>
   </div>
 </div>
@@ -456,7 +456,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0 2.6rem;
     Fab 11 is a team I already work with, in the place I spent my student years preparing to
     return to.</p>
     <div class="cta-row">
-      <a class="btn primary" href="mailto:hykuox@tsmc.com">EMAIL JAY</a>
+      <a class="btn primary" id="mailBtn" href="mailto:hykuox@tsmc.com">hykuox@tsmc.com</a>
       <a class="btn" href="https://linkedin.com/in/jaykuo0619" target="_blank" rel="noopener">LINKEDIN</a>
       <a class="btn" id="phoneBtn" href="#" hidden>PHONE</a>
       <a class="btn" href="Jay_Kuo_CV.pdf" target="_blank" rel="noopener">CV</a>
@@ -571,6 +571,21 @@ function tickLive(){
   }
 }
 tickLive(); setInterval(tickLive,30000);
+
+/* mailto often does nothing when no mail app is registered (common on
+   corporate desktops), so also copy the address and confirm it visibly */
+const MAIL='hykuox@tsmc.com';
+document.querySelectorAll('#mailBtn,#mailBtnTop').forEach(el=>{
+  el.addEventListener('click',()=>{
+    const original=el.textContent;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(MAIL).then(()=>{
+        el.textContent='COPIED · '+MAIL;
+        setTimeout(()=>{el.textContent=original;},2200);
+      },()=>{});
+    }
+  });
+});
 
 /* phone assembled at runtime so it isn't scraper-readable in the source */
 const pb=document.getElementById('phoneBtn');
