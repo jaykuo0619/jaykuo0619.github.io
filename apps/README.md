@@ -16,26 +16,24 @@ apps/
     ├── icon.png          512×512 圖示
     ├── og.png            分享預覽圖、首頁大卡片
     ├── preview.mp4       預覽短影片
+    ├── download/*.apk    Android 親友版 APK
     └── screens/*.jpg     截圖
 ```
 
 ## 發布新的 Android 版本
 
-APK 不放進 git，而是放在 GitHub Releases（每個版本一個 Release）：
+APK 直接放在 `findtoilet/download/`，由 GitHub Pages 提供下載（檔名用英數字，避免中文檔名在部分瀏覽器變亂碼）：
 
-1. 在 GitHub 這個 repo 建一個 Release，標籤用 `findtoilet-android-v版本號`（例如 `findtoilet-android-v1.0.1`），把 APK 拖進去。
-   或用指令：
-   ```bash
-   gh release create findtoilet-android-v1.0.1 "廁略-親友版-1.0.1.apk" \
-     --repo jaykuo0619/jaykuo0619.github.io --title "廁略 Android 1.0.1" --notes "更新內容…"
-   ```
+1. 把新的 APK 放進 `findtoilet/download/`，命名為 `findtoilet-family-版本號.apk`（例如 `findtoilet-family-1.0.1.apk`），並刪掉舊版的 APK，避免 repo 越來越大。
 2. 修改 `data/apps.json` 裡 `findtoilet` → `platforms.android`：
    - `version`：新版本號
-   - `apk`：`https://github.com/jaykuo0619/jaykuo0619.github.io/releases/download/<標籤>/<檔名>`
-   - `size`：例如 `"18 MB"`
+   - `apk`：`/apps/findtoilet/download/<檔名>`
+   - `size`：例如 `"49 MB"`
    - `sha256`：`shasum -a 256 檔名.apk` 的結果（可留 `null`）
 3. 在 `versions` 最前面加一筆版本紀錄。
 4. 提交並推到 `main`，GitHub Pages 約一分鐘後更新。
+
+單一檔案不能超過 100 MB（GitHub 的限制）。之後版本要用同一把親友版金鑰簽署，親友才能直接覆蓋安裝。
 
 `apk` 是 `null` 時，下載按鈕會顯示「準備中」。
 

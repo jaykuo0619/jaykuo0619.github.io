@@ -37,9 +37,9 @@
         "android": {
           "label": "Android",
           "version": "1.0.0",
-          "apk": null,
-          "size": null,
-          "sha256": null,
+          "apk": "/apps/findtoilet/download/findtoilet-family-1.0.0.apk",
+          "size": "49 MB",
+          "sha256": "0b7bf57c5c5be0c261e73b901b95495c9418e3cc7410a7f79e05e0dc054120f9",
           "requires": "Android 8.0 以上",
           "note": "親友版：直接下載安裝，收藏、離線資料等 Pro 功能全部解鎖。"
         }
@@ -78,7 +78,7 @@
         {
           "version": "1.0.0",
           "platform": "Android",
-          "date": "2026-10",
+          "date": "2026-10-07",
           "notes": [
             "第一個 Android 親友版。",
             "主畫面、地圖、篩選、詳細資訊、回報、收藏與離線資料。"
