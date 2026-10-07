@@ -1,7 +1,7 @@
 {
   "store": {
     "name": "Jay Kuo Apps",
-    "tagline": "Jay 親手做的 App，在這裡下載。",
+    "tagline": "Jay 親手做的 App，在這裡直接下載。",
     "developer": "Hung Yi Kuo",
     "contact": "kuohungyi5@gmail.com"
   },
@@ -28,12 +28,6 @@
         "findtoilet/screens/4.jpg"
       ],
       "platforms": {
-        "ios": {
-          "label": "iPhone",
-          "url": "https://apps.apple.com/tw/app/id6817375955",
-          "requires": "iOS 17.0 以上",
-          "note": "從 App Store 下載，提供廁略 Pro 等 App 內購買。"
-        },
         "android": {
           "label": "Android",
           "version": "1.0.0",
@@ -41,7 +35,8 @@
           "size": "49 MB",
           "sha256": "0b7bf57c5c5be0c261e73b901b95495c9418e3cc7410a7f79e05e0dc054120f9",
           "requires": "Android 8.0 以上",
-          "note": "親友版：直接下載安裝，收藏、離線資料等 Pro 功能全部解鎖。"
+          "note": "親友版：直接下載安裝，收藏、離線資料等 Pro 功能全部解鎖。",
+          "firstRun": "第一次開啟會下載全國公廁資料，大約半分鐘。"
         }
       },
       "description": [
@@ -77,29 +72,10 @@
       "versions": [
         {
           "version": "1.0.0",
-          "platform": "Android",
           "date": "2026-10-07",
           "notes": [
             "第一個 Android 親友版。",
             "主畫面、地圖、篩選、詳細資訊、回報、收藏與離線資料。"
-          ]
-        },
-        {
-          "version": "1.0.1",
-          "platform": "iPhone",
-          "date": "2026-10-05",
-          "notes": [
-            "全新圖示與介面。",
-            "開啟時直接顯示目前所在區域。",
-            "使用者回報透過 iCloud 分享給所有人。"
-          ]
-        },
-        {
-          "version": "1.0",
-          "platform": "iPhone",
-          "date": "2026-10-02",
-          "notes": [
-            "第一版上架 App Store。"
           ]
         }
       ],
@@ -108,6 +84,67 @@
         "url": "https://blushing-pin-0f3.notion.site/3ea8beb088be81a99e91f22aae8e9a68"
       },
       "dataSources": "環境部「全國公廁建檔資料」；OpenStreetMap（© OpenStreetMap contributors，ODbL）。借用條件依場所類型推估，實際情況以現場為準。"
+    },
+    {
+      "id": "speedcam",
+      "name": "測速提醒",
+      "enName": null,
+      "subtitle": "零廣告的測速照相提醒",
+      "category": "導航",
+      "icon": "speedcam/icon.png",
+      "price": "免費",
+      "languages": "繁體中文",
+      "ageRating": "4+",
+      "accent": "#13204A",
+      "video": null,
+      "screenshots": [],
+      "platforms": {
+        "android": {
+          "label": "Android",
+          "version": null,
+          "apk": null,
+          "size": null,
+          "sha256": null,
+          "requires": null,
+          "note": "Android 版正在準備中，完成後就能在這裡直接下載安裝。"
+        }
+      },
+      "description": [
+        "開車接近測速照相時，提早用語音和畫面提醒你。沒有廣告，也不追蹤你，所有定位都只在手機上計算。",
+        "只提醒「前方」而且「拍攝方向相同」的測速照相，不會被對向或旁邊道路的照相亂叫。兩段式提醒距離可以自己調整，車速快時會自動提早。測速點資料來自內政部警政署與各縣市政府的開放資料，會定期自動更新。"
+      ],
+      "features": [
+        {
+          "title": "測速照相提醒",
+          "text": "語音加畫面兩段式提醒，只提醒前方、同方向的照相。"
+        },
+        {
+          "title": "超速警告",
+          "text": "超過速限時提醒你減速，容許值可以自己設定。"
+        },
+        {
+          "title": "移動式測速路段",
+          "text": "在移動式測速常見的路段提醒你多留意。"
+        },
+        {
+          "title": "高架與平面",
+          "text": "自動判斷你在高架還是平面道路，減少誤報。"
+        },
+        {
+          "title": "新增測速點",
+          "text": "記下目前位置與行駛方向，下次經過就會提醒你。"
+        },
+        {
+          "title": "行程紀錄",
+          "text": "記錄車速、距離、上下坡、停留地點與耗電／油耗（Pro）。"
+        }
+      ],
+      "versions": [],
+      "privacy": {
+        "summary": "無廣告、無追蹤。所有定位只在手機上計算，不會上傳。",
+        "url": null
+      },
+      "dataSources": "內政部警政署「測速執法設置點」及各縣市政府開放資料；紅綠燈資料 © OpenStreetMap 貢獻者。提醒僅供參考，請遵守道路速限並注意行車安全。"
     }
   ]
 }
