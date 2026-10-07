@@ -1,0 +1,113 @@
+{
+  "store": {
+    "name": "Jay Kuo Apps",
+    "tagline": "Jay 親手做的 App，在這裡下載。",
+    "developer": "Hung Yi Kuo",
+    "contact": "kuohungyi5@gmail.com"
+  },
+  "apps": [
+    {
+      "id": "findtoilet",
+      "name": "廁略",
+      "enName": "Nature Calls: Restroom Finder",
+      "subtitle": "最近的廁所，能不能借一眼看懂",
+      "category": "導航",
+      "icon": "findtoilet/icon.png",
+      "price": "免費",
+      "languages": "繁體中文",
+      "ageRating": "4+",
+      "accent": "#1C6B3B",
+      "video": {
+        "src": "findtoilet/preview.mp4",
+        "poster": "findtoilet/preview-poster.jpg"
+      },
+      "screenshots": [
+        "findtoilet/screens/1.jpg",
+        "findtoilet/screens/2.jpg",
+        "findtoilet/screens/3.jpg",
+        "findtoilet/screens/4.jpg"
+      ],
+      "platforms": {
+        "ios": {
+          "label": "iPhone",
+          "url": "https://apps.apple.com/tw/app/id6817375955",
+          "requires": "iOS 17.0 以上",
+          "note": "從 App Store 下載，提供廁略 Pro 等 App 內購買。"
+        },
+        "android": {
+          "label": "Android",
+          "version": "1.0.0",
+          "apk": null,
+          "size": null,
+          "sha256": null,
+          "requires": "Android 8.0 以上",
+          "note": "親友版：直接下載安裝，收藏、離線資料等 Pro 功能全部解鎖。"
+        }
+      },
+      "description": [
+        "內急的時候，最需要的不是地圖，而是一個答案：最近的廁所在哪裡？現在能不能用？",
+        "廁略（廁所＋策略）打開就是答案：自動定位後，大字顯示離你最近的廁所有幾公尺、走路幾分鐘，一鍵開始步行導航。地圖上用顏色標出借用條件，一眼就知道該去哪一間。"
+      ],
+      "features": [
+        {
+          "title": "最近的廁所",
+          "text": "大字顯示距離與步行時間，一鍵導航。"
+        },
+        {
+          "title": "借用條件",
+          "text": "免費開放、向店員借用、限消費者、需付費，用顏色區分。"
+        },
+        {
+          "title": "營業時間",
+          "text": "營業中、即將打烊、已打烊，打烊的地點自動變灰。"
+        },
+        {
+          "title": "篩選",
+          "text": "公廁、超商、餐飲、只看免費、無障礙、尿布台與親子廁所。"
+        },
+        {
+          "title": "回報",
+          "text": "遇到不能用的廁所，可以拍照記錄狀況與借用條件。"
+        },
+        {
+          "title": "收藏與離線",
+          "text": "收藏常用廁所，下載周圍 10 公里資料，沒訊號也能找。"
+        }
+      ],
+      "versions": [
+        {
+          "version": "1.0.0",
+          "platform": "Android",
+          "date": "2026-10",
+          "notes": [
+            "第一個 Android 親友版。",
+            "主畫面、地圖、篩選、詳細資訊、回報、收藏與離線資料。"
+          ]
+        },
+        {
+          "version": "1.0.1",
+          "platform": "iPhone",
+          "date": "2026-10-05",
+          "notes": [
+            "全新圖示與介面。",
+            "開啟時直接顯示目前所在區域。",
+            "使用者回報透過 iCloud 分享給所有人。"
+          ]
+        },
+        {
+          "version": "1.0",
+          "platform": "iPhone",
+          "date": "2026-10-02",
+          "notes": [
+            "第一版上架 App Store。"
+          ]
+        }
+      ],
+      "privacy": {
+        "summary": "不需註冊、沒有廣告。你的位置只在手機上用來找附近的廁所。",
+        "url": "https://blushing-pin-0f3.notion.site/3ea8beb088be81a99e91f22aae8e9a68"
+      },
+      "dataSources": "環境部「全國公廁建檔資料」；OpenStreetMap（© OpenStreetMap contributors，ODbL）。借用條件依場所類型推估，實際情況以現場為準。"
+    }
+  ]
+}
