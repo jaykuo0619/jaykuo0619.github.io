@@ -7,6 +7,84 @@
   },
   "apps": [
     {
+      "id": "partytable",
+      "name": "揪一桌",
+      "enName": "PartyTable",
+      "subtitle": "派對遊戲，打開手機就是一桌",
+      "category": "遊戲",
+      "icon": "partytable/icon.png",
+      "price": "免費",
+      "languages": "繁體中文",
+      "ageRating": "12+",
+      "accent": "#1D5A45",
+      "video": null,
+      "screenshots": [
+        "partytable/screens/1.jpg",
+        "partytable/screens/2.jpg",
+        "partytable/screens/3.jpg",
+        "partytable/screens/4.jpg",
+        "partytable/screens/5.jpg",
+        "partytable/screens/6.jpg"
+      ],
+      "platforms": {
+        "android": {
+          "label": "Android",
+          "version": "1.0.0",
+          "apk": "/apps/partytable/download/partytable-1.0.0.apk",
+          "size": "0.2 MB",
+          "sha256": "6ebdb540b3e646ddae2e92b816838ec59d4dbd4d2045708f07895d08c0c14680",
+          "requires": "Android 7.0 以上",
+          "note": "直接下載安裝。跟 iPhone、iPad 和網頁版（partytable-jay.web.app）可以同一桌玩。",
+          "firstRun": "第一次開啟就能玩，不用註冊。"
+        }
+      },
+      "description": [
+        "聚會不知道玩什麼？揪一桌收錄 18 款大家都會玩的派對遊戲，朋友各自拿出手機輸入房號、掃 QR code，或在同一個 WiFi 下直接連線，就能一起開打。",
+        "iPhone、iPad、Android、網頁都能同一桌；一個人的時候，也能跟電腦玩。"
+      ],
+      "features": [
+        {
+          "title": "撲克牌",
+          "text": "大老二、抽鬼牌、心臟病、排七、撿紅點、拱豬、瘋狂 8、釣魚、吹牛牌。"
+        },
+        {
+          "title": "骰子",
+          "text": "快艇骰子、擲到 1 歸零，晃一晃手機搖骰盅。"
+        },
+        {
+          "title": "棋牌與派對",
+          "text": "象棋、暗棋、飛行棋、狼人殺、終極密碼、比手畫腳、誰是臥底。"
+        },
+        {
+          "title": "開桌連線",
+          "text": "房號、QR code，或同一個 WiFi 直接連，沒網路也能在身邊開桌。"
+        },
+        {
+          "title": "電腦補位",
+          "text": "人不夠電腦自動補，有人中途離開由電腦代打。"
+        },
+        {
+          "title": "積分與等級",
+          "text": "贏了賺積分，從新手一路升到桌神；輸的人要做什麼可以自己寫。"
+        }
+      ],
+      "versions": [
+        {
+          "version": "1.0.0",
+          "date": "2026-10-09",
+          "notes": [
+            "第一個 Android 版。",
+            "18 款派對遊戲，單機跟電腦玩或多人開桌。"
+          ]
+        }
+      ],
+      "privacy": {
+        "summary": "不需註冊、沒有廣告。暱稱、積分和戰績會備份到雲端，可以在 App 裡一鍵刪除。",
+        "url": "https://partytable-jay.web.app/privacy.html"
+      },
+      "dataSources": null
+    },
+    {
       "id": "findtoilet",
       "name": "廁略",
       "enName": "Nature Calls: Restroom Finder",
