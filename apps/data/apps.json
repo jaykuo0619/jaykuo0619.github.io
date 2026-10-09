@@ -29,10 +29,10 @@
       "platforms": {
         "android": {
           "label": "Android",
-          "version": "1.0.0",
-          "apk": "/apps/partytable/download/partytable-1.0.0.apk",
+          "version": "1.0.1",
+          "apk": "/apps/partytable/download/partytable-1.0.1.apk",
           "size": "0.2 MB",
-          "sha256": "6ebdb540b3e646ddae2e92b816838ec59d4dbd4d2045708f07895d08c0c14680",
+          "sha256": "132d8f6f857352d0d6e18158e835e25d1025f994f3480916260c4ffd7e8c0c18",
           "requires": "Android 7.0 以上",
           "note": "直接下載安裝。跟 iPhone、iPad 和網頁版（partytable-jay.web.app）可以同一桌玩。",
           "firstRun": "第一次開啟就能玩，不用註冊。"
@@ -69,6 +69,14 @@
         }
       ],
       "versions": [
+        {
+          "version": "1.0.1",
+          "date": "2026-10-09",
+          "notes": [
+            "心臟病翻牌時不會再同時看到兩張牌。",
+            "輪到你的時候手機會震動提醒。"
+          ]
+        },
         {
           "version": "1.0.0",
           "date": "2026-10-09",
