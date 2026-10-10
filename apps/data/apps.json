@@ -29,10 +29,10 @@
       "platforms": {
         "android": {
           "label": "Android",
-          "version": "1.1.0",
-          "apk": "/apps/partytable/download/partytable-1.1.0.apk",
+          "version": "1.1.1",
+          "apk": "/apps/partytable/download/partytable-1.1.1.apk",
           "size": "0.2 MB",
-          "sha256": "e90fce5875cc5a213e12271c3e965f1d0ab781304e713c9c9d4a4d0a0fe5312d",
+          "sha256": "c939b1922ba602fb99f34f17cc18a03bc4853d10bd1f7dee851ac0bda2b71267",
           "requires": "Android 7.0 以上",
           "note": "直接下載安裝。跟 iPhone、iPad 和網頁版（partytable-jay.web.app）可以同一桌玩。",
           "firstRun": "第一次開啟就能玩，不用註冊。"
@@ -69,6 +69,13 @@
         }
       ],
       "versions": [
+        {
+          "version": "1.1.1",
+          "date": "2026-10-10",
+          "notes": [
+            "牌局結束後，結算畫面會攤開每個人剩下的牌。"
+          ]
+        },
         {
           "version": "1.1.0",
           "date": "2026-10-10",
