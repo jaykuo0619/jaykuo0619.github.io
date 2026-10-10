@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<title>撿便宜</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="搜尋商品，找附近 7-11、全家、全聯的優惠與折後單價，靠近優惠門市時提醒你。">
+<meta name="theme-color" content="#1F7A5A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="撿便宜">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <form id="searchForm" class="search" role="search">
+    <input id="q" type="search" placeholder="搜尋商品，例如：茶裏王" autocomplete="off" enterkeyhint="search" aria-label="搜尋商品">
+    <button type="submit" aria-label="搜尋">搜尋</button>
+  </form>
+  <div id="alert" class="alert" hidden role="status" aria-live="polite">
+    <div class="alert-title" id="alertTitle"></div>
+    <div class="alert-body" id="alertBody"></div>
+    <button class="alert-close" id="alertClose" aria-label="關閉提醒">×</button>
+  </div>
+</header>
+
+<main>
+  <div id="map" aria-label="附近門市地圖"></div>
+  <div class="legend">
+    <span><i class="dot c711"></i>7-11</span>
+    <span><i class="dot cfm"></i>全家</span>
+    <span><i class="dot cpx"></i>全聯</span>
+    <span><i class="dot ring"></i>有優惠</span>
+    <button id="locate" class="link">回到我的位置</button>
+  </div>
+</main>
+
+<section class="sheet" id="sheet">
+  <div class="sheet-head">
+    <h1 id="sheetTitle">本期優惠</h1>
+    <span class="status" id="storeStatus">正在找你的位置…</span>
+  </div>
+  <div id="results" class="results"></div>
+  <div class="sheet-foot">
+    <label class="toggle">
+      <input type="checkbox" id="strollMode">
+      <span>逛街模式：靠近優惠門市時提醒</span>
+    </label>
+    <div class="foot-row">
+      <label class="small">提醒距離
+        <select id="alertDistance">
+          <option value="100">100 公尺</option>
+          <option value="200" selected>200 公尺</option>
+          <option value="500">500 公尺</option>
+        </select>
+      </label>
+      <label class="small"><input type="checkbox" id="watchOnly"> 只提醒關注的商品</label>
+    </div>
+    <button id="addOffer" class="secondary">＋ 回報一個優惠</button>
+    <p class="fine">優惠資料目前是範例，價格以門市為準。你回報的優惠只存在這支手機上。門市位置來自 OpenStreetMap。</p>
+  </div>
+</section>
+
+<dialog id="offerDialog">
+  <form method="dialog" id="offerForm">
+    <h2>回報優惠</h2>
+    <label>連鎖
+      <select name="chain" required>
+        <option value="7-11">7-11</option>
+        <option value="全家">全家</option>
+        <option value="全聯">全聯</option>
+      </select>
+    </label>
+    <label>商品名稱<input name="product" required placeholder="例如：茶裏王 日式無糖綠茶 600ml"></label>
+    <label>原價（元）<input name="original" type="number" min="1" step="1" required inputmode="numeric"></label>
+    <label>優惠類型
+      <select name="type" id="promoType">
+        <option value="none">沒有優惠，只記價格</option>
+        <option value="price">特價</option>
+        <option value="second_discount">第二件折扣</option>
+        <option value="bogo">買一送一</option>
+        <option value="multi">任選幾件多少錢</option>
+      </select>
+    </label>
+    <label data-for="price">特價（元）<input name="price" type="number" min="1" step="1" inputmode="numeric"></label>
+    <label data-for="second_discount">第二件打幾折（例如 6 折填 6）<input name="rate" type="number" min="1" max="9.9" step="0.1" inputmode="decimal"></label>
+    <div data-for="multi" class="two">
+      <label>幾件<input name="qty" type="number" min="2" step="1" inputmode="numeric"></label>
+      <label>共多少元<input name="total" type="number" min="1" step="1" inputmode="numeric"></label>
+    </div>
+    <label>活動結束日<input name="end" type="date"></label>
+    <menu>
+      <button value="cancel" formnovalidate class="secondary">取消</button>
+      <button value="save" id="saveOffer">儲存</button>
+    </menu>
+  </form>
+</dialog>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
