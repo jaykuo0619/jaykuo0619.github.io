@@ -29,17 +29,17 @@
       "platforms": {
         "android": {
           "label": "Android",
-          "version": "1.1.1",
-          "apk": "/apps/partytable/download/partytable-1.1.1.apk",
+          "version": "1.1.2",
+          "apk": "/apps/partytable/download/partytable-1.1.2.apk",
           "size": "0.2 MB",
-          "sha256": "c939b1922ba602fb99f34f17cc18a03bc4853d10bd1f7dee851ac0bda2b71267",
+          "sha256": "fe02cbef1011bda9fa6570aad3d151885628078da35c8ef573b25e6112f26e82",
           "requires": "Android 7.0 以上",
           "note": "直接下載安裝。跟 iPhone、iPad 和網頁版（partytable-jay.web.app）可以同一桌玩。",
           "firstRun": "第一次開啟就能玩，不用註冊。"
         }
       },
       "description": [
-        "聚會不知道玩什麼？揪一桌收錄 18 款大家都會玩的派對遊戲，朋友各自拿出手機輸入房號、掃 QR code，或在同一個 WiFi 下直接連線，就能一起開打。",
+        "聚會不知道玩什麼？揪一桌收錄 21 款大家都會玩的派對遊戲，朋友各自拿出手機輸入房號、掃 QR code，或在同一個 WiFi 下直接連線，就能一起開打。",
         "iPhone、iPad、Android、網頁都能同一桌；一個人的時候，也能跟電腦玩。"
       ],
       "features": [
@@ -53,7 +53,7 @@
         },
         {
           "title": "棋牌與派對",
-          "text": "象棋、暗棋、飛行棋、狼人殺、終極密碼、比手畫腳、誰是臥底。"
+          "text": "象棋、暗棋、飛行棋、圈圈叉叉、狼人殺、心電感應、你畫我猜、終極密碼、比手畫腳、誰是臥底。"
         },
         {
           "title": "開桌連線",
@@ -69,6 +69,13 @@
         }
       ],
       "versions": [
+        {
+          "version": "1.1.2",
+          "date": "2026-10-10",
+          "notes": [
+            "新增三款遊戲：心電感應、你畫我猜、圈圈叉叉。"
+          ]
+        },
         {
           "version": "1.1.1",
           "date": "2026-10-10",
