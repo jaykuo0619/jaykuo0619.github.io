@@ -29,10 +29,10 @@
       "platforms": {
         "android": {
           "label": "Android",
-          "version": "1.0.1",
-          "apk": "/apps/partytable/download/partytable-1.0.1.apk",
+          "version": "1.1.0",
+          "apk": "/apps/partytable/download/partytable-1.1.0.apk",
           "size": "0.2 MB",
-          "sha256": "132d8f6f857352d0d6e18158e835e25d1025f994f3480916260c4ffd7e8c0c18",
+          "sha256": "e90fce5875cc5a213e12271c3e965f1d0ab781304e713c9c9d4a4d0a0fe5312d",
           "requires": "Android 7.0 以上",
           "note": "直接下載安裝。跟 iPhone、iPad 和網頁版（partytable-jay.web.app）可以同一桌玩。",
           "firstRun": "第一次開啟就能玩，不用註冊。"
@@ -64,11 +64,19 @@
           "text": "人不夠電腦自動補，有人中途離開由電腦代打。"
         },
         {
-          "title": "積分與等級",
-          "text": "贏了賺積分，從新手一路升到桌神；輸的人要做什麼可以自己寫。"
+          "title": "積分、等級與我的編碼",
+          "text": "贏了賺積分升等級；用自己的編碼，在任何裝置都是同一個帳號。"
         }
       ],
       "versions": [
+        {
+          "version": "1.1.0",
+          "date": "2026-10-10",
+          "notes": [
+            "新增「我的編碼」：在其他手機、平板或電腦輸入自己的編碼，就能用同一個帳號，積分和等級都在。",
+            "第一次打開可以取自己的名字。"
+          ]
+        },
         {
           "version": "1.0.1",
           "date": "2026-10-09",
@@ -87,7 +95,7 @@
         }
       ],
       "privacy": {
-        "summary": "不需註冊、沒有廣告。暱稱、積分和戰績會備份到雲端，可以在 App 裡一鍵刪除。",
+        "summary": "不需註冊、沒有廣告。暱稱、積分和戰績存在雲端，用你自己的編碼在各裝置使用，可以在 App 裡一鍵刪除。",
         "url": "https://partytable-jay.web.app/privacy.html"
       },
       "dataSources": null
