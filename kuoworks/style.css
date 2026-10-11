@@ -70,7 +70,13 @@ p { margin: 0; }
 .en { font-family: var(--font-sans); color: var(--muted); letter-spacing: 0.02em; }
 
 /* ---------- Header ---------- */
-.site-head { border-bottom: 1px solid var(--line); }
+.site-head {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+section[id] { scroll-margin-top: 6rem; }
 .site-head .wrap {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: 0.75rem 2rem; padding-block: 1.25rem;
