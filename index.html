@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap">
 <link rel="stylesheet" href="kuoworks/style.css">
 <link rel="stylesheet" href="portfolio.css">
+<script src="kuoworks/topbar.js" defer></script>
 <style>
   /* Home: one page of tiles. Each tile is one thing, with at most two links; details live on resume.html and kuoworks/. */
   .name { position: relative; height: 1.1em; width: 100%; font-size: clamp(3.25rem, 11vw, 7.5rem); font-weight: 300; letter-spacing: 0.06em; line-height: 1.1; margin-top: 0.5rem; cursor: pointer; }
@@ -55,7 +56,7 @@
 </style>
 </head>
 <body>
-<header class="gbar" id="gbar"><div class="in">
+<header class="gbar" id="gbar" data-collapsible data-tab="JAY KUO" data-tab-label="Open menu"><div class="in">
   <a class="mark" href="./">JAY KUO</a>
   <button class="menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="gnav"><svg viewBox="0 0 18 18" fill="none" stroke-width="1.2"><path d="M2 6h14M2 12h14"/></svg></button>
   <nav id="gnav" aria-label="Site">

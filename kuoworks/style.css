@@ -150,3 +150,23 @@ section[id] { scroll-margin-top: 6rem; }
   .nav a { white-space: nowrap; }
   .sheet-bar .wrap { padding-block: 0.5rem; }
 }
+
+/* ---------- Collapsing top bar (topbar.js) ---------- */
+[data-collapsible] { transition: transform .35s cubic-bezier(.2, .7, .2, 1), box-shadow .35s; }
+html.bar-mini [data-collapsible] { transform: translateY(calc(-100% - env(safe-area-inset-top, 0px) - 2px)); }
+html.bar-mini.bar-open [data-collapsible] { transform: none; box-shadow: 0 10px 30px -18px rgba(0, 0, 0, .45); }
+.topbar-tab {
+  position: fixed; z-index: 70; top: calc(env(safe-area-inset-top, 0px) + 0.75rem); left: calc(env(safe-area-inset-left, 0px) + 0.75rem);
+  display: inline-flex; align-items: center; gap: 0.6rem; height: 2.5rem; padding: 0 1rem;
+  border: 1px solid var(--line); border-radius: 999px; color: var(--fg); cursor: pointer;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px);
+  box-shadow: 0 6px 20px -12px rgba(0, 0, 0, .4);
+  font-family: var(--font-sans); font-size: 0.8125rem; letter-spacing: 0.2em;
+  opacity: 0; transform: translateY(-0.5rem) scale(.96); pointer-events: none; transition: opacity .25s, transform .25s;
+}
+.topbar-tab svg { width: 0.9rem; height: 0.9rem; stroke: currentColor; display: block; }
+html.bar-mini .topbar-tab { opacity: 1; transform: none; pointer-events: auto; }
+html.bar-mini.bar-open .topbar-tab { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { [data-collapsible], .topbar-tab { transition: none; } }
+@media print { .topbar-tab { display: none; } html.bar-mini [data-collapsible] { transform: none; } }
