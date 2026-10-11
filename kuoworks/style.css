@@ -170,3 +170,62 @@ html.bar-mini .topbar-tab { opacity: 1; transform: none; pointer-events: auto; }
 html.bar-mini.bar-open .topbar-tab { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { [data-collapsible], .topbar-tab { transition: none; } }
 @media print { .topbar-tab { display: none; } html.bar-mini [data-collapsible] { transform: none; } }
+
+/* ---------- Global bar (shared with the Jay Kuo portfolio) ---------- */
+.gbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 60;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid var(--line); }
+.gbar .in { max-width: 64rem; margin-inline: auto; padding-inline: var(--gutter); height: 3rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.gbar .mark { font-size: 0.875rem; letter-spacing: 0.3em; text-decoration: none; color: var(--fg); white-space: nowrap; display: inline-flex; align-items: center; }
+.gbar .mark svg { height: 0.95rem; width: auto; display: block; }
+.gbar nav { display: flex; gap: clamp(1.25rem, 3.5vw, 2.5rem); font-size: 0.8125rem; }
+.gbar nav a { color: var(--fg-2); text-decoration: none; }
+.gbar nav a:hover, .gbar nav a[aria-current="page"] { color: var(--fg); }
+.gbar .menu { display: none; font: inherit; background: none; border: 0; color: var(--fg); padding: 0.5rem; margin-right: -0.5rem; cursor: pointer; }
+.gbar .menu svg { width: 1.1rem; height: 1.1rem; display: block; stroke: currentColor; }
+@media (max-width: 40rem) {
+  .gbar .menu { display: block; }
+  .gbar nav { display: none; position: absolute; left: 0; right: 0; top: 3rem; flex-direction: column; gap: 0;
+    background: var(--bg); border-bottom: 1px solid var(--line); padding: 0.5rem var(--gutter) 1rem; }
+  .gbar nav a { font-size: 1.25rem; padding-block: 0.6rem; color: var(--fg); }
+  .gbar.open nav { display: flex; }
+}
+
+/* ---------- Tiles: one idea per tile, like apple.com ---------- */
+.tiles { display: grid; gap: 0.75rem; padding: 0.75rem; }
+.tile { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: clamp(2.75rem, 6vw, 3.75rem) 1.5rem 0; min-width: 0; background: var(--surface); color: var(--fg); }
+.tile.hero { min-height: clamp(32rem, 62vw, 42rem); }
+.tile.half, .tile.wide { min-height: clamp(22rem, 38vw, 30rem); }
+.tile .eyebrow { font-size: 0.8125rem; letter-spacing: 0.18em; color: var(--muted); }
+.tile h1, .tile h2 { font-weight: 400; line-height: 1.25; letter-spacing: 0.04em; margin-top: 0.5rem; }
+.tile h1 { font-size: clamp(2rem, 5.4vw, 3.75rem); }
+.tile h2 { font-size: clamp(1.75rem, 3.8vw, 2.75rem); }
+.tile .sub { font-size: clamp(1.0625rem, 2vw, 1.3125rem); color: var(--fg-2); margin-top: 0.75rem; max-width: 24em; line-height: 1.6; }
+.tile .nb { display: inline-block; }
+.tile .links { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.75rem 1.25rem; margin-top: 1.25rem; }
+/* The drawing sits centred in whatever room the words leave, so short tiles never show a hole. */
+.tile .art { margin-block: auto; width: 100%; display: grid; place-items: center; padding-block: 2rem 2.75rem; }
+.pill { display: inline-flex; align-items: center; padding: 0.55rem 1.25rem; border-radius: 999px; background: var(--fg); color: var(--bg);
+  text-decoration: none; font-size: 0.9375rem; border: 1px solid var(--fg); }
+.pill:hover { background: transparent; color: var(--fg); }
+.pill[aria-disabled="true"] { background: transparent; color: var(--muted); border: 1px dashed var(--muted); cursor: default; }
+.more { color: var(--fg); text-decoration: none; font-size: 0.9375rem; }
+.more::after { content: " ›"; }
+.more:hover { text-decoration: underline; }
+.tile.ink { background: #111111; color: #F5F5F3; }
+.tile.ink .eyebrow { color: #8A8A88; } .tile.ink .sub { color: #C4C4C0; }
+.tile.ink .pill { background: #F5F5F3; color: #111111; border-color: #F5F5F3; }
+.tile.ink .pill:hover { background: transparent; color: #F5F5F3; } .tile.ink .more { color: #F5F5F3; }
+@media (min-width: 44rem) {
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tile.hero, .tile.wide { grid-column: 1 / -1; }
+}
+
+/* ---------- One-line footer ---------- */
+.pfoot { max-width: 64rem; margin: 1.5rem auto 0; padding: 1.25rem var(--gutter) 2.5rem; color: var(--muted); font-size: 0.75rem;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; border-top: 1px solid var(--line); }
+.pfoot a { color: var(--fg-2); text-decoration: none; }
+.pfoot a:hover { text-decoration: underline; }

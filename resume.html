@@ -55,7 +55,7 @@
   .xp ul { margin: 0.75rem 0 0; padding-left: 1.1em; color: var(--fg-2); display: grid; gap: 0.35rem; font-size: 0.9375rem; }
   .xp li li { transition: opacity .25s; }
   .xp a { color: var(--fg); }
-  [data-track="engineering"] .xp .p-plan, [data-track="planning"] .xp .p-eng { opacity: 0.35; }
+  [data-track="engineering"] .xp .p-plan, [data-track="planning"] .xp .p-eng { display: none; }
   @media (max-width: 44rem) { .xp > li { grid-template-columns: minmax(0, 1fr); } }
 
   .contact h2 { font-size: var(--step-3); }
@@ -96,7 +96,6 @@
     <div class="section-head"><p class="label">01 · About</p><h2 id="about-h">One person, two process flows.</h2></div>
     <div class="prose" style="margin-left:auto;max-width:40em">
       <p>I'm a Production Control Integration Planner in TSMC's Manufacturing Planning Integration Division, after two years on 3D Fabric advanced-packaging planning, with master's degrees in Computer Science (Georgia Tech) and Information Management (University of Washington).</p>
-      <p>As an engineer, I build the automation (VBA tools that query SQL directly, multi-database pipelines, self-serve HTML reports) that removes hours of manual work every week. As a planner, I own the Fab Daily Indices issued every morning and the Fab Daily Detection Report.</p>
     </div>
     <div class="stats">
       <div class="stat"><p class="n">6 h</p><p class="l">saved per week by the auto-generated Output Plan</p></div>
@@ -109,7 +108,7 @@
 
 <section class="section" id="experience" aria-labelledby="xp-h">
   <div class="wrap">
-    <div class="section-head"><p class="label">02 · Experience</p><h2 id="xp-h">Run history<span class="en">The switch above highlights the engineering or planning side.</span></h2></div>
+    <div class="section-head"><p class="label">02 · Experience</p><h2 id="xp-h">Run history<span class="en">The switch above shows the engineering or planning side.</span></h2></div>
     <ol class="xp">
       <li><p class="when">2026 – Now</p><div>
         <h3>KUØ WORKS<span class="org">Founder &amp; Independent Developer · Taiwan</span></h3>
@@ -191,15 +190,7 @@
 </section>
 </main>
 
-<footer class="site-foot"><div class="wrap">
-<dl class="titleblock">
-  <div><dt>Name</dt><dd>Jay Kuo</dd></div>
-  <div><dt>Sheet</dt><dd>P-01 · Résumé</dd></div>
-  <div><dt>Location</dt><dd>Hsinchu, Taiwan</dd></div>
-  <div><dt>Studio</dt><dd><a href="kuoworks/">KUØ WORKS</a></dd></div>
-</dl>
-<div class="foot-note"><span>© 2026 Jay Kuo</span><span>Built from zero.</span></div>
-</div></footer>
+<footer class="pfoot"><span>© 2026 Jay Kuo</span><span><a href="./">Home</a> · <a href="kuoworks/">KUØ WORKS</a> · <a href="Jay_Kuo_CV.pdf">CV</a></span></footer>
 
 <script>
   (function () {
@@ -209,8 +200,6 @@
       btns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-t') === t ? 'true' : 'false'); });
     }
     btns.forEach(function (b) { b.addEventListener('click', function () { set(b.getAttribute('data-t')); }); });
-    var g = document.getElementById('gbar'), mb = g.querySelector('.menu');
-    mb.addEventListener('click', function () { var o = g.classList.toggle('open'); mb.setAttribute('aria-expanded', o); });
     if (location.hash === '#planning' || location.hash === '#planner') set('planning');
   })();
 </script>

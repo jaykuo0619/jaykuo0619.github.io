@@ -5,6 +5,12 @@
 (function () {
   var bar = document.querySelector('[data-collapsible]'); if (!bar) return;
   var root = document.documentElement;
+  // Phone menu button inside the bar (both sites use the same markup).
+  var menu = bar.querySelector('.menu');
+  if (menu) {
+    menu.addEventListener('click', function () { var o = bar.classList.toggle('open'); menu.setAttribute('aria-expanded', o); });
+    bar.querySelectorAll('nav a').forEach(function (a) { a.addEventListener('click', function () { bar.classList.remove('open'); menu.setAttribute('aria-expanded', false); }); });
+  }
   var tab = document.createElement('button');
   tab.type = 'button'; tab.className = 'topbar-tab';
   tab.setAttribute('aria-label', bar.getAttribute('data-tab-label') || 'Menu');

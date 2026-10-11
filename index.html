@@ -144,9 +144,6 @@
 
 <script>
   (function () {
-    var g = document.getElementById('gbar'), mb = g.querySelector('.menu');
-    mb.addEventListener('click', function () { var o = g.classList.toggle('open'); mb.setAttribute('aria-expanded', o); });
-    g.querySelectorAll('nav a').forEach(function (a) { a.addEventListener('click', function () { g.classList.remove('open'); }); });
     // Name: Chinese first, then English; never both at once. Tap to switch.
     var name = document.getElementById('name');
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
