@@ -22,14 +22,17 @@
   .hero .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.5rem; }
   /* Hero drawing: the stacked logo drawn as a live construction sheet. The Ø slash follows the pointer; the readout shows its angle. */
   .zero { position: relative; max-width: 100%; color: var(--fg); margin: 0; }
-  .zero svg { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; cursor: crosshair; }
-  .zero .slash { transform-box: view-box; transform-origin: 290px 120px; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
-  .zero.live .slash { transition: transform .12s linear; }
+  .zero svg { width: 100%; height: auto; display: block; overflow: visible; cursor: pointer; }
+  .zero .slash { transform-box: view-box; transform-origin: 290px 120px; will-change: transform; }
   .zero .note { font-family: var(--font-sans); font-size: 7px; letter-spacing: 1.4px; fill: var(--muted); }
   .zero .guide { stroke: var(--line); stroke-width: 0.6; }
   .zero .lead { stroke: var(--muted); stroke-width: 0.5; fill: none; }
   .zero .read { font-variant-numeric: tabular-nums; fill: var(--fg); font-size: 10px; letter-spacing: 0.5px; }
   .zero figcaption { margin-top: 0.75rem; }
+  .zero .lay { transition: opacity .7s ease; }
+  .zero[data-lang="en"] #g-zh, .zero[data-lang="zh"] #g-en { opacity: 0; pointer-events: none; }
+  .zero .cap-touch { display: none; }
+  @media (hover: none) { .zero .cap-mouse { display: none; } .zero .cap-touch { display: inline; } }
   @media (max-width: 52rem) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } .zero { max-width: 30rem; } }
 
   .name-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
@@ -79,25 +82,32 @@
         <a class="btn ghost" href="about.html">認識主理人 <span class="btn-en">Founder</span></a>
       </div>
     </div>
-    <figure class="zero" id="zero">
-      <svg viewBox="0 0 400 268" role="img" aria-label="KUØ WORKS 杰構 標誌，Ø 的斜線會跟著游標轉動">
-        <line class="guide" x1="0" y1="120" x2="400" y2="120"/>
-        <line class="guide" x1="290" y1="20" x2="290" y2="200"/>
-        <line class="guide" x1="0" y1="177" x2="400" y2="177"/>
-        <text x="224" y="177" text-anchor="end" font-family="Jost, sans-serif" font-weight="300" font-size="160" letter-spacing="2" fill="currentColor">KU</text>
-        <circle cx="290" cy="120" r="50.7" fill="none" stroke="currentColor" stroke-width="13.3"/>
-        <g class="slash" id="slash"><path fill="currentColor" transform="translate(170 0)" d="M83.34 191.34L168.81 54.57L159.35 48.66L73.88 185.43Z"/></g>
-        <path class="lead" d="M290 120 h70"/>
-        <path class="lead" id="arc" d="M335 120 A45 45 0 0 0 313.8 81.8"/>
-        <text class="note read" id="deg" x="366" y="102">58°</text>
-        <text x="4" y="236" font-family="Jost, sans-serif" font-weight="400" font-size="40" letter-spacing="24.5" fill="currentColor">WORKS</text>
-        <rect x="318" y="196" width="26" height="46" fill="none" stroke="currentColor" stroke-width="1.1"/>
-        <text x="331" y="216" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-size="17" fill="currentColor">杰</text>
-        <text x="331" y="236" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-size="17" fill="currentColor">構</text>
-        <text class="note" x="4" y="262">Ø = 0 · START FROM ZERO</text>
-        <text class="note" x="396" y="262" text-anchor="end">杰構工作室 · TAIWAN</text>
+    <figure class="zero" id="zero" data-lang="zh">
+      <svg viewBox="0 0 400 268" role="img" aria-label="KUØ WORKS 杰構 標誌">
+        <g id="g-en" class="lay">
+          <line class="guide" x1="0" y1="120" x2="400" y2="120"/>
+          <line class="guide" x1="290" y1="20" x2="290" y2="200"/>
+          <line class="guide" x1="0" y1="177" x2="400" y2="177"/>
+          <text x="224" y="177" text-anchor="end" font-family="Jost, sans-serif" font-weight="300" font-size="160" letter-spacing="2" fill="currentColor">KU</text>
+          <circle cx="290" cy="120" r="50.7" fill="none" stroke="currentColor" stroke-width="13.3"/>
+          <g class="slash" id="slash"><path fill="currentColor" transform="translate(170 0)" d="M83.34 191.34L168.81 54.57L159.35 48.66L73.88 185.43Z"/></g>
+          <path class="lead" d="M290 120 h70"/>
+          <path class="lead" id="arc" d="M335 120 A45 45 0 0 0 313.8 81.8"/>
+          <text class="note read" id="deg" x="366" y="102">58°</text>
+          <text x="4" y="236" font-family="Jost, sans-serif" font-weight="400" font-size="40" letter-spacing="24.5" fill="currentColor">WORKS</text>
+          <text class="note" x="4" y="262">Ø = 0 · START FROM ZERO</text>
+          <text class="note" x="396" y="262" text-anchor="end">SOFTWARE STUDIO · TAIWAN</text>
+        </g>
+        <g id="g-zh" class="lay">
+          <line class="guide" x1="0" y1="120" x2="400" y2="120"/>
+          <rect x="150" y="34" width="100" height="172" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="200" y="110" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-weight="400" font-size="66" fill="currentColor">杰</text>
+          <text x="200" y="186" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-weight="400" font-size="66" fill="currentColor">構</text>
+          <text class="note" x="4" y="262">零 · 從零開始</text>
+          <text class="note" x="396" y="262" text-anchor="end">杰構工作室 · 台灣</text>
+        </g>
       </svg>
-      <figcaption class="label">移動游標轉動 Ø · Move to turn the slash</figcaption>
+      <figcaption class="label"><span class="cap-mouse">移動游標轉動 Ø · 點一下切換中英文</span><span class="cap-touch">點一下切換中英文</span></figcaption>
     </figure>
   </div>
 </section>
@@ -106,7 +116,7 @@
   <div class="wrap">
     <div class="section-head">
       <p class="label">The name</p>
-      <h2 id="name-h">名字的由來<span class="en">What KUØ WORKS 杰構 means</span></h2>
+      <h2 id="name-h">名字的由來<span class="en">Ø and 構</span></h2>
     </div>
     <div class="name-grid">
       <div class="name-cell">
@@ -134,21 +144,21 @@
     <ul class="works">
       <li class="work"><a href="findtoilet.html">
         <span class="label">A-01</span>
-        <span><span class="zh">廁略</span><span class="en">FindToilet</span></span>
+        <span><span class="zh">廁略</span></span>
         <span class="desc">找到最近、而且能借的廁所。</span>
         <span class="status">App Store 已上架</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.75h11.19l-4.72 4.72 1.06 1.06 6.53-6.53-6.53-6.53-1.06 1.06 4.72 4.72H5z"/></svg>
       </a></li>
       <li class="work"><a href="ourdays.html">
         <span class="label">A-02</span>
-        <span><span class="zh">小日子</span><span class="en">OurDays</span></span>
+        <span><span class="zh">小日子</span></span>
         <span class="desc">給兩個人用的 App：在一起的天數、紀念日、想說的話。</span>
         <span class="status">App Store 已上架</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.75h11.19l-4.72 4.72 1.06 1.06 6.53-6.53-6.53-6.53-1.06 1.06 4.72 4.72H5z"/></svg>
       </a></li>
       <li class="work"><a href="partytable.html">
         <span class="label">A-03</span>
-        <span><span class="zh">揪一桌</span><span class="en">PartyTable</span></span>
+        <span><span class="zh">揪一桌</span></span>
         <span class="desc">一支手機開桌，朋友用網頁就能加入的派對遊戲。</span>
         <span class="status pending">即將上架</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.75h11.19l-4.72 4.72 1.06 1.06 6.53-6.53-6.53-6.53-1.06 1.06 4.72 4.72H5z"/></svg>
@@ -187,22 +197,50 @@
     var fig = document.getElementById('zero'); if (!fig) return;
     var svg = fig.querySelector('svg'), slash = document.getElementById('slash');
     var deg = document.getElementById('deg'), arc = document.getElementById('arc');
-    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function set(theta) {
+    var hero = fig.closest('section') || fig;
+    var mq = function (q) { return window.matchMedia && window.matchMedia(q).matches; };
+    var still = mq('(prefers-reduced-motion: reduce)'), mouse = mq('(hover: hover) and (pointer: fine)');
+    var cur = 58, target = 58, raf = 0, ready = false;
+    function draw(theta) {
       slash.style.transform = 'rotate(' + (58 - theta) + 'deg)';
       deg.textContent = Math.round(theta) + '°';
       var r = theta * Math.PI / 180, x = 290 + 45 * Math.cos(r), y = 120 - 45 * Math.sin(r);
-      arc.setAttribute('d', 'M335 120 A45 45 0 ' + (theta > 180 ? 1 : 0) + ' 0 ' + x.toFixed(1) + ' ' + y.toFixed(1));
+      arc.setAttribute('d', 'M335 120 A45 45 0 0 0 ' + x.toFixed(1) + ' ' + y.toFixed(1));
     }
-    if (still) return;
-    svg.addEventListener('pointermove', function (e) {
+    function tick() {
+      cur += (target - cur) * 0.35;
+      if (Math.abs(target - cur) < 0.05) cur = target;
+      draw(cur);
+      raf = cur === target ? 0 : requestAnimationFrame(tick);
+    }
+    function aim(t) { target = t; if (!raf) raf = requestAnimationFrame(tick); }
+    function spinOnce() {
+      // one half-turn; the slash is symmetric, so it lands exactly where it started
+      if (still || !slash.animate) return;
+      slash.animate([{ transform: 'rotate(-180deg)' }, { transform: 'rotate(0deg)' }],
+                    { duration: 1300, easing: 'cubic-bezier(.2,.7,.2,1)' });
+    }
+    function show(lang) { fig.setAttribute('data-lang', lang); if (lang === 'en') spinOnce(); }
+    svg.addEventListener('click', function () { show(fig.getAttribute('data-lang') === 'en' ? 'zh' : 'en'); });
+    if (still) { show('en'); ready = true; }
+    else {
+      // play the 杰構 → KUØ WORKS sequence once, when the drawing is first on screen (phones scroll to it)
+      var play = function () { setTimeout(function () { show('en'); setTimeout(function () { ready = true; }, 1300); }, 1100); };
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.5 });
+        io.observe(svg);
+      } else play();
+    }
+    if (!mouse || still) return;
+    hero.addEventListener('pointermove', function (e) {
+      if (!ready || fig.getAttribute('data-lang') !== 'en') return;
       var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
       var p = pt.matrixTransform(svg.getScreenCTM().inverse());
       var t = Math.atan2(120 - p.y, p.x - 290) * 180 / Math.PI;
-      t = ((t % 180) + 180) % 180; if (t < 1) t = 180;
-      fig.classList.add('live'); set(t);
+      t = ((t % 180) + 180) % 180;
+      aim(Math.max(1, t));
     });
-    svg.addEventListener('pointerleave', function () { fig.classList.remove('live'); set(58); });
+    hero.addEventListener('pointerleave', function () { aim(58); });
   })();
 </script>
 </main><footer class="site-foot"><div class="wrap">

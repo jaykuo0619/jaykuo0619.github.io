@@ -4,199 +4,157 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jay Kuo — Engineering & Planning</title>
-<meta name="description" content="Jay Kuo — production control planner at TSMC and founder of KUØ WORKS 杰構, an independent software studio from Taiwan. Planning tools, track record, apps and education.">
+<meta name="description" content="Jay Kuo, production control planner at TSMC and founder of KUØ WORKS, an independent software studio from Taiwan.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Jay Kuo — Engineering & Planning">
-<meta property="og:description" content="Production control planner at TSMC. Founder of KUØ WORKS 杰構. I build the automation that runs the fab's numbers, and small apps that make everyday things easier.">
+<meta property="og:description" content="Production control planner at TSMC. Founder of KUØ WORKS. I build the automation that runs the fab's numbers, and small apps for everyday life.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap">
 <link rel="stylesheet" href="kuoworks/style.css">
 <style>
-  /* Portfolio sheet: same drawing-set system as KUØ WORKS. The Engineering / Planning switch dims the other track. */
-  .pf-mark { font-size: 1.15rem; letter-spacing: 0.32em; text-decoration: none; color: var(--fg); white-space: nowrap; }
-  .pf-mark span { color: var(--muted); letter-spacing: 0.1em; margin-left: 0.4em; }
+  /* Portfolio sheet on the KUØ WORKS system. One column of lists, no cards; the Engineering / Planning switch dims the other track. */
+  .pf-mark { font-size: 1rem; letter-spacing: 0.32em; text-decoration: none; color: var(--fg); white-space: nowrap; }
 
-  .pf-hero .wrap { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 3rem clamp(2rem, 6vw, 5rem); padding-block: clamp(3rem, 8vw, 6rem); align-items: end; }
-  .pf-hero h1 { font-size: clamp(3rem, 9vw, 6.5rem); font-weight: 300; letter-spacing: 0.04em; line-height: 1; }
-  .pf-hero h1 .zh { font-size: 0.42em; letter-spacing: 0.1em; color: var(--muted); margin-left: 0.3em; vertical-align: 0.6em; }
-  .pf-hero .role { margin-top: 1.5rem; font-size: var(--step-1); color: var(--fg-2); max-width: 30em; }
-  .pf-hero .role a { text-decoration: none; border-bottom: 1px solid var(--fg); color: var(--fg); }
-  .strip { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin-top: 2rem; font-size: 0.9375rem; }
-  .strip a { color: var(--fg-2); text-decoration: none; border-bottom: 1px solid var(--line); }
-  .strip a:hover { color: var(--fg); border-bottom-color: var(--fg); }
-
-  .switch { display: inline-grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--fg); width: fit-content; }
-  .switch button { font: inherit; font-size: 0.8125rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.6rem 1.1rem; background: transparent; color: var(--fg); border: 0; cursor: pointer; }
+  .pf-hero .wrap { padding-block: clamp(3rem, 9vw, 6.5rem) clamp(2.5rem, 6vw, 4rem); display: grid; gap: 1.5rem; }
+  .name { position: relative; height: clamp(3.2rem, 11vw, 7rem); cursor: pointer; }
+  .name span { position: absolute; left: 0; top: 0; font-size: clamp(3rem, 10.5vw, 6.75rem); font-weight: 300; letter-spacing: 0.06em; line-height: 1; white-space: nowrap; transition: opacity .7s ease; }
+  .name .zh { font-family: "Noto Sans TC", sans-serif; letter-spacing: 0.2em; }
+  .name[data-lang="en"] .zh, .name[data-lang="zh"] .en-n { opacity: 0; }
+  .pf-hero .role { font-size: var(--step-1); color: var(--fg-2); max-width: 32em; }
+  .pf-hero .role a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--fg); }
+  .track { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 0.5rem; }
+  .switch { display: inline-grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--fg); }
+  .switch button { font: inherit; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.55rem 1rem; background: transparent; color: var(--fg); border: 0; cursor: pointer; }
   .switch button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
-  .tagline { margin-top: 1.25rem; font-size: var(--step-2); line-height: 1.4; min-height: 2.8em; }
-  .tagline b { font-weight: 500; }
+  .tagline { color: var(--fg-2); }
   [data-track="planning"] .t-eng, [data-track="engineering"] .t-plan { display: none; }
 
-  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--fg); }
-  .stat { padding: 1.5rem 1.25rem 1.5rem 0; border-bottom: 1px solid var(--line); min-width: 0; }
-  .stat + .stat { padding-left: 1.25rem; border-left: 1px solid var(--line); }
-  .stat .n { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
-  .stat .l { margin-top: 0.75rem; color: var(--fg-2); font-size: 0.9375rem; line-height: 1.6; }
-  @media (max-width: 52rem) { .pf-hero .wrap { grid-template-columns: minmax(0, 1fr); } .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stat:nth-child(3) { border-left: 0; padding-left: 0; } }
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--fg); margin-top: clamp(2rem, 5vw, 3rem); }
+  .stat { padding: 1.25rem 1rem 1.25rem 0; min-width: 0; }
+  .stat .n { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat .l { margin-top: 0.6rem; color: var(--muted); font-size: 0.875rem; line-height: 1.55; }
+  @media (max-width: 48rem) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-  .apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-  .apps > div, .cells > div { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: clamp(1.25rem, 3vw, 2rem); display: grid; gap: 0.6rem; align-content: start; min-width: 0; }
-  .apps h3, .cells h3 { font-size: var(--step-1); }
-  .apps p, .cells p { color: var(--fg-2); font-size: 0.9375rem; }
-  .apps .links { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin-top: 0.5rem; font-size: 0.9375rem; }
-  .apps .links a { text-decoration: none; border-bottom: 1px solid var(--fg); }
-  .cells { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-  .cells .win { font-size: 0.875rem; color: var(--fg); }
-  @media (max-width: 54rem) { .apps, .cells { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 34rem) { .apps, .cells { grid-template-columns: minmax(0, 1fr); } }
+  /* One list style for apps, tools, research, education */
+  .rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--fg); }
+  .rows > li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 0.35rem 2rem; padding-block: 1.1rem; border-bottom: 1px solid var(--line); }
+  .rows .t { font-size: var(--step-1); line-height: 1.4; }
+  .rows .k { display: block; font-size: 0.6875rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-top: 0.25rem; }
+  .rows .d { color: var(--fg-2); font-size: 0.9375rem; }
+  .rows .d a { color: var(--fg); }
+  @media (max-width: 44rem) { .rows > li { grid-template-columns: minmax(0, 1fr); } }
 
   .xp { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--fg); }
-  .xp > li { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: 0.5rem 2rem; padding-block: 1.75rem; border-bottom: 1px solid var(--line); }
-  .xp .when { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); padding-top: 0.4rem; font-variant-numeric: tabular-nums; }
+  .xp > li { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: 0.25rem 2rem; padding-block: 1.5rem; border-bottom: 1px solid var(--line); }
+  .xp .when { font-size: 0.6875rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); padding-top: 0.45rem; font-variant-numeric: tabular-nums; }
   .xp h3 { font-size: var(--step-1); }
-  .xp h3 .org { color: var(--muted); }
-  .xp ul { margin: 0.75rem 0 0; padding-left: 1.1em; color: var(--fg-2); display: grid; gap: 0.4rem; }
+  .xp .org { display: block; color: var(--muted); font-size: 0.9375rem; }
+  .xp ul { margin: 0.75rem 0 0; padding-left: 1.1em; color: var(--fg-2); display: grid; gap: 0.35rem; font-size: 0.9375rem; }
   .xp li li { transition: opacity .25s; }
   .xp a { color: var(--fg); }
-  [data-track="engineering"] .xp .p-plan, [data-track="planning"] .xp .p-eng { opacity: 0.38; }
+  [data-track="engineering"] .xp .p-plan, [data-track="planning"] .xp .p-eng { opacity: 0.35; }
   @media (max-width: 44rem) { .xp > li { grid-template-columns: minmax(0, 1fr); } }
 
-  .skills { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); border-top: 1px solid var(--fg); }
-  .skills dt, .skills dd { margin: 0; padding-block: 1rem; border-bottom: 1px solid var(--line); min-width: 0; }
-  .skills dt { color: var(--fg); }
-  .skills dd { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .chip { border: 1px solid var(--line); padding: 0.15rem 0.7rem; font-size: 0.875rem; color: var(--fg-2); }
-  @media (max-width: 44rem) { .skills { grid-template-columns: minmax(0, 1fr); } .skills dt { border-bottom: 0; padding-bottom: 0; } }
-
-  .edu { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--fg); }
-  .edu li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.25rem 2rem; padding-block: 1.25rem; border-bottom: 1px solid var(--line); }
-  .edu .deg { font-size: var(--step-1); }
-  .edu .when { font-size: 0.75rem; letter-spacing: 0.2em; color: var(--muted); padding-top: 0.4rem; font-variant-numeric: tabular-nums; }
-  .edu p { grid-column: 1 / -1; color: var(--fg-2); font-size: 0.9375rem; }
-
   .contact h2 { font-size: var(--step-3); }
-  .contact .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
-  .contact .copy { font-size: 0.875rem; color: var(--muted); margin-top: 1rem; min-height: 1.5em; }
+  .contact .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+  .contact .plain { margin-top: 1rem; color: var(--muted); font-size: 0.9375rem; }
 </style>
 </head>
 <body data-track="engineering">
 <header class="site-head"><div class="wrap">
-  <a class="pf-mark" href="#top">JAY KUO<span>郭</span></a>
+  <a class="pf-mark" href="#top">JAY KUO</a>
   <nav class="nav" aria-label="Sections">
-    <a href="#studio">KUØ WORKS</a>
+    <a href="#studio">Studio</a>
     <a href="#experience">Experience</a>
     <a href="#tools">Tools</a>
-    <a href="#education">Education</a>
     <a href="#contact">Contact</a>
   </nav>
 </div></header>
-<div class="sheet-bar"><div class="wrap"><span class="label">Sheet P-00 · Portfolio</span><span class="label">Hsinchu, Taiwan</span></div></div>
 
 <main id="top">
 <section class="pf-hero">
   <div class="wrap">
-    <div>
-      <p class="label">Engineering &amp; Planning</p>
-      <h1 style="margin-top:1rem">JAY KUO<span class="zh">郭</span></h1>
-      <p class="role">Production Control Integration Planner at <b>TSMC</b>. Founder of <a href="kuoworks/">KUØ WORKS 杰構</a>, an independent software studio from Taiwan.</p>
-      <div class="strip">
-        <a href="mailto:kuohungyi5@gmail.com">kuohungyi5@gmail.com</a>
-        <a href="tel:+886933462476">0933-462-476</a>
-        <a href="https://linkedin.com/in/jaykuo0619" target="_blank" rel="noopener">linkedin.com/in/jaykuo0619</a>
-        <a href="Jay_Kuo_CV.pdf" target="_blank" rel="noopener">CV (PDF)</a>
-      </div>
-    </div>
-    <div>
+    <p class="label">Engineering &amp; Planning · Hsinchu, Taiwan</p>
+    <h1 class="name" id="name" data-lang="en" aria-label="Jay Kuo"><span class="en-n">JAY KUO</span><span class="zh" aria-hidden="true">郭</span></h1>
+    <p class="role">Production Control Integration Planner at TSMC. Founder of <a href="kuoworks/">KUØ WORKS</a>, an independent software studio.</p>
+    <div class="track">
       <div class="switch" role="group" aria-label="Read as">
         <button type="button" id="sw-eng" aria-pressed="true" data-t="engineering">Engineering</button>
         <button type="button" id="sw-plan" aria-pressed="false" data-t="planning">Planning</button>
       </div>
-      <p class="tagline" aria-live="polite">
-        <span class="t-eng">I build the <b>automation</b> that runs the fab's numbers.</span>
-        <span class="t-plan">I plan the <b>output</b> a fab promises, and keeps.</span>
-      </p>
+      <p class="tagline" aria-live="polite"><span class="t-eng">I build the automation that runs the fab's numbers.</span><span class="t-plan">I plan the output a fab promises, and keeps.</span></p>
     </div>
   </div>
 </section>
 
 <section class="section" id="about" aria-labelledby="about-h">
   <div class="wrap">
-    <div class="section-head"><p class="label">01 · Process spec</p><h2 id="about-h">One person, two process flows.</h2></div>
+    <div class="section-head"><p class="label">01 · About</p><h2 id="about-h">One person, two process flows.</h2></div>
     <div class="prose" style="margin-left:auto;max-width:40em">
-      <p>I'm a Production Control Integration Planner in TSMC's Manufacturing Planning Integration Division, after two years on 3D Fabric advanced-packaging planning, with dual master's degrees in Computer Science (Georgia Tech) and Information Management (University of Washington). Fabs run on two things: a plan the business can trust, and the data plumbing that keeps that plan honest. I do both.</p>
-      <p>As an engineer, I build the automation (VBA tools that query SQL directly, multi-database pipelines, self-serve HTML reports) that removes hours of manual work from every week. As a planner, I own the Fab Daily Indices issued every morning and the Fab Daily Detection Report, turning that plumbing into decisions on lots, pull-ins and wafer starts.</p>
-      <p>My TSMC story started as an intern during a warehouse-automation rollout, and grew into building the tools the planning floor runs on.</p>
+      <p>I'm a Production Control Integration Planner in TSMC's Manufacturing Planning Integration Division, after two years on 3D Fabric advanced-packaging planning, with master's degrees in Computer Science (Georgia Tech) and Information Management (University of Washington).</p>
+      <p>As an engineer, I build the automation (VBA tools that query SQL directly, multi-database pipelines, self-serve HTML reports) that removes hours of manual work every week. As a planner, I own the Fab Daily Indices issued every morning and the Fab Daily Detection Report.</p>
     </div>
-    <div class="stats" style="margin-top:clamp(2.5rem,6vw,4rem)">
-      <div class="stat"><p class="n">6 h</p><p class="l">manual effort cut per week by the auto-generated Output Plan</p></div>
-      <div class="stat"><p class="n">2.4×</p><p class="l">projected candidate-pool increase, Early Wafer Start verification</p></div>
-      <div class="stat"><p class="n">25%</p><p class="l">team productivity gain from SQL dashboards at TIER</p></div>
-      <div class="stat"><p class="n">70%</p><p class="l">efficiency gain from the vendor-approval workflow at Merck</p></div>
+    <div class="stats">
+      <div class="stat"><p class="n">6 h</p><p class="l">saved per week by the auto-generated Output Plan</p></div>
+      <div class="stat"><p class="n">2.4×</p><p class="l">projected candidate pool, Early Wafer Start verification</p></div>
+      <div class="stat"><p class="n">25%</p><p class="l">team productivity from SQL dashboards at TIER</p></div>
+      <div class="stat"><p class="n">70%</p><p class="l">efficiency from the vendor-approval workflow at Merck</p></div>
     </div>
   </div>
 </section>
 
 <section class="section" id="studio" aria-labelledby="studio-h">
   <div class="wrap">
-    <div class="section-head"><p class="label">02 · Studio</p><h2 id="studio-h">KUØ WORKS 杰構<span class="en">My independent software studio.</span></h2></div>
-    <p class="prose" style="margin-bottom:2rem">Outside the fab, I design, build and ship small iPhone apps on my own. Ø is zero, 構 is structure: start every product from zero, and build the structure first.</p>
-    <div class="apps">
-      <div><span class="label">iOS · Live</span><h3>廁略 FindToilet</h3><p>Find the nearest restroom you can actually use: 40,000+ locations across Taiwan, colour-coded by access rule, with live open-now status.</p>
-        <p class="links"><a href="kuoworks/findtoilet.html">About the app</a><a href="https://apps.apple.com/us/app/nature-calls-restroom-finder/id6817375955" target="_blank" rel="noopener">App Store ↗</a></p></div>
-      <div><span class="label">iOS · Watch · Live</span><h3>小日子 OurDays</h3><p>An app for two: days together, anniversary countdowns, a handwritten board and a daily this-or-that, on the home screen and Apple Watch.</p>
-        <p class="links"><a href="kuoworks/ourdays.html">About the app</a><a href="https://apps.apple.com/app/id6819721328" target="_blank" rel="noopener">App Store ↗</a></p></div>
-      <div><span class="label">iOS · iPad · Web · In review</span><h3>揪一桌 PartyTable</h3><p>Card and party games for one table. One phone opens the game; friends join from the web without installing anything.</p>
-        <p class="links"><a href="kuoworks/partytable.html">About the app</a><a href="https://partytable-jay.web.app" target="_blank" rel="noopener">Play on the web ↗</a></p></div>
-    </div>
-    <div style="margin-top:2rem"><a class="btn" href="kuoworks/">Visit KUØ WORKS 杰構 <span class="btn-en">kuoworks</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.75h11.19l-4.72 4.72 1.06 1.06 6.53-6.53-6.53-6.53-1.06 1.06 4.72 4.72H5z"/></svg></a></div>
+    <div class="section-head"><p class="label">02 · Studio</p><h2 id="studio-h">KUØ WORKS<span class="en">My independent software studio. Ø is zero: every product starts from zero.</span></h2></div>
+    <ul class="rows">
+      <li><div><span class="t">FindToilet</span><span class="k">iOS · Live</span></div><p class="d">The nearest restroom you can actually use: 40,000+ locations across Taiwan, colour-coded by access rule. <a href="kuoworks/findtoilet.html">About</a> · <a href="https://apps.apple.com/us/app/nature-calls-restroom-finder/id6817375955" target="_blank" rel="noopener">App Store ↗</a></p></li>
+      <li><div><span class="t">OurDays</span><span class="k">iOS · Apple Watch · Live</span></div><p class="d">An app for two: days together, anniversary countdowns, a handwritten board and a daily this-or-that. <a href="kuoworks/ourdays.html">About</a> · <a href="https://apps.apple.com/app/id6819721328" target="_blank" rel="noopener">App Store ↗</a></p></li>
+      <li><div><span class="t">PartyTable</span><span class="k">iOS · iPad · Web · In review</span></div><p class="d">Card and party games for one table; friends join from the web without installing anything. <a href="kuoworks/partytable.html">About</a> · <a href="https://partytable-jay.web.app" target="_blank" rel="noopener">Play on the web ↗</a></p></li>
+    </ul>
+    <div style="margin-top:1.75rem"><a class="btn ghost" href="kuoworks/">Visit KUØ WORKS<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.75h11.19l-4.72 4.72 1.06 1.06 6.53-6.53-6.53-6.53-1.06 1.06 4.72 4.72H5z"/></svg></a></div>
   </div>
 </section>
 
 <section class="section" id="experience" aria-labelledby="xp-h">
   <div class="wrap">
-    <div class="section-head"><p class="label">03 · Run history</p><h2 id="xp-h">Experience<span class="en">The switch at the top highlights the engineering or planning side of each role.</span></h2></div>
+    <div class="section-head"><p class="label">03 · Experience</p><h2 id="xp-h">Run history<span class="en">The switch above highlights the engineering or planning side.</span></h2></div>
     <ol class="xp">
-      <li><p class="when">2026 – Present</p><div>
-        <h3>KUØ WORKS 杰構 <span class="org">· Founder &amp; Independent Developer, Taiwan</span></h3>
+      <li><p class="when">2026 – Now</p><div>
+        <h3>KUØ WORKS<span class="org">Founder &amp; Independent Developer · Taiwan</span></h3>
         <ul>
-          <li class="p-eng">Designed, built and shipped iOS apps end to end: 廁略 FindToilet and 小日子 OurDays are live on the App Store; 揪一桌 PartyTable is in review.</li>
-          <li class="p-plan">Run the studio's brand, website and social channels. <a href="kuoworks/">kuoworks →</a></li>
+          <li class="p-eng">Designed, built and shipped iOS apps end to end: FindToilet and OurDays are live on the App Store; PartyTable is in review.</li>
+          <li class="p-plan">Run the studio's brand, website and social channels.</li>
         </ul></div></li>
-      <li><p class="when">2026 – Present</p><div>
-        <h3>TSMC <span class="org">· Production Control Integration Planner, Hsinchu</span></h3>
+      <li><p class="when">2026 – Now</p><div>
+        <h3>TSMC<span class="org">Production Control Integration Planner · Hsinchu</span></h3>
         <ul>
-          <li class="p-eng">Engineered a VBA-driven Fab Daily Status pipeline integrating multiple databases with daily refresh, for multi-dimensional analysis across Customer view, Fab view and more.</li>
-          <li class="p-eng">Built an Excel VBA tool for the team that auto-queries SQL to assemble the weekly backend Output Plan, cutting ~6 hours of manual effort per week while improving accuracy.</li>
-          <li class="p-eng">Created a team-accessible "Pull-In Ratio" HTML report: a self-serve, browser-based view of pull-in performance for every user.</li>
-          <li class="p-eng">Deployed a suite of VBA automation tools across team workflows, standardizing reporting and raising efficiency.</li>
           <li class="p-plan">Own the Fab Daily Indices issued every morning to monitor fab performance.</li>
           <li class="p-plan">Own the Fab Daily Detection Report, and align demand and output across fabs, including Fab 11.</li>
-          <li>Led verification for the Early Wafer Start Candidate project, surfacing key issues projected to increase the candidate pool 2.4×.</li>
-          <li>Drove the Lot Plan revamp with IT, FPC and APC teams to rebuild the CR3 modification tool.</li>
+          <li class="p-eng">Built a VBA-driven Fab Daily Status pipeline integrating multiple databases with daily refresh.</li>
+          <li class="p-eng">Built an Excel VBA tool for the team that assembles the weekly backend Output Plan from SQL, saving ~6 hours a week.</li>
+          <li class="p-eng">Created a self-serve "Pull-In Ratio" HTML report and a suite of VBA tools that standardize team reporting.</li>
+          <li>Led verification for the Early Wafer Start Candidate project (candidate pool projected 2.4×) and drove the Lot Plan revamp with IT, FPC and APC.</li>
         </ul></div></li>
-      <li><p class="when">Jul 2024 – 2026</p><div>
-        <h3>TSMC <span class="org">· 3D Fabric Integration Planner, Hsinchu</span></h3>
+      <li><p class="when">2024 – 2026</p><div>
+        <h3>TSMC<span class="org">3D Fabric Integration Planner · Hsinchu</span></h3>
         <ul>
           <li class="p-plan">Production control and integration planning for 3D Fabric advanced packaging.</li>
-          <li class="p-plan">Partnered with an external consultant firm in English to clarify data assessments and backend process flow.</li>
+          <li class="p-plan">Worked with an external consultant firm, in English, on data assessments and backend process flow.</li>
         </ul></div></li>
-      <li><p class="when">Jul – Sep 2023</p><div>
-        <h3>TSMC <span class="org">· Production Control Integration Planning Intern, Hsinchu</span></h3>
-        <ul><li>Applied KMeans clustering for product-pattern analysis, improving ASRS picking efficiency; represented the department in the final intern competition.</li></ul></div></li>
-      <li><p class="when">Sep 2021 – Aug 2022</p><div>
-        <h3>Taiwan Institute of Economic Research <span class="org">· Data Analyst, Taipei</span></h3>
+      <li><p class="when">2023</p><div>
+        <h3>TSMC<span class="org">Production Control Integration Planning Intern · Hsinchu</span></h3>
+        <ul><li class="p-eng">KMeans product-pattern clustering to improve ASRS picking; department finalist in the intern competition.</li></ul></div></li>
+      <li><p class="when">2021 – 2022</p><div>
+        <h3>Taiwan Institute of Economic Research<span class="org">Data Analyst · Taipei</span></h3>
         <ul>
-          <li>Aggregated 1,000+ biweekly data points via SQL and interactive dashboards, boosting team productivity by 25%.</li>
-          <li>Applied Naïve Bayes sentiment analysis across 6 large datasets; led quantitative-analysis training for 12+ researchers supporting a renowned monthly publication.</li>
-          <li>Evaluated economic data for Taiwan's SME market to support growth forecasting, reducing researcher workload by 20%.</li>
+          <li class="p-eng">SQL pipelines and dashboards over 1,000+ biweekly data points (+25% team productivity); Naïve Bayes sentiment analysis on 6 datasets.</li>
+          <li>Trained 12+ researchers in quantitative methods; SME market analysis that cut researcher workload 20%.</li>
         </ul></div></li>
-      <li><p class="when">Sep 2019 – Aug 2020</p><div>
-        <h3>Merck &amp; Co., Inc. <span class="org">· Global Procurement Intern, Taipei</span></h3>
+      <li><p class="when">2019 – 2020</p><div>
+        <h3>Merck &amp; Co., Inc.<span class="org">Global Procurement Intern · Taipei</span></h3>
         <ul>
-          <li>Built a self-service vendor-purchasing approval workflow: orders 70% more efficient, 25% faster to complete.</li>
-          <li>Redesigned 6 procurement websites with UX improvements (−30% team workload) and cut operational expenses 15% through data-driven process changes.</li>
-          <li>Mentored 3 interns in Python, JavaScript, web design, business analysis and optimization.</li>
+          <li>Self-service vendor-approval workflow (orders 70% more efficient); redesigned 6 procurement sites; mentored 3 interns.</li>
         </ul></div></li>
     </ol>
   </div>
@@ -204,86 +162,52 @@
 
 <section class="section" id="tools" aria-labelledby="tools-h">
   <div class="wrap">
-    <div class="section-head"><p class="label">04 · Tool set</p><h2 id="tools-h">Things I've shipped on the line.</h2></div>
-    <div class="cells">
-      <div><span class="label">VBA · SQL · Multi-DB</span><h3>Fab Daily Status Pipeline</h3><p>Daily-refreshing pipeline that fuses several databases into one multi-dimensional fab view: a single source of truth for planning.</p><p class="win">→ one report, every dimension</p></div>
-      <div><span class="label">VBA · SQL automation</span><h3>Auto Output Plan Generator</h3><p>Excel VBA tool that queries SQL directly and assembles the weekly backend Output Plan without manual pulls.</p><p class="win">→ ~6 h/week saved, higher accuracy</p></div>
-      <div><span class="label">HTML · Self-serve BI</span><h3>Pull-In Ratio Report</h3><p>Browser-based, team-accessible report of pull-in performance. Planners self-serve instead of requesting manual data pulls.</p><p class="win">→ every user, zero waiting</p></div>
-      <div><span class="label">Verification · Analysis</span><h3>Early Wafer Start Candidate</h3><p>Led verification-code development that surfaced key issues in candidate selection for earlier wafer starts.</p><p class="win">→ candidate pool projected 2.4×</p></div>
-      <div><span class="label">Cross-team · IT / FPC / APC</span><h3>Lot Plan Revamp (CR3)</h3><p>Drove the rebuild of the CR3 modification tool with IT, FPC and APC teams, reworking how lot plans get modified.</p><p class="win">→ cross-functional delivery</p></div>
-      <div><span class="label">ML · KMeans</span><h3>ASRS Picking Optimization</h3><p>KMeans product-pattern clustering to improve automated storage &amp; retrieval picking efficiency; department finalist, intern competition.</p><p class="win">→ pattern-driven picking</p></div>
-      <div><span class="label">HTML · Self-serve BI</span><h3>Demand &amp; Output Report Dashboard</h3><p>Dashboard for demand and output tracking, switchable between Fab view, UMG view and Customer view.</p><p class="win">→ three views, one source of truth</p></div>
-      <div><span class="label">VBA · Outlook</span><h3>Email Automation Tool</h3><p>Outlook draft-generation tool that assembles recurring report mails automatically: recipients, subject and formatted content built straight from the data.</p><p class="win">→ reporting mail on autopilot</p></div>
-      <div><span class="label">Meeting ops</span><h3>Host Widget</h3><p>A control widget for the morning meeting's host to switch between discussion topics instantly, keeping the daily production meeting fast and on track.</p><p class="win">→ smoother morning meetings</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="academic" aria-labelledby="ac-h">
-  <div class="wrap">
-    <div class="section-head"><p class="label">05 · Grad school</p><h2 id="ac-h">Academic &amp; research.</h2></div>
-    <div class="cells">
-      <div><span class="label">Georgia Tech · ML</span><h3>Machine Learning for Trading</h3><p>Built and evaluated learning-based trading strategies: market simulation, technical indicators and reinforcement-style learners.</p></div>
-      <div><span class="label">Georgia Tech · KBAI</span><h3>AI for Raven's Progressive Matrices</h3><p>Knowledge-based AI agent solving visual IQ-test analogy problems through figure transformation and semantic reasoning.</p></div>
-      <div><span class="label">Snowflake · Tableau</span><h3>Business Intelligence System</h3><p>End-to-end BI stack: warehouse modeling in Snowflake feeding interactive Tableau dashboards for decision support.</p></div>
-      <div><span class="label">Data science · HR</span><h3>AI Recruiting System</h3><p>Designed a fairer hiring flow with blind screening, diverse panels and AI-driven assessments to reduce bias in selection.</p></div>
-      <div><span class="label">Cybersecurity</span><h3>Security Strategy Research</h3><p>Case-study analysis of APT attacks on semiconductor supply chains and an information-protection strategy: audits, encryption, AI-driven detection.</p></div>
-      <div><span class="label">Data science</span><h3>User Engagement Analysis</h3><p>Behavioral analysis of product usage data to identify engagement drivers and retention opportunities.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="skills" aria-labelledby="sk-h">
-  <div class="wrap">
-    <div class="section-head"><p class="label">06 · Recipe</p><h2 id="sk-h">Skills</h2></div>
-    <dl class="skills">
-      <dt>Programming &amp; query</dt><dd><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">R</span><span class="chip">Excel VBA</span></dd>
-      <dt>Automation &amp; reporting</dt><dd><span class="chip">VBA Automation</span><span class="chip">HTML Dashboards</span><span class="chip">Multi-DB Integration</span><span class="chip">BI Tools</span></dd>
-      <dt>Web &amp; front-end</dt><dd><span class="chip">JavaScript</span><span class="chip">ReactJS</span><span class="chip">NextJS</span><span class="chip">HTML/CSS</span><span class="chip">Tailwind CSS</span><span class="chip">GitHub</span></dd>
-      <dt>Analytics &amp; ML</dt><dd><span class="chip">Data Visualization</span><span class="chip">Statistics</span><span class="chip">KMeans</span><span class="chip">Naïve Bayes</span></dd>
-      <dt>Planning &amp; control</dt><dd><span class="chip">Production Control</span><span class="chip">Output Plan</span><span class="chip">Lot Planning</span><span class="chip">Fab Daily Status</span></dd>
-      <dt>Supply chain &amp; process</dt><dd><span class="chip">Supply Chain Coordination</span><span class="chip">Process Optimization</span><span class="chip">Vendor Management</span></dd>
-      <dt>Collaboration &amp; languages</dt><dd><span class="chip">Cross-Functional Collaboration</span><span class="chip">Stakeholder Communication</span><span class="chip">Mandarin (Native)</span><span class="chip">English (Fluent, TOEFL 107)</span><span class="chip">German (Introductory)</span></dd>
-    </dl>
+    <div class="section-head"><p class="label">04 · Tools</p><h2 id="tools-h">Shipped on the line</h2></div>
+    <ul class="rows">
+      <li><div><span class="t">Fab Daily Status Pipeline</span><span class="k">VBA · SQL · Multi-DB</span></div><p class="d">Several databases fused into one daily, multi-dimensional fab view.</p></li>
+      <li><div><span class="t">Auto Output Plan Generator</span><span class="k">VBA · SQL</span></div><p class="d">Builds the weekly backend Output Plan without manual pulls. ~6 h/week saved.</p></li>
+      <li><div><span class="t">Pull-In Ratio Report</span><span class="k">HTML · Self-serve BI</span></div><p class="d">Browser report every planner can open, instead of asking for data pulls.</p></li>
+      <li><div><span class="t">Demand &amp; Output Dashboard</span><span class="k">HTML · Self-serve BI</span></div><p class="d">One report, switchable between Fab, UMG and Customer views.</p></li>
+      <li><div><span class="t">Email Automation Tool</span><span class="k">VBA · Outlook</span></div><p class="d">Recurring report mails drafted straight from the data.</p></li>
+      <li><div><span class="t">Host Widget</span><span class="k">Meeting ops</span></div><p class="d">Topic switcher that keeps the daily production meeting on track.</p></li>
+    </ul>
   </div>
 </section>
 
 <section class="section" id="education" aria-labelledby="ed-h">
   <div class="wrap">
-    <div class="section-head"><p class="label">07 · Qualification</p><h2 id="ed-h">Education</h2></div>
-    <ul class="edu">
-      <li><span class="deg">Georgia Institute of Technology · MSc, Computer Science</span><span class="when">AUG 2023 – JUL 2025</span><p>Specialization: Human-Computer Interaction. Coursework: Machine Learning for Trading, Knowledge-Based AI.</p></li>
-      <li><span class="deg">University of Washington · MSc, Information Management</span><span class="when">SEP 2022 – JUN 2024</span><p>Specializations: Data Science, Business Intelligence, Cybersecurity. Top-5% iSchool merit-based scholarship.</p></li>
-      <li><span class="deg">National Chengchi University · BSc, International Business</span><span class="when">SEP 2016 – JUN 2020</span><p>School Representative, Asian Economic Seminar (GPAC). English-taught program (Statistics, Economics).</p></li>
+    <div class="section-head"><p class="label">05 · Education</p><h2 id="ed-h">Education &amp; research</h2></div>
+    <ul class="rows">
+      <li><div><span class="t">Georgia Tech</span><span class="k">MSc Computer Science · 2023 – 2025</span></div><p class="d">Human-Computer Interaction. Machine Learning for Trading; a knowledge-based AI agent for Raven's Progressive Matrices.</p></li>
+      <li><div><span class="t">University of Washington</span><span class="k">MSc Information Management · 2022 – 2024</span></div><p class="d">Data Science, Business Intelligence, Cybersecurity. Top-5% iSchool merit scholarship. Snowflake + Tableau BI system; APT supply-chain security research.</p></li>
+      <li><div><span class="t">National Chengchi University</span><span class="k">BSc International Business · 2016 – 2020</span></div><p class="d">School representative, Asian Economic Seminar (GPAC).</p></li>
+      <li><div><span class="t">Skills</span><span class="k">Toolbox</span></div><p class="d">Python, SQL, R, Excel VBA · JavaScript, React, Next.js, Tailwind · Statistics, KMeans, Naïve Bayes · Production control, lot planning · Mandarin (native), English (fluent, TOEFL 107)</p></li>
     </ul>
   </div>
 </section>
 
 <section class="section contact" id="contact" aria-labelledby="ct-h" style="border-bottom:0">
   <div class="wrap">
-    <p class="label">08 · Ship</p>
+    <p class="label">06 · Contact</p>
     <h2 id="ct-h" style="margin-top:0.75rem">Ready to start the next lot?</h2>
     <div class="actions">
-      <a class="btn" href="mailto:kuohungyi5@gmail.com" id="mail">Email me</a>
-      <button type="button" class="btn ghost" id="copy" style="font:inherit;font-size:0.9375rem;cursor:pointer">Copy email</button>
+      <a class="btn" href="mailto:kuohungyi5@gmail.com">Email me</a>
       <a class="btn ghost" href="https://linkedin.com/in/jaykuo0619" target="_blank" rel="noopener">LinkedIn ↗</a>
       <a class="btn ghost" href="Jay_Kuo_CV.pdf" target="_blank" rel="noopener">CV (PDF)</a>
-      <a class="btn ghost" href="kuoworks/">KUØ WORKS 杰構 ↗</a>
     </div>
-    <p class="copy" id="copy-out" aria-live="polite">kuohungyi5@gmail.com · 0933-462-476</p>
+    <p class="plain">kuohungyi5@gmail.com · 0933-462-476</p>
   </div>
 </section>
 </main>
 
 <footer class="site-foot"><div class="wrap">
 <dl class="titleblock">
-  <div><dt>Name</dt><dd>Jay Kuo 郭</dd></div>
+  <div><dt>Name</dt><dd>Jay Kuo</dd></div>
   <div><dt>Sheet</dt><dd>P-00 · Portfolio</dd></div>
   <div><dt>Location</dt><dd>Hsinchu, Taiwan</dd></div>
-  <div><dt>Studio</dt><dd><a href="kuoworks/">KUØ WORKS 杰構</a></dd></div>
-  <div><dt>Contact</dt><dd><a href="mailto:kuohungyi5@gmail.com">kuohungyi5@gmail.com</a></dd></div>
+  <div><dt>Studio</dt><dd><a href="kuoworks/">KUØ WORKS</a></dd></div>
 </dl>
-<div class="foot-note"><span>© 2026 Jay Kuo</span><span>Designed &amp; coded by Jay Kuo · KUØ WORKS</span></div>
+<div class="foot-note"><span>© 2026 Jay Kuo</span><span>Built from zero.</span></div>
 </div></footer>
 
 <script>
@@ -292,15 +216,14 @@
     function set(t) {
       body.setAttribute('data-track', t);
       btns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-t') === t ? 'true' : 'false'); });
-      try { history.replaceState(null, '', '#' + t); } catch (e) {}
     }
     btns.forEach(function (b) { b.addEventListener('click', function () { set(b.getAttribute('data-t')); }); });
     if (location.hash === '#planning' || location.hash === '#planner') set('planning');
-    var copy = document.getElementById('copy'), out = document.getElementById('copy-out');
-    copy.addEventListener('click', function () {
-      var done = function () { out.textContent = 'Copied kuohungyi5@gmail.com'; };
-      if (navigator.clipboard) navigator.clipboard.writeText('kuohungyi5@gmail.com').then(done, function () {});
-    });
+    // Name: Chinese first, then English; never both at once. Tap to switch.
+    var name = document.getElementById('name');
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!still) { name.setAttribute('data-lang', 'zh'); setTimeout(function () { name.setAttribute('data-lang', 'en'); }, 1000); }
+    name.addEventListener('click', function () { name.setAttribute('data-lang', name.getAttribute('data-lang') === 'en' ? 'zh' : 'en'); });
   })();
 </script>
 </body>
