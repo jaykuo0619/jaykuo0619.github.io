@@ -20,13 +20,17 @@
   .hero .en-line { font-size: var(--step-1); margin-top: 1rem; letter-spacing: 0.06em; }
   .hero .lede { margin-top: 2rem; }
   .hero .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.5rem; }
-  .zero { position: relative; aspect-ratio: 1; max-width: 100%; color: var(--fg); }
-  .zero svg { width: 100%; height: auto; display: block; overflow: visible; }
-  .zero .slash { transition: transform .6s cubic-bezier(.2,.7,.2,1); transform-origin: 120px 120px; }
-  .zero:hover .slash { transform: rotate(-8deg); }
-  .zero figcaption { position: absolute; left: 0; bottom: -0.25rem; }
-  .zero .dim { position: absolute; right: 0; top: 0; text-align: right; }
-  @media (max-width: 52rem) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } .zero { max-width: 22rem; } }
+  /* Hero drawing: the stacked logo drawn as a live construction sheet. The Ø slash follows the pointer; the readout shows its angle. */
+  .zero { position: relative; max-width: 100%; color: var(--fg); margin: 0; }
+  .zero svg { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; cursor: crosshair; }
+  .zero .slash { transform-box: view-box; transform-origin: 290px 120px; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+  .zero.live .slash { transition: transform .12s linear; }
+  .zero .note { font-family: var(--font-sans); font-size: 7px; letter-spacing: 1.4px; fill: var(--muted); }
+  .zero .guide { stroke: var(--line); stroke-width: 0.6; }
+  .zero .lead { stroke: var(--muted); stroke-width: 0.5; fill: none; }
+  .zero .read { font-variant-numeric: tabular-nums; fill: var(--fg); font-size: 10px; letter-spacing: 0.5px; }
+  .zero figcaption { margin-top: 0.75rem; }
+  @media (max-width: 52rem) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } .zero { max-width: 30rem; } }
 
   .name-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
   .name-cell { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: clamp(1.5rem, 4vw, 3rem); display: grid; gap: 1.25rem; min-width: 0; }
@@ -75,16 +79,25 @@
         <a class="btn ghost" href="about.html">認識主理人 <span class="btn-en">Founder</span></a>
       </div>
     </div>
-    <figure class="zero" style="margin:0" aria-label="KUØ WORKS 的 Ø 符號">
-      <svg viewBox="0 0 240 240" aria-hidden="true">
-        <line x1="0" y1="120" x2="240" y2="120" stroke="var(--line)" stroke-width="0.6"/>
-        <line x1="120" y1="0" x2="120" y2="240" stroke="var(--line)" stroke-width="0.6"/>
-        <circle cx="120" cy="120" r="50.7" fill="none" stroke="currentColor" stroke-width="13.3"/>
-        <g class="slash"><path fill="currentColor" d="M83.34 191.34L168.81 54.57L159.35 48.66L73.88 185.43Z"/></g>
-        <path d="M172 210 L200 210" stroke="var(--muted)" stroke-width="0.6"/>
-        <text x="204" y="212" font-size="6" fill="var(--muted)" font-family="Jost, sans-serif" letter-spacing="1">58°</text>
+    <figure class="zero" id="zero">
+      <svg viewBox="0 0 400 268" role="img" aria-label="KUØ WORKS 杰構 標誌，Ø 的斜線會跟著游標轉動">
+        <line class="guide" x1="0" y1="120" x2="400" y2="120"/>
+        <line class="guide" x1="290" y1="20" x2="290" y2="200"/>
+        <line class="guide" x1="0" y1="177" x2="400" y2="177"/>
+        <text x="224" y="177" text-anchor="end" font-family="Jost, sans-serif" font-weight="300" font-size="160" letter-spacing="2" fill="currentColor">KU</text>
+        <circle cx="290" cy="120" r="50.7" fill="none" stroke="currentColor" stroke-width="13.3"/>
+        <g class="slash" id="slash"><path fill="currentColor" transform="translate(170 0)" d="M83.34 191.34L168.81 54.57L159.35 48.66L73.88 185.43Z"/></g>
+        <path class="lead" d="M290 120 h70"/>
+        <path class="lead" id="arc" d="M335 120 A45 45 0 0 0 313.8 81.8"/>
+        <text class="note read" id="deg" x="366" y="102">58°</text>
+        <text x="4" y="236" font-family="Jost, sans-serif" font-weight="400" font-size="40" letter-spacing="24.5" fill="currentColor">WORKS</text>
+        <rect x="318" y="196" width="26" height="46" fill="none" stroke="currentColor" stroke-width="1.1"/>
+        <text x="331" y="216" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-size="17" fill="currentColor">杰</text>
+        <text x="331" y="236" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-size="17" fill="currentColor">構</text>
+        <text class="note" x="4" y="262">Ø = 0 · START FROM ZERO</text>
+        <text class="note" x="396" y="262" text-anchor="end">杰構工作室 · TAIWAN</text>
       </svg>
-      <span class="label dim">Ø = 0</span>
+      <figcaption class="label">移動游標轉動 Ø · Move to turn the slash</figcaption>
     </figure>
   </div>
 </section>
@@ -168,6 +181,30 @@
     </div>
   </div>
 </section>
+
+<script>
+  (function () {
+    var fig = document.getElementById('zero'); if (!fig) return;
+    var svg = fig.querySelector('svg'), slash = document.getElementById('slash');
+    var deg = document.getElementById('deg'), arc = document.getElementById('arc');
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function set(theta) {
+      slash.style.transform = 'rotate(' + (58 - theta) + 'deg)';
+      deg.textContent = Math.round(theta) + '°';
+      var r = theta * Math.PI / 180, x = 290 + 45 * Math.cos(r), y = 120 - 45 * Math.sin(r);
+      arc.setAttribute('d', 'M335 120 A45 45 0 ' + (theta > 180 ? 1 : 0) + ' 0 ' + x.toFixed(1) + ' ' + y.toFixed(1));
+    }
+    if (still) return;
+    svg.addEventListener('pointermove', function (e) {
+      var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+      var p = pt.matrixTransform(svg.getScreenCTM().inverse());
+      var t = Math.atan2(120 - p.y, p.x - 290) * 180 / Math.PI;
+      t = ((t % 180) + 180) % 180; if (t < 1) t = 180;
+      fig.classList.add('live'); set(t);
+    });
+    svg.addEventListener('pointerleave', function () { fig.classList.remove('live'); set(58); });
+  })();
+</script>
 </main><footer class="site-foot"><div class="wrap">
 <dl class="titleblock">
   <div><dt>Project</dt><dd>KUØ WORKS 杰構工作室</dd></div>
