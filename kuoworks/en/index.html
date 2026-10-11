@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KUØ WORKS</title>
+<meta name="description" content="KUØ WORKS is an independent software studio from Taiwan. Apps: FindToilet, OurDays, PartyTable. Software, built from zero.">
+<meta property="og:title" content="KUØ WORKS">
+<meta property="og:description" content="KUØ WORKS is an independent software studio from Taiwan. Apps: FindToilet, OurDays, PartyTable. Software, built from zero.">
+<link rel="alternate" hreflang="zh-Hant" href="../index.html">
+<link rel="alternate" hreflang="en" href="index.html">
+<script>
+(function () {
+  var here = "en", there = "../index.html";
+  try {
+    var pick = localStorage.getItem("kw-lang");
+    if (!pick) {
+      var l = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+      pick = /^zh/i.test(l) ? "zh" : "en";
+    }
+    if (pick !== here) location.replace(there + location.hash);
+  } catch (e) {}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="../style.css">
+<script src="../topbar.js" defer></script>
+</head>
+<body>
+<header class="gbar" data-collapsible data-tab="KUØ" data-tab-label="Open menu"><div class="in"><a class="mark" href="index.html" aria-label="KUØ WORKS home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="43 38 506 49" role="img" focusable="false" aria-label="KUØ WORKS 杰構"><path fill="currentColor" d="M45.12 40V84.8H50.56V40ZM68.16 40 48.9 61.12 69.12 84.8H75.84L55.49 60.99L74.88 40ZM91.2 40V70.08Q91.2 73.41 92.26 76.22Q93.31 79.04 95.33 81.09Q97.34 83.14 100.16 84.29Q102.98 85.44 106.43 85.44Q109.89 85.44 112.7 84.29Q115.52 83.14 117.54 81.09Q119.55 79.04 120.61 76.22Q121.66 73.41 121.66 70.08V40H116.22V70.08Q116.22 74.69 113.73 77.5Q111.23 80.32 106.43 80.32Q101.63 80.32 99.14 77.5Q96.64 74.69 96.64 70.08V40ZM139.26 62.4a22.94 22.94 0 1 0 45.88 0a22.94 22.94 0 1 0 -45.88 0ZM144.6 62.4a17.61 17.61 0 1 1 35.21 0a17.61 17.61 0 1 1 -35.21 0ZM147.95 89.42L180.24 37.75L176.45 35.38L144.17 87.05ZM272.37 72.96 259.06 37.76 246 72.96 234.1 40H228.02L245.62 87.04L259.06 52.22L272.5 87.04L290.1 40H284.02ZM309.3 62.4Q309.3 57.34 311.51 53.38Q313.72 49.41 317.56 47.1Q321.4 44.8 326.26 44.8Q331.19 44.8 335 47.1Q338.8 49.41 341.01 53.38Q343.22 57.34 343.22 62.4Q343.22 67.46 341.01 71.42Q338.8 75.39 335 77.7Q331.19 80 326.26 80Q321.4 80 317.56 77.7Q313.72 75.39 311.51 71.42Q309.3 67.46 309.3 62.4ZM303.54 62.4Q303.54 67.26 305.24 71.49Q306.93 75.71 310 78.82Q313.08 81.92 317.24 83.68Q321.4 85.44 326.26 85.44Q331.19 85.44 335.32 83.68Q339.44 81.92 342.52 78.82Q345.59 75.71 347.28 71.49Q348.98 67.26 348.98 62.4Q348.98 57.47 347.28 53.28Q345.59 49.09 342.52 45.98Q339.44 42.88 335.32 41.12Q331.19 39.36 326.26 39.36Q321.4 39.36 317.24 41.12Q313.08 42.88 310 45.98Q306.93 49.09 305.24 53.28Q303.54 57.47 303.54 62.4ZM374.9 62.72 390.26 84.8H396.98L380.98 62.72ZM366.9 40V84.8H372.34V40ZM369.91 44.8H379.06Q381.94 44.8 384.15 45.82Q386.36 46.85 387.6 48.77Q388.85 50.69 388.85 53.44Q388.85 56.19 387.6 58.11Q386.36 60.03 384.15 61.06Q381.94 62.08 379.06 62.08H369.91V66.88H379.06Q383.41 66.88 386.84 65.25Q390.26 63.62 392.28 60.58Q394.29 57.54 394.29 53.44Q394.29 49.28 392.28 46.27Q390.26 43.26 386.84 41.63Q383.41 40 379.06 40H369.91ZM412.98 40V84.8H418.42V40ZM436.02 40 416.76 61.12 436.98 84.8H443.7L423.35 60.99L442.74 40ZM461.04 71.23 456.69 74.18Q458.16 77.12 460.5 79.71Q462.84 82.3 465.94 83.87Q469.04 85.44 472.69 85.44Q475.38 85.44 477.84 84.54Q480.31 83.65 482.26 81.98Q484.21 80.32 485.33 77.95Q486.45 75.58 486.45 72.64Q486.45 69.57 485.36 67.36Q484.28 65.15 482.58 63.58Q480.88 62.02 478.9 60.99Q476.92 59.97 475.12 59.33Q471.22 57.98 468.95 56.61Q466.68 55.23 465.72 53.66Q464.76 52.1 464.76 50.24Q464.76 48.06 466.42 46.3Q468.08 44.54 471.73 44.54Q474.36 44.54 476.18 45.57Q478 46.59 479.28 48.19Q480.56 49.79 481.4 51.46L486.07 48.77Q484.98 46.4 483.06 44.26Q481.14 42.11 478.42 40.74Q475.7 39.36 472.05 39.36Q468.28 39.36 465.33 40.86Q462.39 42.37 460.72 44.99Q459.06 47.62 459.06 50.94Q459.06 54.02 460.24 56.13Q461.43 58.24 463.28 59.68Q465.14 61.12 467.19 62.05Q469.24 62.98 470.9 63.55Q473.46 64.45 475.73 65.57Q478 66.69 479.41 68.48Q480.82 70.27 480.82 73.28Q480.82 76.35 478.64 78.34Q476.47 80.32 472.88 80.32Q470.2 80.32 468.08 79.17Q465.97 78.02 464.28 75.97Q462.58 73.92 461.04 71.23Z"/><path fill="currentColor" d="M534.72 50.9Q535.04 51.1 535.56 51.46Q536.08 51.81 536.71 52.26Q537.34 52.71 538 53.19Q538.67 53.67 539.28 54.11Q539.9 54.56 540.36 54.91Q540.83 55.26 541.06 55.44L540.43 56.44Q540.16 56.2 539.68 55.81Q539.2 55.42 538.61 54.95Q538.03 54.48 537.39 53.98Q536.76 53.47 536.15 53.01Q535.54 52.54 535.03 52.16Q534.52 51.77 534.17 51.52ZM533.68 47.32H534.87V56.92H533.68ZM527.79 49.68H540.75V50.78H527.79ZM533.03 50.23 533.94 50.58Q533.32 51.83 532.4 52.99Q531.49 54.16 530.41 55.1Q529.33 56.03 528.22 56.66Q528.12 56.51 527.98 56.32Q527.84 56.14 527.69 55.97Q527.55 55.8 527.41 55.68Q528.51 55.16 529.58 54.31Q530.65 53.46 531.55 52.4Q532.45 51.34 533.03 50.23ZM531.83 58.14 532.83 57.94Q533.03 58.39 533.2 58.93Q533.36 59.46 533.5 59.95Q533.64 60.44 533.7 60.8L532.63 61.07Q532.57 60.69 532.45 60.19Q532.33 59.69 532.17 59.15Q532.01 58.61 531.83 58.14ZM535.02 58.14 536.05 57.89Q536.29 58.33 536.53 58.85Q536.76 59.37 536.95 59.86Q537.14 60.36 537.25 60.72L536.15 61.03Q536.06 60.66 535.89 60.16Q535.71 59.66 535.48 59.13Q535.25 58.59 535.02 58.14ZM538.07 58.01 539.08 57.6Q539.49 58.09 539.9 58.68Q540.31 59.26 540.65 59.83Q540.98 60.4 541.15 60.86L540.1 61.33Q539.93 60.88 539.6 60.3Q539.27 59.72 538.88 59.12Q538.48 58.52 538.07 58.01ZM529.39 57.68 530.46 57.95Q530.14 58.87 529.64 59.79Q529.15 60.71 528.54 61.33L527.5 60.88Q528.06 60.33 528.57 59.44Q529.08 58.56 529.39 57.68ZM533.01 69.01H540.75V69.85H533.01ZM532.36 70.88H541.27V71.75H532.36ZM532.08 76.52H541.45V77.42H532.08ZM533.68 74.59H539.84V75.41H533.68ZM532.72 67.15H540.97V68.01H532.72ZM534.48 65.9H535.54V71.31H534.48ZM536.21 71.42H537.26V76.9H536.21ZM538 65.9H539.06V71.28H538ZM533.12 72.67H539.84V73.52H534.17V79.87H533.12ZM539.41 72.67H540.48V78.7Q540.48 79.12 540.36 79.35Q540.25 79.58 539.96 79.7Q539.64 79.81 539.13 79.84Q538.62 79.87 537.87 79.87Q537.84 79.67 537.74 79.4Q537.64 79.12 537.54 78.93Q538.09 78.94 538.54 78.95Q539 78.96 539.14 78.94Q539.41 78.93 539.41 78.7ZM527.45 69.21H532.4V70.27H527.45ZM529.59 65.9H530.64V79.9H529.59ZM529.56 69.85 530.27 70.08Q530.09 70.99 529.82 71.97Q529.56 72.94 529.22 73.88Q528.89 74.83 528.51 75.64Q528.12 76.44 527.71 77.02Q527.64 76.79 527.45 76.51Q527.27 76.23 527.13 76.03Q527.52 75.51 527.88 74.8Q528.25 74.08 528.57 73.25Q528.89 72.41 529.15 71.53Q529.4 70.66 529.56 69.85ZM530.56 71.23Q530.7 71.39 530.97 71.78Q531.23 72.16 531.54 72.62Q531.86 73.08 532.12 73.47Q532.37 73.85 532.47 74.02L531.84 74.88Q531.7 74.59 531.47 74.14Q531.23 73.7 530.96 73.23Q530.68 72.76 530.44 72.35Q530.2 71.95 530.04 71.72Z"/><rect x="521.33" y="40" width="25.89" height="44.8" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a><button class="menu" type="button" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 18 18" fill="none" stroke-width="1.2" aria-hidden="true"><path d="M2 6h14M2 12h14"/></svg></button><nav aria-label="Main"><a href="index.html" aria-current="page">Home</a><a href="findtoilet.html">FindToilet</a><a href="ourdays.html">OurDays</a><a href="partytable.html">PartyTable</a><a href="about.html">Founder</a><a href="../../">Portfolio</a><a href="../index.html" lang="zh-Hant" hreflang="zh-Hant" data-setlang="zh">中文</a></nav></div></header><main class="tiles">
+<style>
+  /* Home: tiles come from style.css; below are only the drawings inside them. */
+  /* Hero drawing: 杰構 turns into KUØ WORKS. The Ø slash follows the pointer on a desktop; touch gets one half-turn. */
+  .zero { position: relative; width: min(30rem, 100%); color: var(--fg); margin: 0; }
+  .zero svg { width: 100%; height: auto; display: block; overflow: visible; cursor: pointer; }
+  .zero .slash { transform-box: view-box; transform-origin: 290px 120px; will-change: transform; }
+  .zero .note { font-family: var(--font-sans); font-size: 7px; letter-spacing: 1.4px; fill: var(--muted); }
+  .zero .guide { stroke: var(--line); stroke-width: 0.6; }
+  .zero .lead { stroke: var(--muted); stroke-width: 0.5; fill: none; }
+  .zero .read { font-variant-numeric: tabular-nums; fill: var(--fg); font-size: 10px; letter-spacing: 0.5px; }
+  .zero figcaption { margin-top: 0.75rem; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; }
+  /* Morph, not a swap: 杰 dissolves into KU, 構 shrinks into the Ø ring while the ring draws round it,
+     then the slash sweeps in and WORKS rises. Every part eases on its own beat, both directions. */
+  .zero .m { transition: opacity .8s ease, transform 1.2s cubic-bezier(.2,.7,.2,1), filter .8s ease; }
+  .zero .fb { transform-box: fill-box; transform-origin: center; }
+  .zero .to-ring { transform-box: view-box; transform-origin: 290px 120px; }
+  .zero .ring { stroke-dasharray: 318.6; transition: stroke-dashoffset 1.3s cubic-bezier(.4,0,.2,1); transform-box: view-box; transform-origin: 290px 120px; transform: rotate(-90deg); }
+  .zero[data-lang="zh"] .en-part { opacity: 0; }
+  .zero[data-lang="zh"] .ku { transform: translateX(-26px); filter: blur(6px); }
+  .zero[data-lang="zh"] .ring { stroke-dashoffset: 318.6; }
+  .zero[data-lang="zh"] .works { transform: translateY(10px); filter: blur(4px); }
+  .zero[data-lang="zh"] .zh-part { transition-delay: .35s; }
+  .zero[data-lang="en"] .zh-part { opacity: 0; filter: blur(6px); }
+  .zero[data-lang="en"] .jie { transform: translateX(-30px) scale(.92); }
+  .zero[data-lang="en"] .gou { transform: scale(.45); }
+  .zero[data-lang="en"] .ku { transition-delay: .15s; }
+  .zero[data-lang="en"] .ring { stroke-dashoffset: 0; transition-delay: .2s; }
+  .zero[data-lang="en"] .slash-in { transition-delay: .55s; }
+  .zero[data-lang="en"] .works { transition-delay: .7s; }
+  .zero[data-lang="en"] .marks { transition-delay: 1s; }
+  .zero .cap-touch { display: none; }
+  @media (hover: none) { .zero .cap-mouse { display: none; } .zero .cap-touch { display: inline; } }
+
+  /* 廁略: a wayfinding sign */
+  .sign { background: #111; color: #F5F5F3; display: flex; align-items: center; gap: 1.5rem; padding: 1.25rem 1.75rem; text-align: left; }
+  .sign .n { font-size: clamp(3rem, 7vw, 4.25rem); font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+  .sign .n small { font-size: 0.4em; color: #C9C9C5; }
+  .sign .k { font-size: 0.75rem; letter-spacing: 0.2em; color: #9A9A97; }
+  .sign svg { width: 3rem; fill: #F5F5F3; transform: rotate(-45deg); }
+  .dot { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 50%; margin-right: 0.4rem; }
+
+  /* 小日子: a day counter */
+  .cal { background: var(--bg); border: 1px solid var(--line); width: 13rem; }
+  .cal .top { background: #B8737C; color: #fff; font-size: 0.75rem; letter-spacing: 0.3em; padding: 0.5rem; }
+  .cal .n { font-size: 3.5rem; font-weight: 300; line-height: 1; padding: 1.25rem 0 0.25rem; font-variant-numeric: tabular-nums; }
+  .cal .u { color: var(--fg-2); padding-bottom: 1.25rem; }
+
+  /* 揪一桌: a felt table */
+  .tile.felt { background: radial-gradient(ellipse at 50% 30%, #1F4A39, #132F24); color: #F5F5F3; }
+  .tile.felt .eyebrow { color: #A9C2B5; } .tile.felt .sub { color: #D8E2DC; }
+  .tile.felt .pill { background: #F5F5F3; color: #132F24; border-color: #F5F5F3; } .tile.felt .more { color: #F5F5F3; }
+  .tile.felt .pill:hover { background: transparent; color: #F5F5F3; }
+  .fan { position: relative; width: 15rem; height: 10rem; }
+  .fan span { position: absolute; left: 50%; bottom: 0; width: 5.5rem; height: 7.7rem; margin-left: -2.75rem; background: #FBFBF8; color: #111; border-radius: 0.5rem;
+    box-shadow: 0 8px 18px -8px rgba(0,0,0,.6); transform-origin: 50% 150%; display: grid; place-items: center; font-size: 1.5rem; }
+  .fan span:nth-child(1) { transform: rotate(-24deg); } .fan span:nth-child(2) { transform: rotate(0); color: #C2382B; } .fan span:nth-child(3) { transform: rotate(24deg); }
+
+
+  /* 名字的由來: two glyphs */
+  .glyphs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(40rem, 100%); }
+  .glyphs div { padding: 0 1rem; min-width: 0; }
+  .glyphs div + div { border-left: 1px solid #3A3A38; }
+  .glyphs b { display: block; font-size: clamp(4rem, 11vw, 7rem); font-weight: 300; line-height: 1; }
+  .glyphs span { display: block; margin-top: 0.75rem; color: #C4C4C0; font-size: 0.9375rem; line-height: 1.6; }
+</style>
+
+  <section class="tile hero" id="hero" aria-label="KUØ WORKS">
+    <p class="eyebrow">Software studio · Taiwan</p>
+    <h1><span class="nb">Software,</span> <span class="nb">built from zero.</span></h1>
+    <p class="sub"><span class="nb">Small, useful iPhone apps</span> <span class="nb">for the little things in life.</span></p>
+    <div class="links"><a class="pill" href="#works">See the apps</a><a class="more" href="about.html">Meet the founder</a></div>
+    <div class="art">
+      <figure class="zero" id="zero" data-lang="zh">
+        <svg viewBox="0 0 400 268" role="img" aria-label="KUØ WORKS logo">
+          <g class="m en-part marks">
+            <line class="guide" x1="0" y1="120" x2="400" y2="120"/>
+            <line class="guide" x1="290" y1="20" x2="290" y2="200"/>
+            <line class="guide" x1="0" y1="177" x2="400" y2="177"/>
+            <path class="lead" d="M290 120 h70"/>
+            <path class="lead" id="arc" d="M335 120 A45 45 0 0 0 313.8 81.8"/>
+            <text class="note read" id="deg" x="366" y="102">58°</text>
+            <text class="note" x="4" y="262">Ø = 0 · START FROM ZERO</text>
+            <text class="note" x="396" y="262" text-anchor="end">SOFTWARE STUDIO · TAIWAN</text>
+          </g>
+          <text class="m fb zh-part jie" x="145" y="160" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-weight="300" font-size="104" fill="currentColor">杰</text>
+          <text class="m to-ring zh-part gou" x="262" y="160" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-weight="300" font-size="104" fill="currentColor">構</text>
+          <g class="m zh-part">
+            <text class="note" x="4" y="262">杰構 · KUØ WORKS</text>
+            <text class="note" x="396" y="262" text-anchor="end">SOFTWARE STUDIO · TAIWAN</text>
+          </g>
+          <text class="m en-part ku" x="224" y="177" text-anchor="end" font-family="Jost, sans-serif" font-weight="300" font-size="160" letter-spacing="2" fill="currentColor">KU</text>
+          <circle class="ring" cx="290" cy="120" r="50.7" fill="none" stroke="currentColor" stroke-width="13.3"/>
+          <g class="m en-part slash-in"><g class="slash" id="slash"><path fill="currentColor" transform="translate(170 0)" d="M83.34 191.34L168.81 54.57L159.35 48.66L73.88 185.43Z"/></g></g>
+          <text class="m en-part works" x="4" y="236" font-family="Jost, sans-serif" font-weight="400" font-size="40" letter-spacing="24.5" fill="currentColor">WORKS</text>
+        </svg>
+        <figcaption><span class="cap-mouse">Move the pointer to turn the Ø · click to switch</span><span class="cap-touch">Tap to switch</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="tile half" id="works" aria-label="FindToilet">
+    <p class="eyebrow">iOS · Free · Available</p>
+    <h2>FindToilet</h2>
+    <p class="sub">The nearest restroom you can actually use.</p>
+    <div class="links"><a class="pill" href="https://apps.apple.com/us/app/nature-calls-restroom-finder/id6817375955" target="_blank" rel="noopener">App Store</a><a class="more" href="findtoilet.html">Learn more</a></div>
+    <div class="art">
+      <div class="sign" aria-hidden="true">
+        <div><p class="k">NEAREST</p><p class="n">120<small> m</small></p><p class="k" style="margin-top:0.5rem"><span class="dot" style="background:#0A84FF"></span>ASK STAFF</p></div>
+        <svg viewBox="0 0 24 24"><path d="M11.25 20V6.81l-5.72 5.72-1.06-1.06L12 3.94l7.53 7.53-1.06 1.06-5.72-5.72V20z"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="tile half" aria-label="OurDays">
+    <p class="eyebrow">iOS · Apple Watch · Available</p>
+    <h2>OurDays</h2>
+    <p class="sub">An app for two. Every day together, counted.</p>
+    <div class="links"><a class="pill" href="https://apps.apple.com/app/id6819721328" target="_blank" rel="noopener">App Store</a><a class="more" href="ourdays.html">Learn more</a></div>
+    <div class="art">
+      <div class="cal" aria-hidden="true"><div class="top">TOGETHER</div><div class="n">1,024</div><div class="u">days</div></div>
+    </div>
+  </section>
+
+  <section class="tile half felt" aria-label="PartyTable">
+    <p class="eyebrow">iOS · iPad · Web · Coming soon</p>
+    <h2>PartyTable</h2>
+    <p class="sub">One phone opens the table. Friends join on the web.</p>
+    <div class="links"><a class="pill" href="https://partytable-jay.web.app" target="_blank" rel="noopener">Play on the web</a><a class="more" href="partytable.html">Learn more</a></div>
+    <div class="art"><div class="fan" aria-hidden="true"><span>♠</span><span>♥</span><span>♣</span></div></div>
+  </section>
+
+  <section class="tile half" aria-label="Founder">
+    <p class="eyebrow">Founder</p>
+    <h2>Jay Kuo</h2>
+    <p class="sub"><span class="nb">Automation in the fab,</span> <span class="nb">small apps for everyday life.</span></p>
+    <div class="links"><a class="pill" href="../../">Portfolio</a><a class="more" href="about.html">About the founder</a></div>
+    <div class="art"><img class="portrait sm" src="../img/jay.jpg" alt="Jay Kuo" width="800" height="1000" loading="lazy"></div>
+  </section>
+
+  <section class="tile wide ink" aria-label="The name">
+    <p class="eyebrow">The name</p>
+    <h2>Ø is zero. 構 is structure.</h2>
+    <p class="sub"><span class="nb">Start from who it is for,</span> <span class="nb">then build the structure nobody sees.</span></p>
+    <div class="art">
+      <div class="glyphs" aria-hidden="true">
+        <div><b>Ø</b><span>Start from zero</span></div>
+        <div><b>構</b><span>Structure first, then the surface</span></div>
+      </div>
+    </div>
+  </section>
+
+<script>
+  (function () {
+    var fig = document.getElementById('zero'); if (!fig) return;
+    var svg = fig.querySelector('svg'), slash = document.getElementById('slash');
+    var deg = document.getElementById('deg'), arc = document.getElementById('arc');
+    var hero = document.getElementById('hero') || fig;
+    var mq = function (q) { return window.matchMedia && window.matchMedia(q).matches; };
+    var still = mq('(prefers-reduced-motion: reduce)'), mouse = mq('(hover: hover) and (pointer: fine)');
+    var cur = 58, target = 58, raf = 0, ready = false;
+    function wrap(a) { return ((a % 180) + 180) % 180; }
+    function draw(theta) {
+      // theta runs continuously (it can pass 180 or go below 0); only the readout and arc wrap
+      slash.style.transform = 'rotate(' + (58 - theta) + 'deg)';
+      var w = wrap(theta);
+      deg.textContent = Math.round(w) + '°';
+      var r = w * Math.PI / 180, x = 290 + 45 * Math.cos(r), y = 120 - 45 * Math.sin(r);
+      arc.setAttribute('d', 'M335 120 A45 45 0 0 0 ' + x.toFixed(1) + ' ' + y.toFixed(1));
+    }
+    function tick() {
+      cur += (target - cur) * 0.35;
+      if (Math.abs(target - cur) < 0.05) cur = target;
+      draw(cur);
+      raf = cur === target ? 0 : requestAnimationFrame(tick);
+    }
+    // The slash looks the same every 180°, so aim at whichever copy of the angle is nearest the current one.
+    // Without this, crossing 0°/180° made it swing the long way round (the jump Jay saw).
+    function aim(t) { target = t + 180 * Math.round((cur - t) / 180); if (!raf) raf = requestAnimationFrame(tick); }
+    function spinOnce() {
+      // one half-turn; the slash is symmetric, so it lands exactly where it started
+      if (still || !slash.animate) return;
+      slash.animate([{ transform: 'rotate(-180deg)' }, { transform: 'rotate(0deg)' }],
+                    { duration: 1400, delay: 450, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'backwards' });
+    }
+    function show(lang) { fig.setAttribute('data-lang', lang); if (lang === 'en') spinOnce(); }
+    svg.addEventListener('click', function () { show(fig.getAttribute('data-lang') === 'en' ? 'zh' : 'en'); });
+    if (still) { show('en'); ready = true; }
+    else {
+      // play the 杰構 → KUØ WORKS sequence once, when the drawing is first on screen
+      var play = function () { setTimeout(function () { show('en'); setTimeout(function () { ready = true; }, 1900); }, 1200); };
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.5 });
+        io.observe(svg);
+      } else play();
+    }
+    if (!mouse || still) return;
+    hero.addEventListener('pointermove', function (e) {
+      if (!ready || fig.getAttribute('data-lang') !== 'en') return;
+      var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+      var p = pt.matrixTransform(svg.getScreenCTM().inverse());
+      var t = Math.atan2(120 - p.y, p.x - 290) * 180 / Math.PI;
+      aim(t);
+    });
+    hero.addEventListener('pointerleave', function () { aim(58); });
+  })();
+</script>
+</main><footer class="pfoot"><span>© 2026 KUØ WORKS</span><span><a href="https://www.instagram.com/kuoworks.tw/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.threads.net/@kuoworks.tw" target="_blank" rel="noopener">Threads</a></span></footer>
+</body>
+</html>

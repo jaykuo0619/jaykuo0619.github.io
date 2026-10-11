@@ -5,6 +5,10 @@
 (function () {
   var bar = document.querySelector('[data-collapsible]'); if (!bar) return;
   var root = document.documentElement;
+  // 中文 / EN link: remember the choice so the automatic language redirect respects it.
+  document.querySelectorAll('[data-setlang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('kw-lang', a.getAttribute('data-setlang')); } catch (e) {} });
+  });
   // Phone menu button inside the bar (both sites use the same markup).
   var menu = bar.querySelector('.menu');
   if (menu) {
