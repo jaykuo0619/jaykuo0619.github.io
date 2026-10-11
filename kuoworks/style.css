@@ -1,0 +1,137 @@
+/* KUØ WORKS 杰構 — site stylesheet
+   Layout concept: every page is a sheet in a drawing set. Hairline grid, a title block in the
+   footer, sheet numbers in the corner. Black, grey and white only; each app page adds its own accent. */
+:root {
+  --bg: #F5F5F3;        /* Paper */
+  --surface: #ECECE9;
+  --fg: #111111;        /* Ink */
+  --fg-2: #3C3C3C;      /* Graphite */
+  --muted: #8A8A88;     /* Concrete */
+  --line: #D6D6D2;      /* Mist, a touch darker for hairlines */
+  --invert-bg: #111111;
+  --invert-fg: #F5F5F3;
+
+  --font-latin: "Jost", "Helvetica Neue", Arial, sans-serif;
+  --font-zh: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font: var(--font-latin), var(--font-zh);
+  /* Jost has no CJK glyphs, so Chinese falls through to Noto Sans TC in the same stack. */
+  --font-sans: "Jost", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.75rem;
+  --step-3: clamp(2rem, 4.5vw, 3rem);
+  --step-4: clamp(2.5rem, 7vw, 4.75rem);
+
+  --wrap: 72rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121212; --surface: #1B1B1A; --fg: #EDEDEA; --fg-2: #C4C4C0; --muted: #8A8A88;
+    --line: #2E2E2C; --invert-bg: #EDEDEA; --invert-fg: #121212; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121212; --surface: #1B1B1A; --fg: #EDEDEA; --fg-2: #C4C4C0; --muted: #8A8A88;
+  --line: #2E2E2C; --invert-bg: #EDEDEA; --invert-fg: #121212; color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--step-0);
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+img, svg { max-width: 100%; }
+a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+h1, h2, h3 { font-weight: 400; line-height: 1.3; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* Small uppercase Latin labels, as on the IG posts */
+.label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.en { font-family: var(--font-sans); color: var(--muted); letter-spacing: 0.02em; }
+
+/* ---------- Header ---------- */
+.site-head { border-bottom: 1px solid var(--line); }
+.site-head .wrap {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 0.75rem 2rem; padding-block: 1.25rem;
+}
+.brand { display: inline-flex; align-items: center; color: var(--fg); text-decoration: none; }
+.brand svg { height: 1.35rem; width: auto; display: block; }
+.nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; font-size: 0.9375rem; }
+.nav a { text-decoration: none; color: var(--fg-2); padding-block: 0.25rem; border-bottom: 1px solid transparent; }
+.nav a:hover { color: var(--fg); border-bottom-color: var(--fg); }
+.nav a[aria-current="page"] { color: var(--fg); border-bottom-color: var(--fg); }
+
+/* Sheet marker under the header */
+.sheet-bar .wrap {
+  display: flex; justify-content: space-between; gap: 1rem; padding-block: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+.sheet-bar { }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  padding: 0.85rem 1.4rem; border: 1px solid var(--fg);
+  background: var(--fg); color: var(--bg);
+  text-decoration: none; font-size: 0.9375rem; letter-spacing: 0.04em;
+  transition: background .2s, color .2s;
+}
+.btn:hover { background: transparent; color: var(--fg); }
+.btn svg { width: 1.05rem; height: 1.05rem; fill: currentColor; flex: none; }
+.btn.ghost { background: transparent; color: var(--fg); }
+.btn.ghost:hover { background: var(--fg); color: var(--bg); }
+.btn[aria-disabled="true"] {
+  background: transparent; color: var(--muted); border-style: dashed; border-color: var(--muted); cursor: default;
+}
+
+/* ---------- Footer title block ---------- */
+.site-foot { margin-top: clamp(4rem, 10vw, 7rem); border-top: 1px solid var(--line); }
+.titleblock {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  border-left: 1px solid var(--line); margin-block: 2.5rem;
+}
+.titleblock > div { border-right: 1px solid var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 0.75rem 1rem; min-width: 0; margin-top: -1px; }
+.titleblock dt { font-size: 0.6875rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.titleblock dd { margin: 0.25rem 0 0; font-size: 0.9375rem; color: var(--fg); }
+.titleblock a { text-decoration: none; }
+.titleblock a:hover { text-decoration: underline; }
+.foot-note { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; padding-bottom: 2.5rem; color: var(--muted); font-size: var(--step--1); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+.btn-en { font-size: 0.75rem; letter-spacing: 0.08em; opacity: 0.65; }
+@media (max-width: 30rem) { .btn-en { display: none; } }
+
+/* Section scaffolding shared by every page */
+.section { padding-block: clamp(3.5rem, 8vw, 6rem); border-bottom: 1px solid var(--line); }
+.section-head { display: grid; grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); gap: 1rem 2rem; margin-bottom: clamp(2rem, 5vw, 3.5rem); align-items: baseline; }
+.section-head h2 { font-size: var(--step-3); }
+.section-head .en { display: block; font-size: var(--step-0); margin-top: 0.25rem; }
+@media (max-width: 44rem) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+.lede { font-size: var(--step-1); color: var(--fg-2); max-width: 34em; line-height: 1.8; }
+.prose { max-width: 36em; color: var(--fg-2); }
+.prose p + p { margin-top: 1em; }
+.example-tag { font-size: 0.6875rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
