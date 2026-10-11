@@ -45,7 +45,7 @@
   .side.r .note { flex-direction: row-reverse; }
   .side.r .note .t { text-align: left; }
   .note small { display: block; font-size: 0.6875rem; letter-spacing: 0.2em; color: var(--muted); }
-  .note b { display: block; font-family: var(--hand); font-weight: 400; font-size: clamp(1rem, 1.6vw, 1.25rem); line-height: 1.4; white-space: nowrap; }
+  .note b { display: block; font-family: var(--hand); font-weight: 400; font-size: clamp(1rem, 1.6vw, 1.25rem); line-height: 1.4; text-wrap: balance; overflow-wrap: anywhere; }
   .note .lead { flex: 1 1 1.5rem; min-width: 1.5rem; height: 1px; background: var(--muted); position: relative; }
   .note .lead::after { content: ""; position: absolute; top: -2.5px; width: 6px; height: 6px; border-radius: 50%; background: var(--fg); }
   .side.l .note .lead::after { right: -3px; }
@@ -66,9 +66,9 @@
   .frame .dim::before { top: 0; } .frame .dim::after { bottom: 0; }
   .frame .dim span { position: absolute; top: 50%; left: -0.55rem; transform: translateY(-50%) rotate(-90deg); transform-origin: center; font-size: 0.625rem; letter-spacing: 0.2em; color: var(--muted); background: var(--surface); padding: 0 0.3rem; white-space: nowrap; }
 
-  /* Phones: no room at the sides, so the notes sit under the photo, two by two, still with short leaders. */
-  @media (max-width: 44rem) {
-    .annot { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "pic pic" "l r"; row-gap: 0.5rem; }
+  /* Phones and tablets: not enough room at the sides, so the notes sit under the photo, two by two. */
+  @media (max-width: 60rem) {
+    .annot { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "pic pic" "l r"; column-gap: 1.5rem; row-gap: 0.5rem; width: min(32rem, 100%); }
     .annot::before { display: none; }
     .annot .frame { grid-area: pic; width: min(17rem, 72%); justify-self: center; }
     .annot .side { gap: 1.25rem; }
