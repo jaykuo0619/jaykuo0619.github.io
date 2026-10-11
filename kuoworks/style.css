@@ -229,3 +229,7 @@ html.bar-mini.bar-open .topbar-tab { opacity: 0; pointer-events: none; }
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; border-top: 1px solid var(--line); }
 .pfoot a { color: var(--fg-2); text-decoration: none; }
 .pfoot a:hover { text-decoration: underline; }
+
+/* ---------- Founder photo ---------- */
+.portrait { display: block; width: min(22rem, 78%); height: auto; aspect-ratio: 4 / 5; object-fit: cover; background: #111; }
+.portrait.sm { width: min(15rem, 62%); }
