@@ -179,7 +179,8 @@ html.bar-mini.bar-open .topbar-tab { opacity: 0; pointer-events: none; }
 .gbar .in { max-width: 64rem; margin-inline: auto; padding-inline: var(--gutter); height: 3rem;
   display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .gbar .mark { font-size: 0.875rem; letter-spacing: 0.3em; text-decoration: none; color: var(--fg); white-space: nowrap; display: inline-flex; align-items: center; }
-.gbar .mark svg { height: 0.95rem; width: auto; display: block; }
+.gbar .mark svg { height: 1.1rem; width: auto; display: block; }
+.gbar .mark .zh { font-family: "Noto Sans TC", sans-serif; font-weight: 300; font-size: 0.95rem; letter-spacing: 0.12em; line-height: 1; margin-left: 0.7em; padding-left: 0.7em; border-left: 1px solid var(--line); }
 .gbar nav { display: flex; gap: clamp(1.25rem, 3.5vw, 2.5rem); font-size: 0.8125rem; }
 .gbar nav a { color: var(--fg-2); text-decoration: none; }
 .gbar nav a:hover, .gbar nav a[aria-current="page"] { color: var(--fg); }
