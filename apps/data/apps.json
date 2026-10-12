@@ -29,10 +29,10 @@
       "platforms": {
         "android": {
           "label": "Android",
-          "version": "1.1.2",
-          "apk": "/apps/partytable/download/partytable-1.1.2.apk",
+          "version": "1.3.0",
+          "apk": "/apps/partytable/download/partytable-1.3.0.apk",
           "size": "0.2 MB",
-          "sha256": "fe02cbef1011bda9fa6570aad3d151885628078da35c8ef573b25e6112f26e82",
+          "sha256": "c4f686b407f44b38865442f6f9e431224ad941984269fed9d06d97e45ea50772",
           "requires": "Android 7.0 以上",
           "note": "直接下載安裝。跟 iPhone、iPad 和網頁版（partytable-jay.web.app）可以同一桌玩。",
           "firstRun": "第一次開啟就能玩，不用註冊。"
@@ -69,6 +69,15 @@
         }
       ],
       "versions": [
+        {
+          "version": "1.3.0",
+          "date": "2026-10-12",
+          "notes": [
+            "新增「分享戰績」：一局結束後把結果做成圖卡，四款樣式可選，可以存到相簿或分享到 IG 限動。",
+            "新增派對票：抽鬼牌、終極密碼、圈圈叉叉、心電感應、擲到 1 歸零免費開桌；其他遊戲開桌或單機需要派對票，加入朋友的桌一律免費。",
+            "修正房主離線、重新連線等多人連線問題。"
+          ]
+        },
         {
           "version": "1.1.2",
           "date": "2026-10-10",
