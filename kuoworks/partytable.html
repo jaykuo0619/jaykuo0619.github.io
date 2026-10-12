@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>揪一桌 PartyTable</title>
-<meta name="description" content="揪一桌：一支手機開桌，朋友沒裝 App 也能用網頁加入。大老二、抽鬼牌、心臟病、誰是臥底、狼人殺、你畫我猜、象棋。iPhone、iPad，即將上架。">
+<meta name="description" content="揪一桌：一支手機開桌，朋友沒裝 App 也能用網頁加入。大老二、抽鬼牌、心臟病、誰是臥底、狼人殺、你畫我猜、象棋。iPhone、iPad，App Store 已上架。">
 <meta property="og:title" content="揪一桌 PartyTable">
-<meta property="og:description" content="揪一桌：一支手機開桌，朋友沒裝 App 也能用網頁加入。大老二、抽鬼牌、心臟病、誰是臥底、狼人殺、你畫我猜、象棋。iPhone、iPad，即將上架。">
+<meta property="og:description" content="揪一桌：一支手機開桌，朋友沒裝 App 也能用網頁加入。大老二、抽鬼牌、心臟病、誰是臥底、狼人殺、你畫我猜、象棋。iPhone、iPad，App Store 已上架。">
 <link rel="alternate" hreflang="zh-Hant" href="partytable.html">
 <link rel="alternate" hreflang="en" href="en/partytable.html">
 <script>
@@ -36,10 +36,10 @@
   .tile.felt .eyebrow { color: #A9C2B5; } .tile.felt .sub { color: #D8E2DC; }
   .tile.felt .pill { background: #F5F5F3; color: #132F24; border-color: #F5F5F3; }
   .tile.felt .pill:hover { background: transparent; color: #F5F5F3; }
-  .tile.felt .pill[aria-disabled="true"] { background: transparent; color: #A9C2B5; border-color: #A9C2B5; }
+  .tile.felt .more { color: #F5F5F3; }
+  .tile.felt span.pill:hover { background: #F5F5F3; color: #132F24; cursor: default; }
   .soon { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: #D8E2DC; margin-bottom: 0.5rem; }
-  .soon::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: #F5F5F3; animation: blink 1.6s ease-in-out infinite; }
-  @keyframes blink { 50% { opacity: 0.2; } }
+  .soon::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: #34C759; }
 
   /* Seven games fanned out like a hand of cards; it scales with the tile so a phone shows all seven. */
   .hand { list-style: none; margin: 0; padding: 0; display: flex; justify-content: center; width: min(46rem, 100%); --w: clamp(3.4rem, 11vw, 6.25rem); }
@@ -60,12 +60,12 @@
 </style>
 
 <section class="tile hero felt" aria-label="揪一桌">
-  <p class="soon">審核中 · 即將上架</p>
+  <p class="soon">App Store 已上架</p>
   <p class="eyebrow">iPhone · iPad · 網頁</p>
   <h1><span class="nb">週末揪一桌，</span><span class="nb">不用帶牌。</span></h1>
   <div class="links">
-    <a class="pill" href="https://partytable-jay.web.app" target="_blank" rel="noopener">先用網頁玩</a>
-    <span class="pill" aria-disabled="true">App Store 即將上架</span>
+    <span class="pill">App Store 搜尋「揪一桌」</span>
+    <a class="more" href="https://partytable-jay.web.app" target="_blank" rel="noopener">先用網頁玩</a>
   </div>
   <div class="art hand-wrap">
     <ul class="hand" aria-label="遊戲：大老二、抽鬼牌、心臟病、誰是臥底、狼人殺、你畫我猜、象棋">
@@ -91,7 +91,7 @@
 <section class="tile wide ink" aria-label="網頁版">
   <p class="eyebrow">朋友不用裝 App</p>
   <h2>這週末要揪誰？</h2>
-  <div class="links"><a class="pill" href="https://partytable-jay.web.app" target="_blank" rel="noopener">先用網頁玩</a><a class="more" href="https://www.instagram.com/kuoworks.tw/" target="_blank" rel="noopener">上架消息</a></div>
+  <div class="links"><a class="pill" href="https://partytable-jay.web.app" target="_blank" rel="noopener">先用網頁玩</a><a class="more" href="https://www.instagram.com/kuoworks.tw/" target="_blank" rel="noopener">最新消息</a></div>
   <div class="art"><span class="url">partytable-jay.web.app</span></div>
 </section>
 </main><footer class="pfoot"><span>© 2026 KUØ WORKS 杰構工作室</span><span><a href="https://www.instagram.com/kuoworks.tw/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.threads.net/@kuoworks.tw" target="_blank" rel="noopener">Threads</a></span></footer>

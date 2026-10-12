@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PartyTable</title>
-<meta name="description" content="PartyTable: one phone opens the table, friends join on the web without the app. Big Two, Old Maid, Slapjack, Spy, Werewolf, Draw & Guess, Chinese chess. iPhone and iPad, coming soon.">
+<meta name="description" content="PartyTable: one phone opens the table, friends join on the web without the app. Big Two, Old Maid, Slapjack, Spy, Werewolf, Draw & Guess, Chinese chess. On the App Store for iPhone and iPad.">
 <meta property="og:title" content="PartyTable">
-<meta property="og:description" content="PartyTable: one phone opens the table, friends join on the web without the app. Big Two, Old Maid, Slapjack, Spy, Werewolf, Draw & Guess, Chinese chess. iPhone and iPad, coming soon.">
+<meta property="og:description" content="PartyTable: one phone opens the table, friends join on the web without the app. Big Two, Old Maid, Slapjack, Spy, Werewolf, Draw & Guess, Chinese chess. On the App Store for iPhone and iPad.">
 <link rel="alternate" hreflang="zh-Hant" href="../partytable.html">
 <link rel="alternate" hreflang="en" href="partytable.html">
 <script>
@@ -36,10 +36,10 @@
   .tile.felt .eyebrow { color: #A9C2B5; } .tile.felt .sub { color: #D8E2DC; }
   .tile.felt .pill { background: #F5F5F3; color: #132F24; border-color: #F5F5F3; }
   .tile.felt .pill:hover { background: transparent; color: #F5F5F3; }
-  .tile.felt .pill[aria-disabled="true"] { background: transparent; color: #A9C2B5; border-color: #A9C2B5; }
+  .tile.felt .more { color: #F5F5F3; }
+  .tile.felt span.pill:hover { background: #F5F5F3; color: #132F24; cursor: default; }
   .soon { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: #D8E2DC; margin-bottom: 0.5rem; }
-  .soon::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: #F5F5F3; animation: blink 1.6s ease-in-out infinite; }
-  @keyframes blink { 50% { opacity: 0.2; } }
+  .soon::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: #34C759; }
 
   /* Seven games fanned out like a hand of cards; it scales with the tile so a phone shows all seven. */
   .hand { list-style: none; margin: 0; padding: 0; display: flex; justify-content: center; width: min(46rem, 100%); --w: clamp(3.4rem, 11vw, 6.25rem); }
@@ -60,12 +60,12 @@
 </style>
 
 <section class="tile hero felt" aria-label="PartyTable">
-  <p class="soon">In review · coming soon</p>
+  <p class="soon">Now on the App Store</p>
   <p class="eyebrow">iPhone · iPad · Web</p>
   <h1><span class="nb">Game night.</span> <span class="nb">No cards needed.</span></h1>
   <div class="links">
-    <a class="pill" href="https://partytable-jay.web.app" target="_blank" rel="noopener">Play on the web</a>
-    <span class="pill" aria-disabled="true">App Store coming soon</span>
+    <span class="pill">Search "PartyTable" on the App Store</span>
+    <a class="more" href="https://partytable-jay.web.app" target="_blank" rel="noopener">Play on the web</a>
   </div>
   <div class="art hand-wrap">
     <ul class="hand" aria-label="Games: Big Two, Old Maid, Slapjack, Spy, Werewolf, Draw &amp; Guess, Chinese chess">
@@ -91,7 +91,7 @@
 <section class="tile wide ink" aria-label="Web">
   <p class="eyebrow">No app needed for friends</p>
   <h2>Who are you inviting this weekend?</h2>
-  <div class="links"><a class="pill" href="https://partytable-jay.web.app" target="_blank" rel="noopener">Play on the web</a><a class="more" href="https://www.instagram.com/kuoworks.tw/" target="_blank" rel="noopener">Launch news</a></div>
+  <div class="links"><a class="pill" href="https://partytable-jay.web.app" target="_blank" rel="noopener">Play on the web</a><a class="more" href="https://www.instagram.com/kuoworks.tw/" target="_blank" rel="noopener">News</a></div>
   <div class="art"><span class="url">partytable-jay.web.app</span></div>
 </section>
 </main><footer class="pfoot"><span>© 2026 KUØ WORKS</span><span><a href="https://www.instagram.com/kuoworks.tw/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.threads.net/@kuoworks.tw" target="_blank" rel="noopener">Threads</a></span></footer>
