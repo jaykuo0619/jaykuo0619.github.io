@@ -43,9 +43,12 @@
   .zero .lead { stroke: var(--muted); stroke-width: 0.5; fill: none; }
   .zero .read { font-variant-numeric: tabular-nums; fill: var(--fg); font-size: 10px; letter-spacing: 0.5px; }
   .zero figcaption { margin-top: 0.75rem; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; }
-  .zero .ink { fill: currentColor; fill-opacity: 0; stroke: currentColor; stroke-width: 0.8; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); }
+  .zero .ink { fill: currentColor; fill-opacity: 0; stroke: currentColor; stroke-width: 0.8; stroke-dasharray: var(--len) 99999; stroke-dashoffset: var(--len); opacity: 0; }
   .zero .pencil { fill: none; stroke: var(--muted); stroke-width: 0.8; }
-  .zero .ring, .zero .slash-in, .zero .marks, .zero .zh-notes, .zero .tool { opacity: 0; }
+  .zero .ring, .zero .slash-in, .zero .marks, .zero .zh-notes, .zero .tool, .zero .seal { opacity: 0; }
+  .zero .seal { transform-box: fill-box; transform-origin: center; }
+  .zero .seal rect { fill: none; stroke: currentColor; stroke-width: 1.1; }
+  .zero .seal text { fill: currentColor; font-family: "Noto Sans TC", sans-serif; font-weight: 300; }
   .zero .tool { transform-box: view-box; transform-origin: 0 0; }
   .zero .tool rect { fill: var(--bg); fill-opacity: 0.88; stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; }
   .zero .tool line { stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; }
@@ -53,8 +56,8 @@
   .zero .compass circle { fill: var(--bg); stroke: var(--fg); stroke-width: 1; vector-effect: non-scaling-stroke; }
   .zero .compass line { stroke: var(--fg); }
   .zero.done .zh-part, .zero.done .zh-notes { display: none; }
-  .zero.done .guide, .zero.done .ink { stroke-dashoffset: 0; fill-opacity: 1; }
-  .zero.done .ring, .zero.done .slash-in, .zero.done .marks { opacity: 1; }
+  .zero.done .guide, .zero.done .ink { stroke-dashoffset: 0; fill-opacity: 1; opacity: 1; }
+  .zero.done .ring, .zero.done .slash-in, .zero.done .marks, .zero.done .seal { opacity: 1; }
   .zero .cap-touch { display: none; }
   @media (hover: none) { .zero .cap-mouse { display: none; } .zero .cap-touch { display: inline; } }
 
@@ -111,18 +114,19 @@
             <text class="note" x="4" y="262">Ø = 0 · START FROM ZERO</text>
             <text class="note" x="396" y="262" text-anchor="end">SOFTWARE STUDIO · TAIWAN</text>
           </g>
-          <text class="ink zh-part" id="jie" data-len="2600" style="--len:2600" x="145" y="160" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-weight="300" font-size="104">杰</text>
-          <text class="ink zh-part" id="gou" data-len="2600" style="--len:2600" x="262" y="160" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-weight="300" font-size="104">構</text>
+          <text class="ink zh-part" id="jie" data-len="4200" style="--len:4200" x="145" y="160" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-weight="300" font-size="104">杰</text>
+          <text class="ink zh-part" id="gou" data-len="4200" style="--len:4200" x="262" y="160" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-weight="300" font-size="104">構</text>
           <g class="zh-notes" id="zh-notes">
             <text class="note" x="4" y="262">零 · 從零開始</text>
             <text class="note" x="396" y="262" text-anchor="end">杰構工作室 · 台灣</text>
           </g>
-          <text class="ink en-part" id="ku" data-len="1300" style="--len:1300" x="224" y="177" text-anchor="end" font-family="Jost, sans-serif" font-weight="300" font-size="160" letter-spacing="2">KU</text>
+          <text class="ink en-part" id="ku" data-len="2200" style="--len:2200" x="224" y="177" text-anchor="end" font-family="Jost, sans-serif" font-weight="300" font-size="160" letter-spacing="2">KU</text>
           <circle class="pencil en-part" id="ring-p" cx="290" cy="120" r="50.7" stroke-dasharray="318.6" stroke-dashoffset="318.6" transform="rotate(-90 290 120)"/>
           <circle class="ring en-part" id="ring" cx="290" cy="120" r="50.7" fill="none" stroke="currentColor" stroke-width="13.3"/>
           <line class="pencil en-part" id="slash-p" x1="248.6" y1="188.4" x2="334" y2="51.6" stroke-dasharray="162" stroke-dashoffset="162"/>
           <g class="slash-in en-part" id="slash-in"><g class="slash" id="slash"><path fill="currentColor" transform="translate(170 0)" d="M83.34 191.34L168.81 54.57L159.35 48.66L73.88 185.43Z"/></g></g>
-          <text class="ink en-part" id="works" data-len="420" style="--len:420" x="4" y="236" font-family="Jost, sans-serif" font-weight="400" font-size="40" letter-spacing="24.5">WORKS</text>
+          <text class="ink en-part" id="works" data-len="1500" style="--len:1500" x="4" y="236" font-family="Jost, sans-serif" font-weight="400" font-size="40" letter-spacing="24.5">WORKS</text>
+          <g class="seal en-part" id="seal" aria-hidden="true"><rect x="362" y="180" width="30" height="58"/><text x="377" y="205" text-anchor="middle" font-size="19">杰</text><text x="377" y="229" text-anchor="middle" font-size="19">構</text></g>
           <g class="tool" id="ruler"><rect x="0" y="0" width="264" height="13" rx="1.5"/><line x1="4" x2="4" y1="0" y2="3.5"/><line x1="12" x2="12" y1="0" y2="3.5"/><line x1="20" x2="20" y1="0" y2="3.5"/><line x1="28" x2="28" y1="0" y2="3.5"/><line x1="36" x2="36" y1="0" y2="3.5"/><line x1="44" x2="44" y1="0" y2="3.5"/><line x1="52" x2="52" y1="0" y2="3.5"/><line x1="60" x2="60" y1="0" y2="3.5"/><line x1="68" x2="68" y1="0" y2="3.5"/><line x1="76" x2="76" y1="0" y2="3.5"/><line x1="84" x2="84" y1="0" y2="3.5"/><line x1="92" x2="92" y1="0" y2="3.5"/><line x1="100" x2="100" y1="0" y2="3.5"/><line x1="108" x2="108" y1="0" y2="3.5"/><line x1="116" x2="116" y1="0" y2="3.5"/><line x1="124" x2="124" y1="0" y2="3.5"/><line x1="132" x2="132" y1="0" y2="3.5"/><line x1="140" x2="140" y1="0" y2="3.5"/><line x1="148" x2="148" y1="0" y2="3.5"/><line x1="156" x2="156" y1="0" y2="3.5"/><line x1="164" x2="164" y1="0" y2="3.5"/><line x1="172" x2="172" y1="0" y2="3.5"/><line x1="180" x2="180" y1="0" y2="3.5"/><line x1="188" x2="188" y1="0" y2="3.5"/><line x1="196" x2="196" y1="0" y2="3.5"/><line x1="204" x2="204" y1="0" y2="3.5"/><line x1="212" x2="212" y1="0" y2="3.5"/><line x1="220" x2="220" y1="0" y2="3.5"/><line x1="228" x2="228" y1="0" y2="3.5"/><line x1="236" x2="236" y1="0" y2="3.5"/><line x1="244" x2="244" y1="0" y2="3.5"/><line x1="252" x2="252" y1="0" y2="3.5"/></g>
           <g class="tool compass" id="compass"><line x1="290" y1="120" x2="290" y2="69.3" stroke-width="1.6"/><circle cx="290" cy="120" r="3"/><circle cx="290" cy="69.3" r="1.8"/></g>
         </svg>
@@ -212,7 +216,7 @@
     // Drafting: every step is a Web Animation, so a tap mid-drawing simply cancels and starts the other name.
     var $ = function (id) { return document.getElementById(id); };
     var E = 'cubic-bezier(.6,0,.3,1)', timers = [], busy = false;
-    var zhEls = ['jie', 'gou', 'zh-notes'].map($), enEls = ['ku', 'ring-p', 'ring', 'slash-p', 'slash-in', 'works'].map($).concat(fig.querySelector('.marks'));
+    var zhEls = ['jie', 'gou', 'zh-notes'].map($), enEls = ['ku', 'ring-p', 'ring', 'slash-p', 'slash-in', 'works', 'seal'].map($).concat(fig.querySelector('.marks'));
     function later(ms, fn) { timers.push(setTimeout(fn, ms)); }
     function anim(el, frames, dur, delay, easing) { return el.animate(frames, { duration: dur, delay: delay || 0, easing: easing || E, fill: 'forwards' }); }
     function len(el) { return +(el.dataset.len || el.getAttribute('stroke-dasharray')); }
@@ -247,7 +251,8 @@
       anim($('slash-p'), [{ strokeDashoffset: 0, opacity: 1 }, { strokeDashoffset: 0, opacity: 0 }], 400, t + 3900, 'ease');   // the pencil line goes once the slash is inked, so it can turn freely
       pencil($('works'), 1200, t + 3400);
       appear(fig.querySelector('.marks'), 600, t + 4500);
-      later(t + 4900, function () { ready = true; });
+      anim($('seal'), [{ opacity: 0, transform: 'scale(1.25)' }, { opacity: 1, transform: 'scale(1)' }], 500, t + 4900, 'cubic-bezier(.3,1.4,.5,1)');   // 杰構 seal stamped last
+      later(t + 5400, function () { ready = true; });
     }
     function show(lang, first) {
       reset(); ready = false; fig.setAttribute('data-lang', lang);

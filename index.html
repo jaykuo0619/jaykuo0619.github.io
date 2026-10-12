@@ -23,7 +23,7 @@
   .dw .guide { stroke: var(--muted); stroke-width: 1; fill: none; opacity: 0.55; stroke-dasharray: 1000 1000; stroke-dashoffset: 1000; }
   .dw .guide.dash { opacity: 0.3; }
   .dw .tick { stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; }
-  .dw .nm { font-weight: 300; fill: currentColor; fill-opacity: 0; stroke: currentColor; stroke-width: 1; vector-effect: non-scaling-stroke; stroke-dasharray: 1400; stroke-dashoffset: 1400; }
+  .dw .nm { font-weight: 300; fill: currentColor; fill-opacity: 0; stroke: currentColor; stroke-width: 1; vector-effect: non-scaling-stroke; stroke-dasharray: 1400 99999; stroke-dashoffset: 1400; }
   .dw .nm.han { font-family: "Noto Sans TC", sans-serif; letter-spacing: 0.16em; }
   .dw .nm.lat { font-family: "Jost", sans-serif; letter-spacing: 0.06em; }
   .dw .ruler rect { fill: var(--bg); stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; fill-opacity: 0.85; }
@@ -195,7 +195,7 @@
       el.animate([{ strokeDashoffset: 1400, fillOpacity: 0 }, { strokeDashoffset: 0, fillOpacity: 0, offset: 0.72 }, { strokeDashoffset: 0, fillOpacity: 1 }], { duration: 2000, delay: delay, easing: 'ease-in-out', fill: 'forwards' });
     }
     function erase(lang) {
-      return names[lang].animate([{ strokeDashoffset: 0, fillOpacity: 1 }, { strokeDashoffset: 0, fillOpacity: 0, offset: 0.4 }, { strokeDashoffset: -1400, fillOpacity: 0 }], { duration: 900, easing: 'ease-in', fill: 'forwards' });
+      return names[lang].animate([{ strokeDashoffset: 0, fillOpacity: 1 }, { strokeDashoffset: 0, fillOpacity: 0, offset: 0.4 }, { strokeDashoffset: 1400, fillOpacity: 0 }], { duration: 900, easing: 'ease-in', fill: 'forwards' });
     }
     function rule(m, lang, delay) {
       // Ruler slides in under the baseline, the side guides and dimension are re-measured for this name, then the ruler leaves.
