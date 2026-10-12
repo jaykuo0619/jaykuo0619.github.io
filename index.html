@@ -16,10 +16,21 @@
 <script src="kuoworks/topbar.js" defer></script>
 <style>
   /* Home: one page of tiles. Each tile is one thing, with at most two links; details live on resume.html and kuoworks/. */
-  .name { position: relative; height: 1.1em; width: 100%; font-size: clamp(3.25rem, 11vw, 7.5rem); font-weight: 300; letter-spacing: 0.06em; line-height: 1.1; margin-top: 0.5rem; cursor: pointer; }
-  .name span { position: absolute; left: 0; right: 0; top: 0; white-space: nowrap; transition: opacity .7s ease; }
-  .name .zh { font-family: "Noto Sans TC", sans-serif; letter-spacing: 0.18em; font-weight: 300; }
-  .name[data-lang="en"] .zh, .name[data-lang="zh"] .en-n { opacity: 0; }
+  /* Name as a drafting sheet: a ruler slides in, guide lines are ruled, the pencil outlines the letters,
+     then they are inked. Switching erases one name and drafts the other; 杰構 signs the title block. */
+  .name { margin: 0.75rem 0 0; width: min(46rem, 100%); cursor: pointer; font-size: 1rem; line-height: 1; }
+  .name svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .dw .guide { stroke: var(--muted); stroke-width: 1; fill: none; opacity: 0.55; stroke-dasharray: 1000 1000; stroke-dashoffset: 1000; }
+  .dw .guide.dash { opacity: 0.3; }
+  .dw .tick { stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .dw .nm { font-weight: 300; fill: currentColor; fill-opacity: 0; stroke: currentColor; stroke-width: 1; vector-effect: non-scaling-stroke; stroke-dasharray: 1400; stroke-dashoffset: 1400; }
+  .dw .nm.han { font-family: "Noto Sans TC", sans-serif; letter-spacing: 0.16em; }
+  .dw .nm.lat { font-family: "Jost", sans-serif; letter-spacing: 0.06em; }
+  .dw .ruler rect { fill: var(--bg); stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; fill-opacity: 0.85; }
+  .dw .tb rect, .dw .tb line { fill: none; stroke: currentColor; stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .dw .tb text { fill: currentColor; font-family: "Noto Sans TC", sans-serif; font-weight: 300; }
+  .dw .tb .s { font-family: "Jost", sans-serif; fill: var(--muted); letter-spacing: 0.2em; }
+  .dw .lbl { fill: var(--muted); font-family: "Jost", sans-serif; font-size: 18px; letter-spacing: 0.2em; }
 
   .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.75rem, 5vw, 4.5rem); width: min(44rem, 100%); }
   .stats div { min-width: 0; }
@@ -70,7 +81,20 @@
 <main class="tiles">
   <section class="tile hero" aria-label="Jay Kuo">
     <p class="eyebrow">Engineering &amp; Planning</p>
-    <h1 class="name" id="name" data-lang="en" aria-label="Jay Kuo"><span class="en-n">JAY KUO</span><span class="zh" aria-hidden="true">郭泓毅</span></h1>
+    <h1 class="name" id="name" aria-label="Jay Kuo">
+      <svg class="dw" viewBox="0 0 800 270" aria-hidden="true" focusable="false">
+        <g class="ruler" opacity="0"><rect x="40" y="198" width="720" height="20" rx="2"/><g id="rticks"></g></g>
+        <line class="guide" id="g-cap" x1="0" x2="800" y1="66" y2="66"/>
+        <line class="guide" id="g-base" x1="0" x2="800" y1="166" y2="166"/>
+        <line class="guide dash" id="g-mid" x1="400" x2="400" y1="16" y2="220"/>
+        <line class="guide" id="g-l" x1="0" x2="0" y1="16" y2="220"/>
+        <line class="guide" id="g-r" x1="0" x2="0" y1="16" y2="220"/>
+        <g id="dim" opacity="0"><line class="tick" id="d-line" y1="38" y2="38"/><line class="tick" id="d-a" y1="31" y2="45"/><line class="tick" id="d-b" y1="31" y2="45"/><text class="lbl" id="d-txt" y="24" text-anchor="middle"></text></g>
+        <text class="nm han" id="nm-zh" x="400" y="166" text-anchor="middle" font-size="118">郭泓毅</text>
+        <text class="nm lat" id="nm-en" x="400" y="166" text-anchor="middle" font-size="128">JAY KUO</text>
+        <g class="tb" id="tb" opacity="0"><rect x="540" y="226" width="260" height="42"/><line x1="626" x2="626" y1="226" y2="268"/><text x="583" y="256" text-anchor="middle" font-size="25">杰構</text><text class="s" x="713" y="253" text-anchor="middle" font-size="15">KUØ WORKS</text></g>
+      </svg>
+    </h1>
     <p class="sub">Production control planner at TSMC.<br>Founder of KUØ WORKS.</p>
     <div class="links"><a class="pill" href="resume.html">See résumé</a><a class="more" href="Jay_Kuo_CV.pdf" target="_blank" rel="noopener">Download CV</a></div>
     <div class="art">
@@ -144,11 +168,58 @@
 
 <script>
   (function () {
-    // Name: Chinese first, then English; never both at once. Tap to switch.
-    var name = document.getElementById('name');
+    // Name: drafted like a drawing. The ruler and guides are laid down, 郭泓毅 is pencilled then inked,
+    // erased, and JAY KUO is drafted in its place; 杰構 signs the title block. Tap to redraw the other name.
+    var h1 = document.getElementById('name'), svg = h1.querySelector('svg');
+    var $ = function (id) { return document.getElementById(id); };
+    var names = { zh: $('nm-zh'), en: $('nm-en') }, gl = $('g-l'), gr = $('g-r');
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!still) { name.setAttribute('data-lang', 'zh'); setTimeout(function () { name.setAttribute('data-lang', 'en'); }, 1100); }
-    name.addEventListener('click', function () { name.setAttribute('data-lang', name.getAttribute('data-lang') === 'en' ? 'zh' : 'en'); });
+    var ticks = $('rticks'), NS = 'http://www.w3.org/2000/svg';
+    for (var x = 40; x <= 760; x += 12) { var t = document.createElementNS(NS, 'line'); var long = (x - 40) % 120 === 0;
+      t.setAttribute('class', 'tick'); t.setAttribute('x1', x); t.setAttribute('x2', x); t.setAttribute('y1', 198); t.setAttribute('y2', long ? 209 : 204); ticks.appendChild(t); }
+    var E = 'cubic-bezier(.6,0,.3,1)';
+    function line(el, from, to, dur, delay) { return el.animate([{ strokeDasharray: '1000 1000', strokeDashoffset: from }, { strokeDasharray: '1000 1000', strokeDashoffset: to }], { duration: dur, delay: delay || 0, easing: E, fill: 'forwards' }); }
+    function fade(el, a, b, dur, delay) { return el.animate([{ opacity: a }, { opacity: b }], { duration: dur, delay: delay || 0, easing: 'ease', fill: 'forwards' }); }
+    function measure(lang) {
+      var b = names[lang].getBBox(), l = Math.round(b.x) - 6, r = Math.round(b.x + b.width) + 6;
+      return { l: l, r: r, w: r - l };
+    }
+    function setDim(m, lang) {
+      [gl, gr].forEach(function (g, i) { var x = i ? m.r : m.l; g.setAttribute('x1', x); g.setAttribute('x2', x); });
+      $('d-line').setAttribute('x1', m.l); $('d-line').setAttribute('x2', m.r);
+      $('d-a').setAttribute('x1', m.l); $('d-a').setAttribute('x2', m.l); $('d-b').setAttribute('x1', m.r); $('d-b').setAttribute('x2', m.r);
+      $('d-txt').setAttribute('x', (m.l + m.r) / 2); $('d-txt').textContent = lang === 'zh' ? '3 字' : '7 CHARS';
+    }
+    function draw(lang, delay) {
+      var el = names[lang];
+      el.animate([{ strokeDashoffset: 1400, fillOpacity: 0 }, { strokeDashoffset: 0, fillOpacity: 0, offset: 0.72 }, { strokeDashoffset: 0, fillOpacity: 1 }], { duration: 2000, delay: delay, easing: 'ease-in-out', fill: 'forwards' });
+    }
+    function erase(lang) {
+      return names[lang].animate([{ strokeDashoffset: 0, fillOpacity: 1 }, { strokeDashoffset: 0, fillOpacity: 0, offset: 0.4 }, { strokeDashoffset: -1400, fillOpacity: 0 }], { duration: 900, easing: 'ease-in', fill: 'forwards' });
+    }
+    function rule(m, lang, delay) {
+      // Ruler slides in under the baseline, the side guides and dimension are re-measured for this name, then the ruler leaves.
+      var ru = svg.querySelector('.ruler');
+      ru.animate([{ opacity: 0, transform: 'translateX(-60px)' }, { opacity: 1, transform: 'none', offset: 0.25 }, { opacity: 1, transform: 'none', offset: 0.75 }, { opacity: 0, transform: 'translateX(40px)' }], { duration: 2600, delay: delay, easing: E, fill: 'forwards' });
+      setTimeout(function () { setDim(m, lang); line(gl, 1000, 810, 600); line(gr, 1000, 810, 600, 120); fade($('dim'), 0, 1, 400, 500); }, delay + 300);
+    }
+    var cur = null, busy = false;
+    function show(lang) {
+      if (busy || lang === cur) return; busy = true;
+      var m = measure(lang), wait = 0;
+      if (cur) { erase(cur); fade($('dim'), 1, 0, 300); line(gl, 810, 1000, 400); line(gr, 810, 1000, 400); wait = 600; }
+      rule(m, lang, wait); draw(lang, wait + 700);
+      cur = lang; setTimeout(function () { busy = false; }, wait + 2600);
+    }
+    function start() {
+      if (still) { setDim(measure('en'), 'en'); $('dim').style.opacity = 1; names.en.style.cssText = 'stroke-dashoffset:0;fill-opacity:1'; $('tb').style.opacity = 1; cur = 'en'; return; }
+      line($('g-base'), 1000, 200, 900); line($('g-cap'), 1000, 200, 900, 150); line($('g-mid'), 1000, 810, 700, 300);
+      setTimeout(function () { show('zh'); }, 500);
+      setTimeout(function () { show('en'); }, 3800);
+      setTimeout(function () { var tb = $('tb'); tb.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 700, easing: E, fill: 'forwards' }); }, 7400);
+    }
+    h1.addEventListener('click', function () { show(cur === 'en' ? 'zh' : 'en'); });
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start);
   })();
 </script>
 </body>
