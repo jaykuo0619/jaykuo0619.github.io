@@ -69,26 +69,60 @@
   .tile.film { padding-bottom: clamp(1.5rem, 4vw, 2.5rem); }
   .film video { display: block; width: 100%; max-width: 60rem; aspect-ratio: 16 / 9; background: #000; margin-top: 2rem; }
   .film.tall video { aspect-ratio: 9 / 16; max-width: 22rem; }
-  /* Scroll story: each feature pins to the screen while its picture settles into place, like apple.com */
-  .story { grid-column: 1 / -1; }
-  .ch { position: relative; height: 175vh; background: var(--surface); }
-  .ch + .ch { margin-top: 0.75rem; }
-  .ch.dark { background: #111111; color: #F5F5F3; }
-  .ch .pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(1.25rem, 3vh, 2.25rem); padding: 4.5rem 1.25rem 2rem; text-align: center; overflow: hidden; }
-  .ch .eyebrow { font-size: 0.8125rem; letter-spacing: 0.18em; color: var(--muted); }
-  .ch.dark .eyebrow { color: #8A8A88; }
-  .ch h2 { font-weight: 400; font-size: clamp(1.75rem, 4.4vw, 3.25rem); line-height: 1.25; letter-spacing: 0.04em; margin-top: 0.5rem; text-wrap: balance; }
-  .ch .sub { font-size: clamp(1rem, 1.8vw, 1.25rem); color: var(--fg-2); margin: 0.75rem auto 0; max-width: 26em; line-height: 1.6; text-wrap: balance; }
-  .ch.dark .sub { color: #C4C4C0; }
-  .ch figure { margin: 0; width: min(100%, 64rem, calc((100svh - 17rem) * 16 / 9)); min-width: min(100%, 18rem); }
-  .ch img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 1.25rem; background: #000; }
+  /* desktop: a film that is still playing follows you as a small window in the top-left corner */
+  .film .slot { width: 100%; max-width: 60rem; margin-top: 2rem; }
+  .film .slot video { margin: 0 auto; }
+  .film video.floating { position: fixed; z-index: 80; top: calc(env(safe-area-inset-top, 0px) + 4rem); left: 1rem; width: 22rem; max-width: none; margin: 0; border-radius: 12px; box-shadow: 0 18px 50px rgba(0,0,0,.35); }
+  .film .unfloat { display: none; position: fixed; z-index: 81; top: calc(env(safe-area-inset-top, 0px) + 4.4rem); left: calc(23rem - 2.4rem); width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
+  .film.is-floating .unfloat { display: block; }
+  /* Scroll stage: one set of devices stays on screen; scrolling moves them, swaps their screens,
+     and brings in a second iPhone, the Watch or the iPad only while a feature needs it. */
+  .scrolly { grid-column: 1 / -1; position: relative; height: calc(var(--n) * 100vh + 60vh); }
+  .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--surface); color: var(--fg); }
+  .stage .caps { position: absolute; z-index: 5; left: clamp(1.5rem, 6vw, 6rem); top: 50%; transform: translateY(-50%); width: min(30rem, 34vw); height: 16rem; }
+  .stage .cap { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); opacity: 0; }
+  .stage .cap .eyebrow { font-size: 0.8125rem; letter-spacing: 0.18em; color: var(--muted); }
+  .stage .cap h2 { font-weight: 400; font-size: clamp(1.75rem, 3.4vw, 3rem); line-height: 1.25; letter-spacing: 0.04em; margin-top: 0.5rem; text-wrap: balance; }
+  .stage .cap .sub { font-size: clamp(1rem, 1.5vw, 1.1875rem); color: var(--fg-2); margin-top: 0.85rem; line-height: 1.65; text-wrap: pretty; }
+  .stage.dark .cap .sub { color: #C4C4C0; } .stage.dark .cap .eyebrow { color: #8A8A88; }
+  .stage .dots { position: absolute; z-index: 5; right: 1.25rem; top: 50%; transform: translateY(-50%); display: grid; gap: 0.55rem; }
+  .stage .dots i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.2; transition: opacity .3s, transform .3s; }
+  .stage .dots i.on { opacity: 0.85; transform: scale(1.35); }
+  .stage .dev { position: absolute; left: 50%; top: 50%; transform-origin: 50% 50%; opacity: 0; will-change: transform, opacity; }
+  .stage .dev img { display: block; max-width: none; }
+  .stage .layers { position: absolute; overflow: hidden; background: #000; }
+  .stage .layers img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+  /* iPhone: titanium band, black bezel, screen in points (393 × 852) */
+  .stage .phone { width: 417px; height: 876px; margin: -438px 0 0 -208.5px; border-radius: 72px;
+    background: linear-gradient(90deg, #77746f 0%, #e9e6e1 1.6%, #b5b2ac 4%, #8f8c86 50%, #b5b2ac 96%, #e9e6e1 98.4%, #77746f 100%);
+    box-shadow: 0 2px 3px rgba(0,0,0,.28), 0 30px 60px -12px rgba(30,15,15,.38), 0 80px 140px -30px rgba(30,15,15,.3); }
+  .stage .phone::before { content: ""; position: absolute; left: 5px; top: 5px; width: 407px; height: 866px; border-radius: 67px; background: #030303; }
+  .stage .phone::after { content: ""; position: absolute; left: 5px; top: 5px; width: 407px; height: 866px; border-radius: 67px; pointer-events: none;
+    background: linear-gradient(118deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.04) 26%, rgba(255,255,255,0) 38%); }
+  .stage .phone .btn { position: absolute; width: 5px; border-radius: 3px; background: linear-gradient(90deg, #77746f, #e9e6e1 45%, #b5b2ac); }
+  .stage .phone .layers { left: 12px; top: 12px; width: 393px; height: 852px; border-radius: 58px; }
+  /* Apple Watch: aluminium case and sport band */
+  .stage .swatch { width: 420px; height: 1200px; margin: -600px 0 0 -210px; }
+  .stage .swatch .band { position: absolute; left: 90px; width: 240px; height: 430px; background: linear-gradient(90deg, #3B1720, #8E3446 18%, #B8475C 50%, #8E3446 82%, #3B1720); }
+  .stage .swatch .band.t { top: 0; border-radius: 46px 46px 0 0; -webkit-mask: linear-gradient(0deg, #000 70%, transparent); mask: linear-gradient(0deg, #000 70%, transparent); }
+  .stage .swatch .band.b { top: 770px; border-radius: 0 0 46px 46px; -webkit-mask: linear-gradient(180deg, #000 70%, transparent); mask: linear-gradient(180deg, #000 70%, transparent); }
+  .stage .swatch .crown { position: absolute; left: 392px; top: 478px; width: 26px; height: 92px; border-radius: 9px / 14px; background: repeating-linear-gradient(180deg, #D6D7DB 0 2.5px, #86878D 2.5px 5px); }
+  .stage .swatch .case { position: absolute; left: 20px; top: 370px; width: 380px; height: 460px; border-radius: 112px;
+    background: linear-gradient(135deg, #F4F4F6 0%, #CDCED3 18%, #A2A3A9 46%, #C5C6CB 74%, #EDEDF0 100%); box-shadow: 0 50px 120px rgba(0,0,0,.45); }
+  .stage .swatch .glass { position: absolute; left: 7px; top: 7px; width: 366px; height: 446px; border-radius: 106px; background: #050506; }
+  .stage .swatch .layers { left: 15px; top: 15px; width: 336px; height: 416px; border-radius: 91px; }
+  /* iPad */
+  .stage .ipad { width: 1100px; height: 780px; margin: -390px 0 0 -550px; border-radius: 52px;
+    background: linear-gradient(140deg, #6b6b70, #2a2a2e 30%, #1b1b1e 70%, #55555a); box-shadow: 0 60px 120px rgba(60,30,30,.22), inset 0 0 0 2px #8a8a90; }
+  .stage .ipad .layers { left: 24px; top: 24px; width: 1052px; height: 732px; border-radius: 30px; }
+  /* feature cards that float beside the phone */
+  .stage .card img { border-radius: 28px; box-shadow: 0 40px 90px rgba(60,30,30,.16); }
   @media (max-width: 44rem) and (orientation: portrait) {
-    .ch { height: 160vh; }
-    .ch figure { width: min(100%, calc((100svh - 18rem) * 4 / 5)); }
-    .ch img { aspect-ratio: 4 / 5; }
+    .stage .caps { left: 1.25rem; right: 1.25rem; width: auto; top: calc(env(safe-area-inset-top, 0px) + 4.25rem); transform: none; height: 9.5rem; text-align: center; }
+    .stage .cap { top: 0; transform: none; }
+    .stage .cap h2 { font-size: 1.625rem; } .stage .cap .sub { font-size: 0.9375rem; margin-top: 0.5rem; }
+    .stage .dots { display: none; }
   }
-  .js .ch .txt, .js .ch figure { will-change: transform, opacity; }
-  @media (prefers-reduced-motion: reduce) { .ch { height: auto; } .ch .pin { position: static; height: auto; padding-block: 4rem; } }
 </style>
 
 <section class="tile hero" aria-label="OurDays">
@@ -107,90 +141,143 @@
   </div>
 </section>
 
-<section class="tile wide ink film" aria-label="enAB">
+<section class="tile wide ink film" aria-label="OurDays launch film">
   <p class="eyebrow">Launch film · 4 min</p>
   <h2>Meet OurDays in four minutes.</h2>
-  <video id="film" controls playsinline preload="none" src="../video/ourdays-film-en-16x9.mp4" poster="../video/ourdays-film-en-16x9.jpg" data-tall="../video/ourdays-film-en-9x16" aria-label="enAB"></video>
+  <div class="slot"><video id="film" controls playsinline preload="none" src="../video/ourdays-film-en-16x9.mp4" poster="../video/ourdays-film-en-16x9.jpg" data-tall="../video/ourdays-film-en-9x16" aria-label="OurDays launch film"></video></div>
+  <button class="unfloat" type="button" aria-label="Close mini player">×</button>
 </section>
 <script>
   // phones held upright get the 9:16 cut; everything else keeps 16:9
   (function () {
     var v = document.getElementById('film');
     if (window.matchMedia('(max-width: 44rem) and (orientation: portrait)').matches) {
-      v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; v.parentNode.classList.add('tall');
+      v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; v.closest('.film').classList.add('tall');
     }
+    // scrolled away while playing: on desktop the film keeps going in a small corner window; on phones it pauses
+    var tile = v.closest('.film'), slot = tile.querySelector('.slot'), x = tile.querySelector('.unfloat'), away = false;
+    var desk = window.matchMedia('(min-width: 56rem) and (hover: hover)');
+    function sync() {
+      var float = away && !v.paused && !v.ended && desk.matches;
+      if (float && !v.classList.contains('floating')) slot.style.height = slot.offsetHeight + 'px';
+      if (!float) slot.style.height = '';
+      v.classList.toggle('floating', float); tile.classList.toggle('is-floating', float);
+    }
+    new IntersectionObserver(function (es) {
+      away = es[0].intersectionRatio < 0.35;
+      if (away && !desk.matches && !v.paused) v.pause();
+      sync();
+    }, { threshold: [0, 0.35, 1] }).observe(slot);
+    v.addEventListener('play', sync); v.addEventListener('pause', sync); v.addEventListener('ended', sync);
+    x.addEventListener('click', function () { v.pause(); });
   })();
 </script>
 
-<div class="story">
-<section class="ch" aria-label="Together"><div class="pin">
-  <div class="txt"><p class="eyebrow">Together</p><h2>Every day counts.</h2><p class="sub">Quietly counting, from the day you got together.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/days-en-p.webp"><img src="../img/ourdays/days-en-w.webp" alt="Every day counts." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch" aria-label="Home Screen widget"><div class="pin">
-  <div class="txt"><p class="eyebrow">Home Screen widget</p><h2>The first thing you see each morning.</h2><p class="sub">Your days, and their words, right on your Home Screen.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/widget-en-p.webp"><img src="../img/ourdays/widget-en-w.webp" alt="The first thing you see each morning." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch" aria-label="Three modes"><div class="pin">
-  <div class="txt"><p class="eyebrow">Three modes</p><h2>Long distance, same city, or one roof.</h2><p class="sub">Home adapts to how far apart you are right now.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/modes-en-p.webp"><img src="../img/ourdays/modes-en-w.webp" alt="Long distance, same city, or one roof." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch" aria-label="Miss you"><div class="pin">
-  <div class="txt"><p class="eyebrow">Miss you</p><h2>Thinking of them? Just tap.</h2><p class="sub">Tap once, or a hundred times. They feel it right away.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/miss-en-p.webp"><img src="../img/ourdays/miss-en-w.webp" alt="Thinking of them? Just tap." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch dark" aria-label="Shared chalkboard"><div class="pin">
-  <div class="txt"><p class="eyebrow">Shared chalkboard</p><h2>One chalkboard, shared by two.</h2><p class="sub">Write, doodle, pin a photo. It shows up on their side.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/board-en-p.webp"><img src="../img/ourdays/board-en-w.webp" alt="One chalkboard, shared by two." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch" aria-label="Countdowns"><div class="pin">
-  <div class="txt"><p class="eyebrow">Countdowns</p><h2>Count down to the days worth waiting for.</h2><p class="sub">Next visit, birthdays, anniversaries, all at a glance.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/count-en-p.webp"><img src="../img/ourdays/count-en-w.webp" alt="Count down to the days worth waiting for." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch" aria-label="Know Each Other"><div class="pin">
-  <div class="txt"><p class="eyebrow">Know Each Other</p><h2>Guess first. Then reveal.</h2><p class="sub">A few this-or-that questions a day. Right is sweet; wrong gives you something to talk about.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/quiz-en-p.webp"><img src="../img/ourdays/quiz-en-w.webp" alt="Guess first. Then reveal." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch" aria-label="Games"><div class="pin">
-  <div class="txt"><p class="eyebrow">Games</p><h2>Play together, even 2,000 km apart.</h2><p class="sub">Tic-Tac-Toe, Draw &amp; Guess, Yacht Dice and more, made for two.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/games-en-p.webp"><img src="../img/ourdays/games-en-w.webp" alt="Play together, even 2,000 km apart." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch dark" aria-label="Hold together"><div class="pin">
-  <div class="txt"><p class="eyebrow">Hold together</p><h2>Hold together, and it’s a hug.</h2><p class="sub">When you both hold the heart at the same time, you’re holding each other.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/hug-en-p.webp"><img src="../img/ourdays/hug-en-w.webp" alt="Hold together, and it’s a hug." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch dark" aria-label="Apple Watch"><div class="pin">
-  <div class="txt"><p class="eyebrow">Apple Watch</p><h2>A glance at your wrist.</h2><p class="sub">Your days on your watch face, and a gentle tap when they’re thinking of you.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/watch-en-p.webp"><img src="../img/ourdays/watch-en-w.webp" alt="A glance at your wrist." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-<section class="ch" aria-label="iPad"><div class="pin">
-  <div class="txt"><p class="eyebrow">iPad</p><h2>Draw for them with Apple Pencil.</h2><p class="sub">Every stroke on iPad appears on their iPhone.</p></div>
-  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/ipad-en-p.webp"><img src="../img/ourdays/ipad-en-w.webp" alt="Draw for them with Apple Pencil." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
-</div></section>
-</div>
+<section class="scrolly" style="--n:11" aria-label="OurDays features">
+  <div class="stage">
+  <div class="caps">
+    <div class="cap"><p class="eyebrow">Together</p><h2>Every day counts.</h2><p class="sub">Quietly counting, from the day you got together.</p></div>
+    <div class="cap"><p class="eyebrow">Home Screen widget</p><h2>The first thing you see each morning.</h2><p class="sub">Your days, and their words, right on your Home Screen.</p></div>
+    <div class="cap"><p class="eyebrow">Three modes</p><h2>Long distance, same city, or one roof.</h2><p class="sub">Home adapts to how far apart you are right now.</p></div>
+    <div class="cap"><p class="eyebrow">Miss you</p><h2>Thinking of them? Just tap.</h2><p class="sub">Tap once, or a hundred times. They feel it right away.</p></div>
+    <div class="cap"><p class="eyebrow">Shared chalkboard</p><h2>One chalkboard, shared by two.</h2><p class="sub">Write, doodle, pin a photo. It shows up on their side, and on their Home Screen.</p></div>
+    <div class="cap"><p class="eyebrow">Countdowns</p><h2>Count down to the days worth waiting for.</h2><p class="sub">Next visit, birthdays, anniversaries, all at a glance.</p></div>
+    <div class="cap"><p class="eyebrow">Know Each Other</p><h2>Guess first. Then reveal.</h2><p class="sub">A few this-or-that questions a day. Right is sweet; wrong gives you something to talk about.</p></div>
+    <div class="cap"><p class="eyebrow">Games</p><h2>Play together, even 2,000 km apart.</h2><p class="sub">Tic-Tac-Toe, Draw &amp; Guess, Yacht Dice and more, made for two.</p></div>
+    <div class="cap"><p class="eyebrow">Hold together</p><h2>Hold together, and it’s a hug.</h2><p class="sub">When you both hold the heart at once, you’re holding each other.</p></div>
+    <div class="cap"><p class="eyebrow">Apple Watch</p><h2>A glance at your wrist.</h2><p class="sub">Your days on your watch face, and a gentle tap when they’re thinking of you.</p></div>
+    <div class="cap"><p class="eyebrow">iPad</p><h2>Draw for them with Apple Pencil.</h2><p class="sub">Every stroke on iPad appears on their iPhone.</p></div>
+  </div>
+  <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="dev card" data-d="modes" aria-hidden="true" style="margin:-342px 0 0 -751px"><img src="../img/ourdays/stage/modes-en.webp" alt="" width="1503" height="684" decoding="async"></div>
+  <div class="dev card" data-d="board" aria-hidden="true" style="margin:-387px 0 0 -700px"><img src="../img/ourdays/stage/board-en.webp" alt="" width="1400" height="774" decoding="async"></div>
+  <div class="dev card" data-d="count" aria-hidden="true" style="margin:-320px 0 0 -500px"><img src="../img/ourdays/stage/count-en.webp" alt="" width="1000" height="639" decoding="async"></div>
+  <div class="dev card" data-d="quiz" aria-hidden="true" style="margin:-301px 0 0 -500px"><img src="../img/ourdays/stage/quiz-en.webp" alt="" width="1000" height="601" decoding="async"></div>
+  <div class="dev ipad" data-d="P" aria-hidden="true"><div class="layers"><img data-k="ipad" src="../img/ourdays/stage/ipad-en.webp" alt="" decoding="async"></div></div>
+  <div class="dev swatch" data-d="W" aria-hidden="true"><div class="band t"></div><div class="band b"></div><div class="crown"></div><div class="case"><div class="glass"><div class="layers"><img data-k="watchA" src="../img/ourdays/stage/watchA-en.webp" alt="" decoding="async"> <img data-k="watchB" src="../img/ourdays/stage/watchB-en.webp" alt="" decoding="async"></div></div></div></div>
+  <div class="dev phone" data-d="B" aria-hidden="true"><i class="btn" style="left:-4px;top:168px;height:34px"></i><i class="btn" style="left:-4px;top:236px;height:62px"></i><i class="btn" style="left:-4px;top:312px;height:62px"></i><i class="btn" style="left:416px;top:252px;height:98px"></i><div class="layers"><img data-k="missB0" src="../img/ourdays/stage/missB0-en.webp" alt="" decoding="async"> <img data-k="missB1" src="../img/ourdays/stage/missB1-en.webp" alt="" decoding="async"> <img data-k="gameB" src="../img/ourdays/stage/gameB-en.webp" alt="" decoding="async"> <img data-k="hugB0" src="../img/ourdays/stage/hugB0-en.webp" alt="" decoding="async"> <img data-k="hugB1" src="../img/ourdays/stage/hugB1-en.webp" alt="" decoding="async"></div></div>
+  <div class="dev phone" data-d="A" aria-hidden="true"><i class="btn" style="left:-4px;top:168px;height:34px"></i><i class="btn" style="left:-4px;top:236px;height:62px"></i><i class="btn" style="left:-4px;top:312px;height:62px"></i><i class="btn" style="left:416px;top:252px;height:98px"></i><div class="layers"><img data-k="home" src="../img/ourdays/stage/home-en.webp" alt="" decoding="async"> <img data-k="widget" src="../img/ourdays/stage/widget-en.webp" alt="" decoding="async"> <img data-k="missA0" src="../img/ourdays/stage/missA0-en.webp" alt="" decoding="async"> <img data-k="missA1" src="../img/ourdays/stage/missA1-en.webp" alt="" decoding="async"> <img data-k="boardw" src="../img/ourdays/stage/boardw-en.webp" alt="" decoding="async"> <img data-k="gameA" src="../img/ourdays/stage/gameA-en.webp" alt="" decoding="async"> <img data-k="hugA0" src="../img/ourdays/stage/hugA0-en.webp" alt="" decoding="async"> <img data-k="hugA1" src="../img/ourdays/stage/hugA1-en.webp" alt="" decoding="async"> <img data-k="ipadPhone" src="../img/ourdays/stage/ipadPhone-en.webp" alt="" decoding="async"></div></div>
+  </div>
+</section>
 <script>
-  // Scroll story: as a chapter scrolls through, its words rise in first, then the picture grows into place.
+  // Scroll stage. Each feature owns one screen-height of scrolling. Devices hold their pose through
+  // most of it, then glide to the next pose over the last part, so the motion never stops or jumps.
   (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    document.documentElement.classList.add('js');
-    var chs = [].slice.call(document.querySelectorAll('.ch'));
+    var root = document.querySelector('.scrolly'); if (!root) return;
+    var stage = root.querySelector('.stage'), caps = [].slice.call(root.querySelectorAll('.cap')), dots = [].slice.call(root.querySelectorAll('.dots i'));
+    var N = caps.length, dev = {};
+    [].slice.call(root.querySelectorAll('.dev')).forEach(function (e) {
+      var L = {}; [].slice.call(e.querySelectorAll('.layers img')).forEach(function (im) { L[im.dataset.k] = im; });
+      dev[e.dataset.d] = { e: e, L: L };
+    });
+    // pose per feature: [x, y, scale, opacity] in a 1600 × 1000 stage (desktop) or 800 × 1600 (phone)
+    var H = { o: 0 };
+    var DESK = {
+      A: [[250,0,.84,1],[250,0,.84,1],[640,40,.56,1],[90,0,.76,1],[660,30,.6,1],[650,30,.62,1],[650,30,.62,1],[90,0,.76,1],[90,0,.76,1],[560,40,.6,1],[640,140,.46,1]],
+      B: [[760,0,.76,0],[760,0,.76,0],[760,0,.76,0],[480,0,.76,1],[900,0,.76,0],[900,0,.76,0],[900,0,.76,0],[480,0,.76,1],[480,0,.76,1],[900,0,.76,0],[900,0,.76,0]],
+      W: [[160,80,.62,0],[160,80,.62,0],[160,80,.62,0],[160,80,.62,0],[160,80,.62,0],[160,80,.62,0],[160,80,.62,0],[160,80,.62,0],[160,80,.62,0],[120,0,.74,1],[100,-60,.62,0]],
+      P: [[180,60,.5,0],[180,60,.5,0],[180,60,.5,0],[180,60,.5,0],[180,60,.5,0],[180,60,.5,0],[180,60,.5,0],[180,60,.5,0],[180,60,.5,0],[180,60,.5,0],[180,-30,.56,1]],
+      modes: [[200,40,.4,0],[200,40,.4,0],[250,0,.46,1],[60,0,.42,0],[60,0,.42,0],[60,0,.42,0],[60,0,.42,0],[60,0,.42,0],[60,0,.42,0],[60,0,.42,0],[60,0,.42,0]],
+      board: [[200,40,.42,0],[200,40,.42,0],[200,40,.42,0],[200,40,.42,0],[220,-10,.46,1],[60,0,.44,0],[60,0,.44,0],[60,0,.44,0],[60,0,.44,0],[60,0,.44,0],[60,0,.44,0]],
+      count: [[60,40,.52,0],[60,40,.52,0],[60,40,.52,0],[60,40,.52,0],[60,40,.52,0],[200,0,.58,1],[60,0,.52,0],[60,0,.52,0],[60,0,.52,0],[60,0,.52,0],[60,0,.52,0]],
+      quiz: [[60,40,.52,0],[60,40,.52,0],[60,40,.52,0],[60,40,.52,0],[60,40,.52,0],[60,40,.52,0],[200,0,.58,1],[60,0,.52,0],[60,0,.52,0],[60,0,.52,0],[60,0,.52,0]]
+    };
+    var MOB = {
+      A: [[0,250,.92,1],[0,250,.92,1],[0,500,.42,1],[-170,260,.6,1],[0,560,.4,1],[0,560,.4,1],[0,560,.4,1],[-170,260,.6,1],[-170,260,.6,1],[265,540,.34,1],[230,520,.42,1]],
+      B: [[340,260,.6,0],[340,260,.6,0],[340,260,.6,0],[170,260,.6,1],[340,260,.6,0],[340,260,.6,0],[340,260,.6,0],[170,260,.6,1],[170,260,.6,1],[340,260,.6,0],[340,260,.6,0]],
+      W: [[0,300,.9,0],[0,300,.9,0],[0,300,.9,0],[0,300,.9,0],[0,300,.9,0],[0,300,.9,0],[0,300,.9,0],[0,300,.9,0],[0,300,.9,0],[0,250,1,1],[0,200,.9,0]],
+      P: [[0,180,.62,0],[0,180,.62,0],[0,180,.62,0],[0,180,.62,0],[0,180,.62,0],[0,180,.62,0],[0,180,.62,0],[0,180,.62,0],[0,180,.62,0],[0,180,.62,0],[0,130,.68,1]],
+      modes: [[0,300,.46,0],[0,300,.46,0],[0,130,.5,1],[0,300,.46,0],[0,300,.46,0],[0,300,.46,0],[0,300,.46,0],[0,300,.46,0],[0,300,.46,0],[0,300,.46,0],[0,300,.46,0]],
+      board: [[0,150,.48,0],[0,150,.48,0],[0,150,.48,0],[0,150,.48,0],[0,60,.54,1],[0,250,.48,0],[0,250,.48,0],[0,250,.48,0],[0,250,.48,0],[0,250,.48,0],[0,250,.48,0]],
+      count: [[0,120,.68,0],[0,120,.68,0],[0,120,.68,0],[0,120,.68,0],[0,120,.68,0],[0,40,.74,1],[0,250,.68,0],[0,250,.68,0],[0,250,.68,0],[0,250,.68,0],[0,250,.68,0]],
+      quiz: [[0,120,.68,0],[0,120,.68,0],[0,120,.68,0],[0,120,.68,0],[0,120,.68,0],[0,120,.68,0],[0,60,.74,1],[0,250,.68,0],[0,250,.68,0],[0,250,.68,0],[0,250,.68,0]]
+    };
+    // which screen each device shows per feature; [before, after] switches a third of the way in
+    var SCR = {
+      A: ['home','widget','home',['missA0','missA1'],'boardw','home','home','gameA',['hugA0','hugA1'],'widget','ipadPhone'],
+      B: ['missB0','missB0','missB0',['missB0','missB1'],'missB1','missB1','gameB','gameB',['hugB0','hugB1'],'hugB1','hugB1'],
+      W: ['watchA','watchA','watchA','watchA','watchA','watchA','watchA','watchA','watchA',['watchA','watchB'],'watchB'],
+      P: ['ipad','ipad','ipad','ipad','ipad','ipad','ipad','ipad','ipad','ipad','ipad']
+    };
+    var DARK = [0,0,0,0,0,0,0,0,1,1,0];
+    var ease = function (v) { return v < .5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2; };
     var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
-    var ease = function (v) { return 1 - Math.pow(1 - v, 3); };
+    var lerp = function (a, b, t) { return a + (b - a) * t; };
+    var key = function (d, i, u) { var k = SCR[d][i]; return typeof k === 'string' ? k : (u < .34 ? k[0] : k[1]); };
     var ticking = false;
     function draw() {
       ticking = false;
-      var vh = window.innerHeight;
-      chs.forEach(function (c) {
-        var r = c.getBoundingClientRect();
-        if (r.bottom < -vh || r.top > 2 * vh) return;
-        var p = clamp((vh - r.top) / (r.height + vh * 0.2));      // 0 as it enters, 1 as it leaves
-        var t = ease(clamp((p - 0.12) / 0.22)), f = ease(clamp((p - 0.2) / 0.3));
-        var out = clamp((p - 0.86) / 0.14);
-        var tx = c.querySelector('.txt'), fg = c.querySelector('figure');
-        tx.style.opacity = t * (1 - out); tx.style.transform = 'translateY(' + ((1 - t) * 40 - out * 30) + 'px)';
-        fg.style.opacity = (0.15 + 0.85 * f) * (1 - out * 0.6);
-        fg.style.transform = 'translateY(' + (1 - f) * 60 + 'px) scale(' + (0.86 + 0.14 * f) + ')';
+      var vw = stage.clientWidth, vh = stage.clientHeight, mob = vw < 704 && vh > vw;
+      var K = mob ? MOB : DESK, U = mob ? Math.min(vw / 800, vh / 1600) : Math.min(vw / 1600, vh / 1000);
+      var r = root.getBoundingClientRect(), f = Math.max(0, Math.min(N - 1.0001, -r.top / vh));
+      var i = Math.floor(f), u = f - i, t = ease(clamp((u - .55) / .45)), j = Math.min(N - 1, i + 1);
+      Object.keys(K).forEach(function (d) {
+        var a = K[d][i], b = K[d][j], e = dev[d].e;
+        var o = lerp(a[3], b[3], t);
+        // devices fading out drift a little, so leaving reads as moving away rather than blinking
+        e.style.opacity = o;
+        e.style.visibility = o < .005 ? 'hidden' : 'visible';
+        var bob = Math.sin(f * Math.PI * 2) * 10;  // a slow float that keeps moving while a pose holds, zero at every feature boundary
+        e.style.transform = 'translate(' + lerp(a[0], b[0], t) * U + 'px,' + (lerp(a[1], b[1], t) + bob) * U + 'px) scale(' + lerp(a[2], b[2], t) * U + ')';
+        if (SCR[d]) {
+          var k0 = key(d, i, u), k1 = key(d, j, 0), L = dev[d].L, w = {};
+          // inside a feature the before/after switch crossfades quickly
+          if (typeof SCR[d][i] !== 'string') { var q = clamp((u - .26) / .16); var ks = SCR[d][i]; w[ks[0]] = 1 - q; w[ks[1]] = (w[ks[1]] || 0) + q; if (t > 0) { for (var x in w) w[x] *= 1 - t; w[k1] = (w[k1] || 0) + t; } }
+          else { w[k0] = 1 - t; w[k1] = (w[k1] || 0) + t; }
+          for (var n in L) L[n].style.opacity = w[n] || 0;
+        }
       });
+      var dk = lerp(DARK[i], DARK[j], t);
+      var c = function (a, b) { return Math.round(lerp(a, b, dk)); };
+      stage.style.background = dk > 0 ? 'rgb(' + c(236, 17) + ',' + c(236, 17) + ',' + c(233, 17) + ')' : '';
+      stage.style.color = dk > .5 ? '#F5F5F3' : '';
+      stage.classList.toggle('dark', dk > .5);
+      caps.forEach(function (cp, k) {
+        var o = (k === 0 ? 1 : clamp((f - (k - .12)) / .14)) * (k === N - 1 ? 1 : 1 - clamp((f - (k + .58)) / .14));
+        cp.style.opacity = o; cp.style.transform = (mob ? '' : 'translateY(-50%) ') + 'translateY(' + (f - (k + .3)) * -36 + 'px)';
+        cp.setAttribute('aria-hidden', o < .5 ? 'true' : 'false');
+      });
+      dots.forEach(function (dt, k) { dt.classList.toggle('on', k === Math.round(f - .2)); });
     }
     function req() { if (!ticking) { ticking = true; requestAnimationFrame(draw); } }
     window.addEventListener('scroll', req, { passive: true }); window.addEventListener('resize', req); draw();
