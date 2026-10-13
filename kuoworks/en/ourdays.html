@@ -69,6 +69,26 @@
   .tile.film { padding-bottom: clamp(1.5rem, 4vw, 2.5rem); }
   .film video { display: block; width: 100%; max-width: 60rem; aspect-ratio: 16 / 9; background: #000; margin-top: 2rem; }
   .film.tall video { aspect-ratio: 9 / 16; max-width: 22rem; }
+  /* Scroll story: each feature pins to the screen while its picture settles into place, like apple.com */
+  .story { grid-column: 1 / -1; }
+  .ch { position: relative; height: 175vh; background: var(--surface); }
+  .ch + .ch { margin-top: 0.75rem; }
+  .ch.dark { background: #111111; color: #F5F5F3; }
+  .ch .pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(1.25rem, 3vh, 2.25rem); padding: 4.5rem 1.25rem 2rem; text-align: center; overflow: hidden; }
+  .ch .eyebrow { font-size: 0.8125rem; letter-spacing: 0.18em; color: var(--muted); }
+  .ch.dark .eyebrow { color: #8A8A88; }
+  .ch h2 { font-weight: 400; font-size: clamp(1.75rem, 4.4vw, 3.25rem); line-height: 1.25; letter-spacing: 0.04em; margin-top: 0.5rem; text-wrap: balance; }
+  .ch .sub { font-size: clamp(1rem, 1.8vw, 1.25rem); color: var(--fg-2); margin: 0.75rem auto 0; max-width: 26em; line-height: 1.6; text-wrap: balance; }
+  .ch.dark .sub { color: #C4C4C0; }
+  .ch figure { margin: 0; width: min(100%, 64rem, calc((100svh - 17rem) * 16 / 9)); min-width: min(100%, 18rem); }
+  .ch img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 1.25rem; background: #000; }
+  @media (max-width: 44rem) and (orientation: portrait) {
+    .ch { height: 160vh; }
+    .ch figure { width: min(100%, calc((100svh - 18rem) * 4 / 5)); }
+    .ch img { aspect-ratio: 4 / 5; }
+  }
+  .js .ch .txt, .js .ch figure { will-change: transform, opacity; }
+  @media (prefers-reduced-motion: reduce) { .ch { height: auto; } .ch .pin { position: static; height: auto; padding-block: 4rem; } }
 </style>
 
 <section class="tile hero" aria-label="OurDays">
@@ -99,6 +119,81 @@
     if (window.matchMedia('(max-width: 44rem) and (orientation: portrait)').matches) {
       v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; v.parentNode.classList.add('tall');
     }
+  })();
+</script>
+
+<div class="story">
+<section class="ch" aria-label="Together"><div class="pin">
+  <div class="txt"><p class="eyebrow">Together</p><h2>Every day counts.</h2><p class="sub">Quietly counting, from the day you got together.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/days-en-p.webp"><img src="../img/ourdays/days-en-w.webp" alt="Every day counts." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="Home Screen widget"><div class="pin">
+  <div class="txt"><p class="eyebrow">Home Screen widget</p><h2>The first thing you see each morning.</h2><p class="sub">Your days, and their words, right on your Home Screen.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/widget-en-p.webp"><img src="../img/ourdays/widget-en-w.webp" alt="The first thing you see each morning." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="Three modes"><div class="pin">
+  <div class="txt"><p class="eyebrow">Three modes</p><h2>Long distance, same city, or one roof.</h2><p class="sub">Home adapts to how far apart you are right now.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/modes-en-p.webp"><img src="../img/ourdays/modes-en-w.webp" alt="Long distance, same city, or one roof." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="Miss you"><div class="pin">
+  <div class="txt"><p class="eyebrow">Miss you</p><h2>Thinking of them? Just tap.</h2><p class="sub">Tap once, or a hundred times. They feel it right away.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/miss-en-p.webp"><img src="../img/ourdays/miss-en-w.webp" alt="Thinking of them? Just tap." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch dark" aria-label="Shared chalkboard"><div class="pin">
+  <div class="txt"><p class="eyebrow">Shared chalkboard</p><h2>One chalkboard, shared by two.</h2><p class="sub">Write, doodle, pin a photo. It shows up on their side.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/board-en-p.webp"><img src="../img/ourdays/board-en-w.webp" alt="One chalkboard, shared by two." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="Countdowns"><div class="pin">
+  <div class="txt"><p class="eyebrow">Countdowns</p><h2>Count down to the days worth waiting for.</h2><p class="sub">Next visit, birthdays, anniversaries, all at a glance.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/count-en-p.webp"><img src="../img/ourdays/count-en-w.webp" alt="Count down to the days worth waiting for." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="Know Each Other"><div class="pin">
+  <div class="txt"><p class="eyebrow">Know Each Other</p><h2>Guess first. Then reveal.</h2><p class="sub">A few this-or-that questions a day. Right is sweet; wrong gives you something to talk about.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/quiz-en-p.webp"><img src="../img/ourdays/quiz-en-w.webp" alt="Guess first. Then reveal." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="Games"><div class="pin">
+  <div class="txt"><p class="eyebrow">Games</p><h2>Play together, even 2,000 km apart.</h2><p class="sub">Tic-Tac-Toe, Draw &amp; Guess, Yacht Dice and more, made for two.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/games-en-p.webp"><img src="../img/ourdays/games-en-w.webp" alt="Play together, even 2,000 km apart." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch dark" aria-label="Hold together"><div class="pin">
+  <div class="txt"><p class="eyebrow">Hold together</p><h2>Hold together, and it’s a hug.</h2><p class="sub">When you both hold the heart at the same time, you’re holding each other.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/hug-en-p.webp"><img src="../img/ourdays/hug-en-w.webp" alt="Hold together, and it’s a hug." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch dark" aria-label="Apple Watch"><div class="pin">
+  <div class="txt"><p class="eyebrow">Apple Watch</p><h2>A glance at your wrist.</h2><p class="sub">Your days on your watch face, and a gentle tap when they’re thinking of you.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/watch-en-p.webp"><img src="../img/ourdays/watch-en-w.webp" alt="A glance at your wrist." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="iPad"><div class="pin">
+  <div class="txt"><p class="eyebrow">iPad</p><h2>Draw for them with Apple Pencil.</h2><p class="sub">Every stroke on iPad appears on their iPhone.</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="../img/ourdays/ipad-en-p.webp"><img src="../img/ourdays/ipad-en-w.webp" alt="Draw for them with Apple Pencil." width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+</div>
+<script>
+  // Scroll story: as a chapter scrolls through, its words rise in first, then the picture grows into place.
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.documentElement.classList.add('js');
+    var chs = [].slice.call(document.querySelectorAll('.ch'));
+    var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+    var ease = function (v) { return 1 - Math.pow(1 - v, 3); };
+    var ticking = false;
+    function draw() {
+      ticking = false;
+      var vh = window.innerHeight;
+      chs.forEach(function (c) {
+        var r = c.getBoundingClientRect();
+        if (r.bottom < -vh || r.top > 2 * vh) return;
+        var p = clamp((vh - r.top) / (r.height + vh * 0.2));      // 0 as it enters, 1 as it leaves
+        var t = ease(clamp((p - 0.12) / 0.22)), f = ease(clamp((p - 0.2) / 0.3));
+        var out = clamp((p - 0.86) / 0.14);
+        var tx = c.querySelector('.txt'), fg = c.querySelector('figure');
+        tx.style.opacity = t * (1 - out); tx.style.transform = 'translateY(' + ((1 - t) * 40 - out * 30) + 'px)';
+        fg.style.opacity = (0.15 + 0.85 * f) * (1 - out * 0.6);
+        fg.style.transform = 'translateY(' + (1 - f) * 60 + 'px) scale(' + (0.86 + 0.14 * f) + ')';
+      });
+    }
+    function req() { if (!ticking) { ticking = true; requestAnimationFrame(draw); } }
+    window.addEventListener('scroll', req, { passive: true }); window.addEventListener('resize', req); draw();
   })();
 </script>
 

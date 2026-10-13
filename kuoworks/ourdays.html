@@ -69,6 +69,26 @@
   .tile.film { padding-bottom: clamp(1.5rem, 4vw, 2.5rem); }
   .film video { display: block; width: 100%; max-width: 60rem; aspect-ratio: 16 / 9; background: #000; margin-top: 2rem; }
   .film.tall video { aspect-ratio: 9 / 16; max-width: 22rem; }
+  /* Scroll story: each feature pins to the screen while its picture settles into place, like apple.com */
+  .story { grid-column: 1 / -1; }
+  .ch { position: relative; height: 175vh; background: var(--surface); }
+  .ch + .ch { margin-top: 0.75rem; }
+  .ch.dark { background: #111111; color: #F5F5F3; }
+  .ch .pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(1.25rem, 3vh, 2.25rem); padding: 4.5rem 1.25rem 2rem; text-align: center; overflow: hidden; }
+  .ch .eyebrow { font-size: 0.8125rem; letter-spacing: 0.18em; color: var(--muted); }
+  .ch.dark .eyebrow { color: #8A8A88; }
+  .ch h2 { font-weight: 400; font-size: clamp(1.75rem, 4.4vw, 3.25rem); line-height: 1.25; letter-spacing: 0.04em; margin-top: 0.5rem; text-wrap: balance; }
+  .ch .sub { font-size: clamp(1rem, 1.8vw, 1.25rem); color: var(--fg-2); margin: 0.75rem auto 0; max-width: 26em; line-height: 1.6; text-wrap: balance; }
+  .ch.dark .sub { color: #C4C4C0; }
+  .ch figure { margin: 0; width: min(100%, 64rem, calc((100svh - 17rem) * 16 / 9)); min-width: min(100%, 18rem); }
+  .ch img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 1.25rem; background: #000; }
+  @media (max-width: 44rem) and (orientation: portrait) {
+    .ch { height: 160vh; }
+    .ch figure { width: min(100%, calc((100svh - 18rem) * 4 / 5)); }
+    .ch img { aspect-ratio: 4 / 5; }
+  }
+  .js .ch .txt, .js .ch figure { will-change: transform, opacity; }
+  @media (prefers-reduced-motion: reduce) { .ch { height: auto; } .ch .pin { position: static; height: auto; padding-block: 4rem; } }
 </style>
 
 <section class="tile hero" aria-label="小日子">
@@ -99,6 +119,81 @@
     if (window.matchMedia('(max-width: 44rem) and (orientation: portrait)').matches) {
       v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; v.parentNode.classList.add('tall');
     }
+  })();
+</script>
+
+<div class="story">
+<section class="ch" aria-label="在一起"><div class="pin">
+  <div class="txt"><p class="eyebrow">在一起</p><h2>每一天，都算數。</h2><p class="sub">從在一起的那天開始，安靜地幫你們數著。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/days-zh-p.webp"><img src="img/ourdays/days-zh-w.webp" alt="每一天，都算數。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="桌面小工具"><div class="pin">
+  <div class="txt"><p class="eyebrow">桌面小工具</p><h2>早上醒來，第一眼就是你們。</h2><p class="sub">天數和對方留的話，就放在主畫面上。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/widget-zh-p.webp"><img src="img/ourdays/widget-zh-w.webp" alt="早上醒來，第一眼就是你們。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="三種模式"><div class="pin">
+  <div class="txt"><p class="eyebrow">三種模式</p><h2>遠距離、同城、同居，都剛剛好。</h2><p class="sub">依你們現在的距離，首頁會換成最需要的樣子。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/modes-zh-p.webp"><img src="img/ourdays/modes-zh-w.webp" alt="遠距離、同城、同居，都剛剛好。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="想你按鈕"><div class="pin">
+  <div class="txt"><p class="eyebrow">想你按鈕</p><h2>想你的時候，按一下。</h2><p class="sub">按一下，或連按很多下。對方那邊馬上就收到。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/miss-zh-p.webp"><img src="img/ourdays/miss-zh-w.webp" alt="想你的時候，按一下。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch dark" aria-label="共享小黑板"><div class="pin">
+  <div class="txt"><p class="eyebrow">共享小黑板</p><h2>一塊兩個人一起用的黑板。</h2><p class="sub">寫字、畫畫、貼一張照片，對方打開就看得到。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/board-zh-p.webp"><img src="img/ourdays/board-zh-w.webp" alt="一塊兩個人一起用的黑板。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="倒數"><div class="pin">
+  <div class="txt"><p class="eyebrow">倒數</p><h2>值得等待的日子，一起倒數。</h2><p class="sub">下次見面、生日、紀念日，一眼就看到還有幾天。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/count-zh-p.webp"><img src="img/ourdays/count-zh-w.webp" alt="值得等待的日子，一起倒數。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="了解彼此"><div class="pin">
+  <div class="txt"><p class="eyebrow">了解彼此</p><h2>先猜，再揭曉。</h2><p class="sub">每天幾題二選一。猜對了很甜，猜錯了更好聊。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/quiz-zh-p.webp"><img src="img/ourdays/quiz-zh-w.webp" alt="先猜，再揭曉。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="小遊戲"><div class="pin">
+  <div class="txt"><p class="eyebrow">小遊戲</p><h2>一起玩，就算隔著兩千公里。</h2><p class="sub">圈圈叉叉、你畫我猜、快艇骰子……為兩個人設計。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/games-zh-p.webp"><img src="img/ourdays/games-zh-w.webp" alt="一起玩，就算隔著兩千公里。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch dark" aria-label="一起按住"><div class="pin">
+  <div class="txt"><p class="eyebrow">一起按住</p><h2>一起按住，就是一個擁抱。</h2><p class="sub">兩個人同時按住愛心，就抱到了。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/hug-zh-p.webp"><img src="img/ourdays/hug-zh-w.webp" alt="一起按住，就是一個擁抱。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch dark" aria-label="Apple Watch"><div class="pin">
+  <div class="txt"><p class="eyebrow">Apple Watch</p><h2>抬起手腕，就看得到。</h2><p class="sub">天數在錶面上，對方想你時，手腕輕輕一震。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/watch-zh-p.webp"><img src="img/ourdays/watch-zh-w.webp" alt="抬起手腕，就看得到。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+<section class="ch" aria-label="iPad"><div class="pin">
+  <div class="txt"><p class="eyebrow">iPad</p><h2>用 Apple Pencil，畫給對方看。</h2><p class="sub">在 iPad 上畫的每一筆，都會出現在對方的 iPhone 上。</p></div>
+  <figure><picture><source media="(max-width: 44rem) and (orientation: portrait)" srcset="img/ourdays/ipad-zh-p.webp"><img src="img/ourdays/ipad-zh-w.webp" alt="用 Apple Pencil，畫給對方看。" width="1600" height="900" loading="lazy" decoding="async"></picture></figure>
+</div></section>
+</div>
+<script>
+  // Scroll story: as a chapter scrolls through, its words rise in first, then the picture grows into place.
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.documentElement.classList.add('js');
+    var chs = [].slice.call(document.querySelectorAll('.ch'));
+    var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+    var ease = function (v) { return 1 - Math.pow(1 - v, 3); };
+    var ticking = false;
+    function draw() {
+      ticking = false;
+      var vh = window.innerHeight;
+      chs.forEach(function (c) {
+        var r = c.getBoundingClientRect();
+        if (r.bottom < -vh || r.top > 2 * vh) return;
+        var p = clamp((vh - r.top) / (r.height + vh * 0.2));      // 0 as it enters, 1 as it leaves
+        var t = ease(clamp((p - 0.12) / 0.22)), f = ease(clamp((p - 0.2) / 0.3));
+        var out = clamp((p - 0.86) / 0.14);
+        var tx = c.querySelector('.txt'), fg = c.querySelector('figure');
+        tx.style.opacity = t * (1 - out); tx.style.transform = 'translateY(' + ((1 - t) * 40 - out * 30) + 'px)';
+        fg.style.opacity = (0.15 + 0.85 * f) * (1 - out * 0.6);
+        fg.style.transform = 'translateY(' + (1 - f) * 60 + 'px) scale(' + (0.86 + 0.14 * f) + ')';
+      });
+    }
+    function req() { if (!ticking) { ticking = true; requestAnimationFrame(draw); } }
+    window.addEventListener('scroll', req, { passive: true }); window.addEventListener('resize', req); draw();
   })();
 </script>
 
