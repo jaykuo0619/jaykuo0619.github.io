@@ -269,10 +269,10 @@ html.bar-desk.bar-mini.bar-open [data-collapsible] { box-shadow: 0 8px 24px -18p
 /* ---------- One tile at a time: scrolling snaps to the top of the next tile ----------
    Touch screens use CSS snapping; with a mouse or trackpad tiles.js moves one tile per scroll gesture. */
 @media (hover: none) {
-  html:has(main.tiles) { scroll-snap-type: y mandatory; }
-  main.tiles > .tile { scroll-snap-align: start; scroll-margin-top: env(safe-area-inset-top, 0px); }
-  main.tiles > .tile:not(.tile ~ .tile) { scroll-margin-top: 100vh; } /* first stop is the very top, bar included (a <style> can come first, so not :first-child) */
-  main.tiles ~ .pfoot { scroll-snap-align: end; }
+  html:has(main.tiles.snap) { scroll-snap-type: y mandatory; }
+  main.tiles.snap > .tile { scroll-snap-align: start; scroll-margin-top: env(safe-area-inset-top, 0px); }
+  main.tiles.snap > .tile:not(.tile ~ .tile) { scroll-margin-top: 100vh; } /* first stop is the very top, bar included (a <style> can come first, so not :first-child) */
+  main.tiles.snap ~ .pfoot { scroll-snap-align: end; }
 }
 
 /* ---------- Home-screen web app (iPhone): the page runs under the status bar ----------

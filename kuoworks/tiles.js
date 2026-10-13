@@ -9,7 +9,7 @@
 (function () {
   // One tile at a time with a mouse or trackpad: each scroll gesture glides to the next (or previous) row of
   // tiles. A tile taller than the window scrolls normally until its end. Touch screens use CSS snapping instead.
-  var main = document.querySelector('main.tiles');
+  var main = document.querySelector('main.tiles.snap');
   var fine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (!main || !fine) return;
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
