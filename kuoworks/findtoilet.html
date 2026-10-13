@@ -67,26 +67,118 @@
   .plan > div { padding: 1.25rem 1rem 0 0; min-width: 0; }
   .plan b { display: block; font-weight: 400; font-size: 0.75rem; letter-spacing: 0.22em; color: #8A8A88; }
   .plan p { margin-top: 0.5rem; color: #E2E2DF; line-height: 1.8; }
+
+  /* Like the OurDays page: every section sits on black, whatever the viewer's theme (Jay, 2026-10-13). */
+  :root:not(#_) { --bg: #000; --surface: #000; --fg: #F5F5F3; --fg-2: #C4C4C0; --muted: #8A8A88; --line: #262624;
+    --invert-bg: #F5F5F3; --invert-fg: #000; color-scheme: dark; }
+  .tiles .tile.ink { background: #000; }
+
+  /* launch film: fills the first screen, 16:9 on wide screens and 9:16 on phones held upright */
+  .tile.film { justify-content: center; padding-top: 1.25rem; padding-bottom: .5rem; }
+  .tile.film h2 { font-size: clamp(1.375rem, 2.6vw, 2rem); }
+  .film .slot { width: 100%; margin-top: 1rem; }
+  .film video { display: block; width: 100%; margin: 0 auto; aspect-ratio: 16 / 9; background: #000; }
+  .film.tall video { aspect-ratio: 9 / 16; }
+  /* desktop: a film that is still playing follows you as a small window in a corner */
+  .film video.floating { position: fixed; z-index: 80; top: 4rem; left: 1rem; width: 22rem; margin: 0; border-radius: 12px; box-shadow: 0 18px 50px rgba(0,0,0,.35); transition: top .45s ease, left .45s ease, width .45s ease; }
+  .film .unfloat { display: none; position: fixed; z-index: 81; top: 4.4rem; left: 20.6rem; transition: top .45s ease, left .45s ease; width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
+  .film.is-floating .unfloat { display: block; }
+  .film .more-info { display: inline-flex; flex-direction: column; align-items: center; gap: .15rem; margin-top: .5rem; color: #8A8A88; text-decoration: none; font-size: .8125rem; letter-spacing: .14em; }
+  .film .more-info:hover { color: #F5F5F3; }
+  .film .more-info svg { width: 1.1rem; height: 1.1rem; animation: nudge 2.4s ease-in-out infinite; }
+  @keyframes nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(4px); } }
+  @media (prefers-reduced-motion: reduce) { .film .more-info svg { animation: none; } }
+  /* back to top */
+  .totop { position: fixed; z-index: 70; right: 1rem; bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem); width: 2.75rem; height: 2.75rem; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.18); background: rgba(28,28,27,.72); color: #F5F5F3; display: grid; place-items: center; cursor: pointer;
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); opacity: 0; transform: translateY(.5rem); pointer-events: none; transition: opacity .3s, transform .3s; }
+  .totop.on { opacity: 1; transform: none; pointer-events: auto; }
+  .totop svg { width: 1.1rem; height: 1.1rem; }
 </style>
 
-<section class="tile hero" aria-label="廁略">
-  <div class="ft-icon" role="img" aria-label="廁略 App 圖示"><span class="v">廁略</span><span class="rule"></span></div>
-  <p class="eyebrow">iPhone · 免費</p>
-  <h1><span class="nb">找到最近、</span><span class="nb">而且能借的廁所。</span></h1>
-  <div class="links"><a class="pill" href="https://apps.apple.com/us/app/nature-calls-restroom-finder/id6817375955" target="_blank" rel="noopener">App Store 下載</a></div>
-  <div class="art">
-    <div class="sign" aria-label="畫面示意">
-      <div>
-        <p class="k">最近一間</p>
-        <p class="dist">120<small>m</small></p>
-        <p class="meta"><span><span class="dot" style="background:#0A84FF"></span>向店員借用</span><span><span class="dot" style="background:#34C759"></span>營業中</span></p>
-      </div>
-      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11.25 20V6.81l-5.72 5.72-1.06-1.06L12 3.94l7.53 7.53-1.06 1.06-5.72-5.72V20z"/></svg></div>
-    </div>
-  </div>
+<section class="tile wide ink film" aria-label="廁略發表影片">
+  <p class="eyebrow">發表影片 · 44 秒</p>
+  <h2>花 44 秒，認識廁略。</h2>
+  <div class="slot"><video id="film" controls playsinline preload="none" src="video/findtoilet-film-16x9.mp4" poster="video/findtoilet-film-16x9.jpg" data-tall="video/findtoilet-film-9x16" aria-label="廁略發表影片"></video></div>
+  <a class="more-info" href="#more"><span>More Info</span><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 7 9 12.5 14.5 7"/></svg></a>
+  <button class="unfloat" type="button" aria-label="關閉小視窗">×</button>
 </section>
+<script>
+  (function () {
+    var v = document.getElementById('film'), tile = v.closest('.film'), slot = tile.querySelector('.slot'), x = tile.querySelector('.unfloat');
+    // phones held upright get the 9:16 cut; everything else keeps 16:9
+    if (window.matchMedia('(max-width: 44rem) and (orientation: portrait)').matches) {
+      v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; tile.classList.add('tall');
+    }
+    // the film tile fills the first screen and the whole frame always fits inside it
+    var lastW = 0;
+    function fit(force) {
+      if (v.classList.contains('floating') || (!force && window.innerWidth === lastW)) return;
+      lastW = window.innerWidth;
+      var bar = document.querySelector('.gbar'), b = bar ? bar.getBoundingClientRect().height : 0, gap = 12;
+      var screenH = window.innerHeight - b - gap * 2;
+      tile.style.minHeight = screenH + 'px';
+      var above = slot.getBoundingClientRect().top - tile.getBoundingClientRect().top;
+      var mi = tile.querySelector('.more-info'), below = (parseFloat(getComputedStyle(tile).paddingBottom) || 0) + (mi ? mi.offsetHeight + 8 : 0);
+      var w = (screenH - above - below) * (tile.classList.contains('tall') ? 9 / 16 : 16 / 9);
+      v.style.maxWidth = Math.max(160, Math.min(tile.clientWidth - 32, w)) + 'px';
+    }
+    fit(true); window.addEventListener('resize', function () { fit(false); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fit(true); });
+    tile.querySelector('.more-info').addEventListener('click', function (e) {
+      e.preventDefault(); document.getElementById('more').scrollIntoView({ behavior: 'smooth' });
+    });
+    // scrolled away while playing: on desktop the film keeps going in a small corner window; on phones it pauses
+    var away = false, keepMax = '', corner = -1, size = 0, raf = 0;
+    var desk = window.matchMedia('(min-width: 56rem) and (hover: hover)');
+    function sync() {
+      var float = away && !v.paused && !v.ended && desk.matches;
+      if (float && !v.classList.contains('floating')) slot.style.height = slot.offsetHeight + 'px';
+      if (!float) slot.style.height = '';
+      v.classList.toggle('floating', float); tile.classList.toggle('is-floating', float);
+      if (float) place(); else { v.style.left = v.style.top = v.style.width = ''; x.style.left = x.style.top = ''; v.style.maxWidth = keepMax || v.style.maxWidth; keepMax = ''; }
+    }
+    // the corner window goes wherever it covers the least text, shrinking if every corner has words in it
+    var TEXT = 'main > .tile:not(.film) h1, main > .tile:not(.film) h2, main > .tile:not(.film) p, main > .tile .links, main > .tile .legend, main > .tile .hours, main > .tile .chips, main > .tile .sign, .pfoot';
+    function cover(r) {
+      var a = 0;
+      document.querySelectorAll(TEXT).forEach(function (el) {
+        var b = el.getBoundingClientRect();
+        var w = Math.min(r.x + r.w, b.right) - Math.max(r.x, b.left), h = Math.min(r.y + r.h, b.bottom) - Math.max(r.y, b.top);
+        if (w > 0 && h > 0) a += w * h;
+      });
+      return a;
+    }
+    function place() {
+      if (!v.classList.contains('floating')) return;
+      if (!keepMax) keepMax = v.style.maxWidth || ' ';
+      v.style.maxWidth = 'none';
+      var bar = document.querySelector('.gbar'), top = (bar ? bar.getBoundingClientRect().bottom : 0) + 16, m = 16, W = innerWidth, H = innerHeight, best = null;
+      [352, 300, 248, 200].forEach(function (w, si) {
+        var h = w * 9 / 16, mid = (top + H - 80 - h) / 2;
+        [[m, top], [m, H - h - m], [W - w - m, top], [W - w - m, H - h - 80], [m, mid], [W - w - m, mid]].forEach(function (p, ci) {
+          var c = cover({ x: p[0], y: p[1], w: w, h: h }) + si * 400 + (ci > 3 ? 200 : 0) + (ci === corner && si === size ? -300 : 0);
+          if (!best || c < best.c) best = { c: c, x: p[0], y: p[1], w: w, ci: ci, si: si };
+        });
+      });
+      corner = best.ci; size = best.si;
+      v.style.left = best.x + 'px'; v.style.top = best.y + 'px'; v.style.width = best.w + 'px';
+      x.style.left = (best.x + best.w - 38) + 'px'; x.style.top = (best.y + 6) + 'px';
+    }
+    window.addEventListener('scroll', function () { if (!raf && v.classList.contains('floating')) raf = requestAnimationFrame(function () { raf = 0; place(); }); }, { passive: true });
+    window.addEventListener('resize', place);
+    new IntersectionObserver(function (es) {
+      away = es[0].intersectionRatio < 0.35;
+      if (away && !desk.matches && !v.paused) v.pause();
+      sync();
+    }, { threshold: [0, 0.35, 1] }).observe(slot);
+    v.addEventListener('play', sync); v.addEventListener('pause', sync); v.addEventListener('ended', sync);
+    x.addEventListener('click', function () { v.pause(); });
+  })();
+</script>
 
-<section class="tile half" aria-label="顏色">
+
+<section id="more" class="tile half" aria-label="顏色">
   <p class="eyebrow">一眼看懂</p>
   <h2>看顏色，<br>就知道能不能借。</h2>
   <div class="art">
@@ -140,6 +232,31 @@
     </div>
   </div>
 </section>
+<section class="tile hero" aria-label="廁略">
+  <div class="ft-icon" role="img" aria-label="廁略 App 圖示"><span class="v">廁略</span><span class="rule"></span></div>
+  <p class="eyebrow">iPhone · 免費</p>
+  <h1><span class="nb">找到最近、</span><span class="nb">而且能借的廁所。</span></h1>
+  <div class="links"><a class="pill" href="https://apps.apple.com/us/app/nature-calls-restroom-finder/id6817375955" target="_blank" rel="noopener">App Store 下載</a></div>
+  <div class="art">
+    <div class="sign" aria-label="畫面示意">
+      <div>
+        <p class="k">最近一間</p>
+        <p class="dist">120<small>m</small></p>
+        <p class="meta"><span><span class="dot" style="background:#0A84FF"></span>向店員借用</span><span><span class="dot" style="background:#34C759"></span>營業中</span></p>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11.25 20V6.81l-5.72 5.72-1.06-1.06L12 3.94l7.53 7.53-1.06 1.06-5.72-5.72V20z"/></svg></div>
+    </div>
+  </div>
+</section>
+<button class="totop" type="button" aria-label="回到頂部"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 15V3M3.5 8.5 9 3l5.5 5.5"/></svg></button>
+<script>
+  (function () {
+    var t = document.querySelector('.totop');
+    function show() { t.classList.toggle('on', window.pageYOffset > window.innerHeight * 0.8); }
+    window.addEventListener('scroll', show, { passive: true }); show();
+    t.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  })();
+</script>
 </main><footer class="pfoot"><span>© 2026 KUØ WORKS 杰構工作室</span><span><a href="https://www.instagram.com/kuoworks.tw/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.threads.net/@kuoworks.tw" target="_blank" rel="noopener">Threads</a></span></footer>
 </body>
 </html>
