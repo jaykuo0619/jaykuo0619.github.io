@@ -1,7 +1,9 @@
 /* Collapsing top bar, shared by the KUØ WORKS site and the Jay Kuo portfolio.
    Scrolling down past the bar folds it into a small tab at the top left; tapping the tab brings the
    whole bar back. Scrolling on, tapping elsewhere or pressing Esc folds it again. Back at the top it
-   is a normal bar. Mark the header with data-collapsible and put the tab text in data-tab. */
+   is a normal bar. Mark the header with data-collapsible and put the tab text in data-tab.
+   On a computer with a mouse there is no tab: the bar simply slides away, and comes back while the
+   pointer is at the top edge of the window (or keyboard focus enters it). */
 (function () {
   var bar = document.querySelector('[data-collapsible]'); if (!bar) return;
   var root = document.documentElement;
@@ -22,7 +24,9 @@
     '<svg viewBox="0 0 18 18" fill="none" stroke-width="1.2" aria-hidden="true"><path d="M2 6h14M2 12h14"/></svg>';
   document.body.appendChild(tab);
 
-  var mini = false, open = false, openY = 0;
+  var desk = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (desk) root.classList.add('bar-desk');
+  var mini = false, open = false, openY = 0, atTop = false;
   function setOpen(o) {
     open = o; openY = window.scrollY;
     root.classList.toggle('bar-open', o);
@@ -34,7 +38,16 @@
   function update() {
     var m = window.scrollY > bar.offsetHeight + 40;
     if (m !== mini) { mini = m; root.classList.toggle('bar-mini', m); if (!m && open) setOpen(false); }
-    else if (open && Math.abs(window.scrollY - openY) > 80) setOpen(false);
+    else if (open && !atTop && Math.abs(window.scrollY - openY) > 80) setOpen(false);
+  }
+  if (desk) {
+    document.addEventListener('mousemove', function (e) {
+      atTop = e.clientY < (open ? bar.offsetHeight + 12 : 24);
+      if (!mini) return;
+      if (atTop && !open) setOpen(true);
+      else if (!atTop && open && !bar.contains(document.activeElement)) setOpen(false);
+    }, { passive: true });
+    bar.addEventListener('focusin', function () { if (mini && !open) setOpen(true); });
   }
   tab.addEventListener('click', function (e) { e.stopPropagation(); setOpen(true); });
   document.addEventListener('click', function (e) { if (open && !bar.contains(e.target)) setOpen(false); });

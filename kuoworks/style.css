@@ -169,6 +169,9 @@ html.bar-mini.bar-open [data-collapsible] { transform: none; box-shadow: 0 10px 
 .topbar-tab svg { width: 0.9rem; height: 0.9rem; stroke: currentColor; display: block; }
 html.bar-mini .topbar-tab { opacity: 1; transform: none; pointer-events: auto; }
 html.bar-mini.bar-open .topbar-tab { opacity: 0; pointer-events: none; }
+/* Computers with a mouse: no tab; the bar comes back while the pointer is at the top edge (topbar.js). */
+html.bar-desk .topbar-tab { display: none; }
+html.bar-desk.bar-mini.bar-open [data-collapsible] { box-shadow: 0 8px 24px -18px rgba(0, 0, 0, .35); }
 @media (prefers-reduced-motion: reduce) { [data-collapsible], .topbar-tab { transition: none; } }
 @media print { .topbar-tab { display: none; } html.bar-mini [data-collapsible] { transform: none; } }
 
