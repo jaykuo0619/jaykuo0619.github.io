@@ -29,10 +29,10 @@
       "platforms": {
         "android": {
           "label": "Android",
-          "version": "1.1.2",
-          "apk": "/apps/partytable/download/partytable-1.1.2.apk",
-          "size": "0.2 MB",
-          "sha256": "fe02cbef1011bda9fa6570aad3d151885628078da35c8ef573b25e6112f26e82",
+          "version": "1.3.1",
+          "apk": "/apps/partytable/download/partytable-1.3.1.apk",
+          "size": "0.3 MB",
+          "sha256": "ebe66b143a77d5be13c102a2154a6a5df40aec7108b1ce3234a65700566e0605",
           "requires": "Android 7.0 以上",
           "note": "直接下載安裝。跟 iPhone、iPad 和網頁版（partytable-jay.web.app）可以同一桌玩。",
           "firstRun": "第一次開啟就能玩，不用註冊。"
@@ -69,6 +69,24 @@
         }
       ],
       "versions": [
+        {
+          "version": "1.3.1",
+          "date": "2026-10-13",
+          "notes": [
+            "每個遊戲都有「怎麼玩」教學：第一次進遊戲會跳出來，會玩的人可以選不再顯示，右上的「?」隨時能再看。",
+            "修正：有人斷線又馬上回來時，電腦不會再替他出手；釣魚的「問」按鈕偶爾沒反應；6 到 8 人桌的玩家列被切掉。",
+            "狼人殺一桌最多 8 人。"
+          ]
+        },
+        {
+          "version": "1.3.0",
+          "date": "2026-10-12",
+          "notes": [
+            "新增「分享戰績」：一局結束後把結果做成圖卡，四款樣式可選，可以存到相簿或分享到 IG 限動。",
+            "新增派對票：抽鬼牌、終極密碼、圈圈叉叉、心電感應、擲到 1 歸零免費開桌；其他遊戲開桌或單機需要派對票，加入朋友的桌一律免費。",
+            "修正房主離線、重新連線等多人連線問題。"
+          ]
+        },
         {
           "version": "1.1.2",
           "date": "2026-10-10",
