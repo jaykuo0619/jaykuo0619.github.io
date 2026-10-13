@@ -7,6 +7,23 @@
    A drawing starts as soon as it is on screen and pauses when it leaves. With reduced motion nothing moves
    (body.anim is never set, so every drawing simply shows its final state). */
 (function () {
+  // Opening a snapping page from a link (no #anchor) always starts at the top. iPhone Safari can otherwise
+  // settle on a snap point further down while the page is still loading. Back/forward and reload keep their place.
+  if (!document.querySelector('main.tiles.snap') || location.hash) return;
+  var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  if (nav && nav.type !== 'navigate') return;
+  var moved = false;
+  ['touchstart', 'wheel', 'keydown', 'mousedown'].forEach(function (e) {
+    window.addEventListener(e, function () { moved = true; }, { once: true, passive: true });
+  });
+  function top() { if (!moved && window.scrollY !== 0) window.scrollTo(0, 0); }
+  top();
+  window.addEventListener('load', top);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(top);
+  setTimeout(top, 700);
+})();
+
+(function () {
   // One tile at a time with a mouse or trackpad: each scroll gesture glides to the next (or previous) row of
   // tiles. A tile taller than the window scrolls normally until its end. Touch screens use CSS snapping instead.
   var main = document.querySelector('main.tiles.snap');

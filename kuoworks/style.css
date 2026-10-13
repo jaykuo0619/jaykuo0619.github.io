@@ -274,7 +274,10 @@ html.bar-desk.bar-mini.bar-open [data-collapsible] { box-shadow: 0 8px 24px -18p
 @media (hover: none) {
   html:has(main.tiles.snap) { scroll-snap-type: y mandatory; }
   main.tiles.snap > .tile { scroll-snap-align: start; scroll-margin-top: env(safe-area-inset-top, 0px); }
-  main.tiles.snap > .tile:not(.tile ~ .tile) { scroll-margin-top: 100vh; } /* first stop is the very top, bar included (a <style> can come first, so not :first-child) */
+  /* First stop is exactly the top of the page: bar (3rem + 1px border) and main's 12px padding above the first tile.
+     It must not point above the page (Safari may drop such a stop and settle further down).
+     A <style> can come first in main, so not :first-child. */
+  main.tiles.snap > .tile:not(.tile ~ .tile) { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 3rem + 13px); }
   main.tiles.snap ~ .pfoot { scroll-snap-align: end; }
 }
 
