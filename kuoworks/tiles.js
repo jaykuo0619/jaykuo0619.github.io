@@ -24,6 +24,23 @@
 })();
 
 (function () {
+  // Touch screens snap with CSS. When a tile is taller than the screen, strict snapping would pull past its lower
+  // part, so the page switches to gentle snapping (html.snap-loose): it only settles when a tile top is close.
+  var main = document.querySelector('main.tiles.snap'); if (!main) return;
+  function check() {
+    var h = window.innerHeight, last = 0, loose = false;
+    Array.prototype.forEach.call(main.querySelectorAll(':scope > .tile'), function (t, i) {
+      var top = t.getBoundingClientRect().top + window.scrollY;
+      if (i > 0 && top - last > h) loose = true;
+      if (i > 0) last = top;
+      if (t.offsetHeight > h) loose = true;
+    });
+    document.documentElement.classList.toggle('snap-loose', loose);
+  }
+  check(); window.addEventListener('load', check); window.addEventListener('resize', check);
+})();
+
+(function () {
   // One tile at a time with a mouse or trackpad: each scroll gesture glides to the next (or previous) row of
   // tiles. A tile taller than the window scrolls normally until its end. Touch screens use CSS snapping instead.
   var main = document.querySelector('main.tiles.snap');
@@ -44,22 +61,17 @@
     if (list[list.length - 1] < max) list.push(max);
     return list;
   }
-  function tileAt(y) {
-    var best = null;
-    Array.prototype.forEach.call(tiles(), function (t) { var r = t.getBoundingClientRect(); if (r.top + y <= y + 2) best = r; });
-    return best;
-  }
   window.addEventListener('wheel', function (e) {
     if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
     if (busy) { e.preventDefault(); holdUntilQuiet(); return; }  // swallow the rest of this gesture (trackpad inertia)
     if (Math.abs(e.deltaY) < 3) return;
-    var y = window.scrollY, h = window.innerHeight, dir = e.deltaY > 0 ? 1 : -1, cur = tileAt(y);
-    // inside a tile taller than the window: scroll it normally until its edge is reached
-    if (cur && cur.height > h + 4 && ((dir > 0 && cur.bottom > h + 2) || (dir < 0 && cur.top < -2))) return;
+    var y = window.scrollY, h = window.innerHeight, dir = e.deltaY > 0 ? 1 : -1;
     var list = stops(), target = null, k;
     if (dir > 0) { for (k = 0; k < list.length; k++) if (list[k] > y + 2) { target = list[k]; break; } }
     else { for (k = list.length - 1; k >= 0; k--) if (list[k] < y - 2) { target = list[k]; break; } }
     if (target === null) return;
+    // A tile taller than the window: jumping would skip part of it, so scroll normally until the next stop is in view.
+    if (Math.abs(target - y) > h) return;
     e.preventDefault();
     busy = true; releaseAt = Date.now() + (still ? 150 : 650);
     window.scrollTo({ top: target, behavior: still ? 'auto' : 'smooth' });
