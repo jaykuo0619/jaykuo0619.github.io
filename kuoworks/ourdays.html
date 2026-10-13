@@ -66,6 +66,9 @@
 
   .code { display: flex; gap: 0.5rem; }
   .code span { width: 2.75rem; height: 3.5rem; border: 1px solid var(--fg); display: grid; place-items: center; font-size: 1.5rem; font-variant-numeric: tabular-nums; background: var(--bg); }
+  .tile.film { padding-bottom: clamp(1.5rem, 4vw, 2.5rem); }
+  .film video { display: block; width: 100%; max-width: 60rem; aspect-ratio: 16 / 9; background: #000; margin-top: 2rem; }
+  .film.tall video { aspect-ratio: 9 / 16; max-width: 22rem; }
 </style>
 
 <section class="tile hero" aria-label="小日子">
@@ -83,6 +86,21 @@
     </div>
   </div>
 </section>
+
+<section class="tile wide ink film" aria-label="zhAB">
+  <p class="eyebrow">發表影片 · 4 分鐘</p>
+  <h2>花四分鐘，認識小日子。</h2>
+  <video id="film" controls playsinline preload="none" src="video/ourdays-film-zh-16x9.mp4" poster="video/ourdays-film-zh-16x9.jpg" data-tall="video/ourdays-film-zh-9x16" aria-label="zhAB"></video>
+</section>
+<script>
+  // phones held upright get the 9:16 cut; everything else keeps 16:9
+  (function () {
+    var v = document.getElementById('film');
+    if (window.matchMedia('(max-width: 44rem) and (orientation: portrait)').matches) {
+      v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; v.parentNode.classList.add('tall');
+    }
+  })();
+</script>
 
 <section class="tile half board" aria-label="手寫黑板">
   <p class="eyebrow">手寫黑板</p>
