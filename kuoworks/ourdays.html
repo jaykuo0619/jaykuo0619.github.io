@@ -69,6 +69,12 @@
   .tile.film { padding-bottom: clamp(1.5rem, 4vw, 2.5rem); }
   .film video { display: block; width: 100%; max-width: 60rem; aspect-ratio: 16 / 9; background: #000; margin-top: 2rem; }
   .film.tall video { aspect-ratio: 9 / 16; max-width: 22rem; }
+  /* desktop: a film that is still playing follows you as a small window in the top-left corner */
+  .film .slot { width: 100%; max-width: 60rem; margin-top: 2rem; }
+  .film .slot video { margin: 0 auto; }
+  .film video.floating { position: fixed; z-index: 80; top: calc(env(safe-area-inset-top, 0px) + 4rem); left: 1rem; width: 22rem; max-width: none; margin: 0; border-radius: 12px; box-shadow: 0 18px 50px rgba(0,0,0,.35); }
+  .film .unfloat { display: none; position: fixed; z-index: 81; top: calc(env(safe-area-inset-top, 0px) + 4.4rem); left: calc(23rem - 2.4rem); width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
+  .film.is-floating .unfloat { display: block; }
   /* Scroll stage: one set of devices stays on screen; scrolling moves them, swaps their screens,
      and brings in a second iPhone, the Watch or the iPad only while a feature needs it. */
   .scrolly { grid-column: 1 / -1; position: relative; height: calc(var(--n) * 100vh + 60vh); }
@@ -135,18 +141,35 @@
   </div>
 </section>
 
-<section class="tile wide ink film" aria-label="zhAB">
+<section class="tile wide ink film" aria-label="小日子發表影片">
   <p class="eyebrow">發表影片 · 4 分鐘</p>
   <h2>花四分鐘，認識小日子。</h2>
-  <video id="film" controls playsinline preload="none" src="video/ourdays-film-zh-16x9.mp4" poster="video/ourdays-film-zh-16x9.jpg" data-tall="video/ourdays-film-zh-9x16" aria-label="zhAB"></video>
+  <div class="slot"><video id="film" controls playsinline preload="none" src="video/ourdays-film-zh-16x9.mp4" poster="video/ourdays-film-zh-16x9.jpg" data-tall="video/ourdays-film-zh-9x16" aria-label="小日子發表影片"></video></div>
+  <button class="unfloat" type="button" aria-label="關閉小視窗">×</button>
 </section>
 <script>
   // phones held upright get the 9:16 cut; everything else keeps 16:9
   (function () {
     var v = document.getElementById('film');
     if (window.matchMedia('(max-width: 44rem) and (orientation: portrait)').matches) {
-      v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; v.parentNode.classList.add('tall');
+      v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; v.closest('.film').classList.add('tall');
     }
+    // scrolled away while playing: on desktop the film keeps going in a small corner window; on phones it pauses
+    var tile = v.closest('.film'), slot = tile.querySelector('.slot'), x = tile.querySelector('.unfloat'), away = false;
+    var desk = window.matchMedia('(min-width: 56rem) and (hover: hover)');
+    function sync() {
+      var float = away && !v.paused && !v.ended && desk.matches;
+      if (float && !v.classList.contains('floating')) slot.style.height = slot.offsetHeight + 'px';
+      if (!float) slot.style.height = '';
+      v.classList.toggle('floating', float); tile.classList.toggle('is-floating', float);
+    }
+    new IntersectionObserver(function (es) {
+      away = es[0].intersectionRatio < 0.35;
+      if (away && !desk.matches && !v.paused) v.pause();
+      sync();
+    }, { threshold: [0, 0.35, 1] }).observe(slot);
+    v.addEventListener('play', sync); v.addEventListener('pause', sync); v.addEventListener('ended', sync);
+    x.addEventListener('click', function () { v.pause(); });
   })();
 </script>
 
