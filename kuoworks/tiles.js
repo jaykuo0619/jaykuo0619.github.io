@@ -1,6 +1,6 @@
 /* Tile animations, shared by the KUØ WORKS home page and the Jay Kuo portfolio home page.
    Each drawing is optional: the script animates whichever of these it finds.
-     .sign[data-l]  FindToilet sign: points to the next restroom (distance counts, arrow turns, access colour changes)
+     .sign[data-l]  Nature Calls sign: points to the next restroom (distance counts, arrow turns, access colour changes)
      .cal           OurDays day counter: only the digits that change roll up, like a flip clock
      .fan           PartyTable cards: dealt, then gathered and fanned again with the red card lifted
      .phw           Founder photo: comes up like a print, crop marks snap on, then a slow drift
