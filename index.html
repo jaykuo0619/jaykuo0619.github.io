@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="kuoworks/style.css">
 <link rel="stylesheet" href="portfolio.css">
 <script src="kuoworks/topbar.js" defer></script>
+<script src="kuoworks/tiles.js" defer></script>
 <style>
   /* Home: one page of tiles. Each tile is one thing, with at most two links; details live on resume.html and kuoworks/. */
   /* Name as a drafting sheet: a ruler slides in, guide lines are ruled, the pencil outlines the letters,
@@ -129,9 +130,9 @@
     <p class="sub">The nearest restroom you can actually use.</p>
     <div class="links"><a class="pill" href="https://apps.apple.com/us/app/nature-calls-restroom-finder/id6817375955" target="_blank" rel="noopener">App Store</a><a class="more" href="kuoworks/findtoilet.html">Learn more</a></div>
     <div class="art">
-      <div class="sign" aria-hidden="true">
-        <div><p class="k">Nearest</p><p class="n">120<small>m</small></p><p class="k" style="margin-top:0.5rem"><span class="dot" style="background:#0A84FF"></span>Ask staff</p></div>
-        <svg viewBox="0 0 24 24"><path d="M11.25 20V6.81l-5.72 5.72-1.06-1.06L12 3.94l7.53 7.53-1.06 1.06-5.72-5.72V20z"/></svg>
+      <div class="sign" aria-hidden="true" data-l="Ask staff|Free|Customers only">
+        <div><p class="k">Nearest</p><p class="n"><span class="num">120</span><small>m</small></p><p class="k" style="margin-top:0.5rem"><span class="dot" style="background:#0A84FF"></span><span class="lbl">Ask staff</span></p></div>
+        <svg class="arrow" viewBox="0 0 24 24"><path d="M11.25 20V6.81l-5.72 5.72-1.06-1.06L12 3.94l7.53 7.53-1.06 1.06-5.72-5.72V20z"/></svg>
       </div>
     </div>
   </section>

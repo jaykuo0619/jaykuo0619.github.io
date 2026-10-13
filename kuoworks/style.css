@@ -238,3 +238,39 @@ html.bar-desk.bar-mini.bar-open [data-collapsible] { box-shadow: 0 8px 24px -18p
 /* ---------- Founder photo ---------- */
 .portrait { display: block; width: min(22rem, 78%); height: auto; aspect-ratio: 4 / 5; object-fit: cover; background: #111; }
 .portrait.sm { width: min(15rem, 62%); }
+
+/* ---------- Tile animations (tiles.js), shared with the portfolio home ---------- */
+.sign .num { display: inline-block; min-width: 3ch; text-align: right; }
+.sign[data-l] > div { min-width: 10.5rem; }
+.sign .arrow { transition: transform 0.9s cubic-bezier(.3,1.3,.5,1); }
+.sign .dot { transition: background-color 0.4s; }
+.sign .lbl { display: inline-block; transition: opacity 0.3s, transform 0.3s; }
+.sign .lbl.out { opacity: 0; transform: translateY(4px); }
+.cal .n .d { display: inline-block; height: 1em; overflow: hidden; vertical-align: top; }
+.cal .n .r { display: block; animation: roll 0.55s cubic-bezier(.3,0,.2,1) forwards; }
+.cal .n .r i { display: block; height: 1em; font-style: normal; }
+@keyframes roll { from { transform: translateY(0); } to { transform: translateY(-1em); } }
+.fan span { transition: transform 0.9s cubic-bezier(.3,1.2,.5,1), opacity 0.5s; }
+.anim .fan:not(.on) span, .fan.gather span { transform: rotate(0deg) translateY(10px); }
+.anim .fan:not(.on) span { opacity: 0; }
+.fan.on span:nth-child(1) { transition-delay: 0.05s; } .fan.on span:nth-child(3) { transition-delay: 0.15s; }
+.fan.lift span:nth-child(2) { transform: translateY(-1.25rem); z-index: 2; }
+.phw { position: relative; width: min(15rem, 62%); }
+.phw .ph { overflow: hidden; aspect-ratio: 4 / 5; background: #111; transition: clip-path 0.9s cubic-bezier(.6,0,.2,1); }
+.phw img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.phw.on img { animation: drift 12s ease-in-out 0.6s infinite alternate; }
+@keyframes drift { from { transform: scale(1); } to { transform: scale(1.08) translate(-2%, -1%); } }
+.phw i { position: absolute; width: 12px; height: 12px; border: 0 solid var(--fg); transition: transform 0.7s cubic-bezier(.3,1.2,.5,1) 0.6s, opacity 0.4s 0.6s; }
+.phw i:nth-of-type(1) { top: -8px; left: -8px; border-width: 1px 0 0 1px; } .phw i:nth-of-type(2) { top: -8px; right: -8px; border-width: 1px 1px 0 0; }
+.phw i:nth-of-type(3) { bottom: -8px; left: -8px; border-width: 0 0 1px 1px; } .phw i:nth-of-type(4) { bottom: -8px; right: -8px; border-width: 0 1px 1px 0; }
+.anim .phw:not(.on) .ph { clip-path: inset(100% 0 0 0); }
+.anim .phw:not(.on) i { opacity: 0; transform: scale(2.2); }
+
+/* ---------- One tile at a time: scrolling snaps to the top of the next tile ----------
+   Touch screens use CSS snapping; with a mouse or trackpad tiles.js moves one tile per scroll gesture. */
+@media (hover: none) {
+  html:has(main.tiles) { scroll-snap-type: y mandatory; }
+  main.tiles > .tile { scroll-snap-align: start; }
+  main.tiles > .tile:first-child { scroll-margin-top: 6rem; } /* first stop is the very top, bar included */
+  main.tiles ~ .pfoot { scroll-snap-align: end; }
+}
