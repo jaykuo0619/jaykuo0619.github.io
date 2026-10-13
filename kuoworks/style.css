@@ -71,13 +71,13 @@ p { margin: 0; }
 
 /* ---------- Header ---------- */
 .site-head {
-  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  position: sticky; top: 0; z-index: 50; padding-top: env(safe-area-inset-top, 0px);
   border-bottom: 1px solid var(--line);
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
 }
 /* The bar collapses to a small tab once scrolled, so an anchored tile lands flush with the top of the screen. */
-section[id] { scroll-margin-top: 0; }
+section[id] { scroll-margin-top: env(safe-area-inset-top, 0px); }
 .site-head .wrap {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: 0.75rem 2rem; padding-block: 1.25rem;
@@ -154,7 +154,7 @@ section[id] { scroll-margin-top: 0; }
 
 /* ---------- Collapsing top bar (topbar.js) ---------- */
 [data-collapsible] { transition: transform .35s cubic-bezier(.2, .7, .2, 1), box-shadow .35s; }
-html.bar-mini [data-collapsible] { transform: translateY(calc(-100% - env(safe-area-inset-top, 0px) - 2px)); }
+html.bar-mini [data-collapsible] { transform: translateY(calc(-100% - 2px)); }
 html.bar-mini.bar-open [data-collapsible] { transform: none; box-shadow: 0 10px 30px -18px rgba(0, 0, 0, .45); }
 .topbar-tab {
   position: fixed; z-index: 70; top: calc(env(safe-area-inset-top, 0px) + 0.75rem); left: calc(env(safe-area-inset-left, 0px) + 0.75rem);
@@ -176,7 +176,7 @@ html.bar-desk.bar-mini.bar-open [data-collapsible] { box-shadow: 0 8px 24px -18p
 @media print { .topbar-tab { display: none; } html.bar-mini [data-collapsible] { transform: none; } }
 
 /* ---------- Global bar (shared with the Jay Kuo portfolio) ---------- */
-.gbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 60;
+.gbar { position: sticky; top: 0; z-index: 60; padding-top: env(safe-area-inset-top, 0px);
   background: color-mix(in srgb, var(--bg) 82%, transparent);
   -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px);
   border-bottom: 1px solid var(--line); }
@@ -192,7 +192,7 @@ html.bar-desk.bar-mini.bar-open [data-collapsible] { box-shadow: 0 8px 24px -18p
 .gbar .menu svg { width: 1.1rem; height: 1.1rem; display: block; stroke: currentColor; }
 @media (max-width: 40rem) {
   .gbar .menu { display: block; }
-  .gbar nav { display: none; position: absolute; left: 0; right: 0; top: 3rem; flex-direction: column; gap: 0;
+  .gbar nav { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; gap: 0;
     background: var(--bg); border-bottom: 1px solid var(--line); padding: 0.5rem var(--gutter) 1rem; }
   .gbar nav a { font-size: 1.25rem; padding-block: 0.6rem; color: var(--fg); }
   .gbar.open nav { display: flex; }
@@ -270,7 +270,14 @@ html.bar-desk.bar-mini.bar-open [data-collapsible] { box-shadow: 0 8px 24px -18p
    Touch screens use CSS snapping; with a mouse or trackpad tiles.js moves one tile per scroll gesture. */
 @media (hover: none) {
   html:has(main.tiles) { scroll-snap-type: y mandatory; }
-  main.tiles > .tile { scroll-snap-align: start; }
-  main.tiles > .tile:first-child { scroll-margin-top: 6rem; } /* first stop is the very top, bar included */
+  main.tiles > .tile { scroll-snap-align: start; scroll-margin-top: env(safe-area-inset-top, 0px); }
+  main.tiles > .tile:not(.tile ~ .tile) { scroll-margin-top: 100vh; } /* first stop is the very top, bar included (a <style> can come first, so not :first-child) */
   main.tiles ~ .pfoot { scroll-snap-align: end; }
 }
+
+/* ---------- Home-screen web app (iPhone): the page runs under the status bar ----------
+   The bars pad themselves below it, and once they fold away this strip keeps the clock
+   from sitting on top of a tile; tiles snap just below it. */
+body::before { content: ""; position: fixed; z-index: 65; top: 0; left: 0; right: 0; height: env(safe-area-inset-top, 0px);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px); pointer-events: none; }
