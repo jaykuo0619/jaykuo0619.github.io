@@ -76,8 +76,8 @@
   /* desktop: a film that is still playing follows you as a small window in the top-left corner */
   .film .slot { width: 100%; max-width: 60rem; margin-top: 2rem; }
   .film .slot video { margin: 0 auto; }
-  .film video.floating { position: fixed; z-index: 80; top: calc(env(safe-area-inset-top, 0px) + 4rem); left: 1rem; width: 22rem; max-width: none; margin: 0; border-radius: 12px; box-shadow: 0 18px 50px rgba(0,0,0,.35); }
-  .film .unfloat { display: none; position: fixed; z-index: 81; top: calc(env(safe-area-inset-top, 0px) + 4.4rem); left: calc(23rem - 2.4rem); width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
+  .film video.floating { position: fixed; z-index: 80; top: 4rem; left: 1rem; width: 22rem; margin: 0; border-radius: 12px; box-shadow: 0 18px 50px rgba(0,0,0,.35); transition: top .45s ease, left .45s ease, width .45s ease; }
+  .film .unfloat { display: none; position: fixed; z-index: 81; top: 4.4rem; left: 20.6rem; transition: top .45s ease, left .45s ease; width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
   .film.is-floating .unfloat { display: block; }
   /* the film tile fills the first screen and the film always fits inside it, on any screen */
   .tile.film { justify-content: center; }
@@ -188,7 +188,43 @@
       if (float && !v.classList.contains('floating')) slot.style.height = slot.offsetHeight + 'px';
       if (!float) slot.style.height = '';
       v.classList.toggle('floating', float); tile.classList.toggle('is-floating', float);
+      if (float) place(true); else { v.style.left = v.style.top = v.style.width = ''; x.style.left = x.style.top = ''; v.style.maxWidth = keepMax || v.style.maxWidth; keepMax = ''; }
     }
+    // the corner window goes wherever it covers the least text, shrinking if every corner has words in it
+    var keepMax = '', corner = -1, size = 0, raf = 0;
+    var TEXT = '.stage .cap, main > .tile:not(.film) h1, main > .tile:not(.film) h2, main > .tile:not(.film) p, main > .tile .opts, main > .tile .links, main > .tile .chalk, main > .tile .code, .pfoot';
+    function cover(r) {
+      var a = 0;
+      document.querySelectorAll(TEXT).forEach(function (el) {
+        var o = el.classList.contains('cap') ? parseFloat(getComputedStyle(el).opacity) : 1;
+        if (o < .05) return;
+        var els = el.classList.contains('cap') ? el.children : [el];
+        for (var i = 0; i < els.length; i++) {
+          var b = els[i].getBoundingClientRect();
+          var w = Math.min(r.x + r.w, b.right) - Math.max(r.x, b.left), h = Math.min(r.y + r.h, b.bottom) - Math.max(r.y, b.top);
+          if (w > 0 && h > 0) a += w * h * o;
+        }
+      });
+      return a;
+    }
+    function place(now) {
+      if (!v.classList.contains('floating')) return;
+      if (!keepMax) keepMax = v.style.maxWidth || ' ';
+      v.style.maxWidth = 'none';
+      var bar = document.querySelector('.gbar'), top = (bar ? bar.getBoundingClientRect().bottom : 0) + 16, m = 16, W = innerWidth, H = innerHeight, best = null;
+      [352, 300, 248, 200].forEach(function (w, si) {
+        var h = w * 9 / 16, mid = (top + H - 80 - h) / 2;
+        [[m, top], [m, H - h - m], [W - w - m, top], [W - w - m, H - h - 80], [m, mid], [W - w - m, mid]].forEach(function (p, ci) {
+          var c = cover({ x: p[0], y: p[1], w: w, h: h }) + si * 400 + (ci > 3 ? 200 : 0) + (ci === corner && si === size ? -300 : 0);
+          if (!best || c < best.c) best = { c: c, x: p[0], y: p[1], w: w, ci: ci, si: si };
+        });
+      });
+      corner = best.ci; size = best.si;
+      v.style.left = best.x + 'px'; v.style.top = best.y + 'px'; v.style.width = best.w + 'px';
+      x.style.left = (best.x + best.w - 38) + 'px'; x.style.top = (best.y + 6) + 'px';
+    }
+    window.addEventListener('scroll', function () { if (!raf && v.classList.contains('floating')) raf = requestAnimationFrame(function () { raf = 0; place(); }); }, { passive: true });
+    window.addEventListener('resize', function () { place(); });
     new IntersectionObserver(function (es) {
       away = es[0].intersectionRatio < 0.35;
       if (away && !desk.matches && !v.paused) v.pause();
