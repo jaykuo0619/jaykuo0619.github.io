@@ -266,6 +266,9 @@ html.bar-desk.bar-mini.bar-open [data-collapsible] { box-shadow: 0 8px 24px -18p
 .anim .phw:not(.on) .ph { clip-path: inset(100% 0 0 0); }
 .anim .phw:not(.on) i { opacity: 0; transform: scale(2.2); }
 
+/* NOTE for the OurDays page (ourdays.html, maintained separately via PRs): snapping below only applies to
+   main.tiles.snap, which that page does not use. The .gbar safe-area padding and the body::before status-bar
+   strip at the end of this file do reach it; scope them with a page class if they clash with its stage. */
 /* ---------- One tile at a time: scrolling snaps to the top of the next tile ----------
    Touch screens use CSS snapping; with a mouse or trackpad tiles.js moves one tile per scroll gesture. */
 @media (hover: none) {
