@@ -79,6 +79,15 @@
   .film video.floating { position: fixed; z-index: 80; top: calc(env(safe-area-inset-top, 0px) + 4rem); left: 1rem; width: 22rem; max-width: none; margin: 0; border-radius: 12px; box-shadow: 0 18px 50px rgba(0,0,0,.35); }
   .film .unfloat { display: none; position: fixed; z-index: 81; top: calc(env(safe-area-inset-top, 0px) + 4.4rem); left: calc(23rem - 2.4rem); width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
   .film.is-floating .unfloat { display: block; }
+  /* the film tile fills the first screen and the film always fits inside it, on any screen */
+  .tile.film { justify-content: center; }
+  .film .slot video { width: 100%; }
+  /* back to top */
+  .totop { position: fixed; z-index: 70; right: 1rem; bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem); width: 2.75rem; height: 2.75rem; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.18); background: rgba(28,28,27,.72); color: #F5F5F3; display: grid; place-items: center; cursor: pointer;
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); opacity: 0; transform: translateY(.5rem); pointer-events: none; transition: opacity .3s, transform .3s; }
+  .totop.on { opacity: 1; transform: none; pointer-events: auto; }
+  .totop svg { width: 1.1rem; height: 1.1rem; }
   /* Scroll stage: one set of devices stays on screen; scrolling moves them, swaps their screens,
      and brings in a second iPhone, the Watch or the iPad only while a feature needs it. */
   .scrolly { grid-column: 1 / -1; position: relative; height: calc(var(--n) * 100vh + 60vh); }
@@ -141,6 +150,24 @@
     if (window.matchMedia('(max-width: 44rem) and (orientation: portrait)').matches) {
       v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; v.closest('.film').classList.add('tall');
     }
+    // a refresh always opens on the film, sized so the whole frame fits on screen
+    var tile0 = v.closest('.film');
+    if (!location.hash && 'scrollRestoration' in history) { history.scrollRestoration = 'manual'; window.scrollTo(0, 0); }
+    var lastW = 0;
+    function fit(force) {
+      if (v.classList.contains('floating') || (!force && window.innerWidth === lastW)) return;
+      lastW = window.innerWidth;
+      var bar = document.querySelector('.gbar'), b = bar ? bar.getBoundingClientRect().height : 0, gap = 12;
+      var tall = tile0.classList.contains('tall'), sl = tile0.querySelector('.slot');
+      var screenH = window.innerHeight - b - gap * 2;
+      tile0.style.minHeight = screenH + 'px';
+      var above = sl.getBoundingClientRect().top - tile0.getBoundingClientRect().top;
+      var below = parseFloat(getComputedStyle(tile0).paddingBottom) || 0;
+      var w = (screenH - above - below) * (tall ? 9 / 16 : 16 / 9);
+      v.style.maxWidth = Math.max(160, Math.min(tall ? 352 : 960, w)) + 'px';
+    }
+    fit(true); window.addEventListener('resize', function () { fit(false); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fit(true); });
     // scrolled away while playing: on desktop the film keeps going in a small corner window; on phones it pauses
     var tile = v.closest('.film'), slot = tile.querySelector('.slot'), x = tile.querySelector('.unfloat'), away = false;
     var desk = window.matchMedia('(min-width: 56rem) and (hover: hover)');
@@ -274,6 +301,8 @@
     // magnet: anywhere on the page, one wheel notch, swipe or key press glides to the next stop.
     // Stops are every feature of the stage plus the top of every row of tiles below it.
     var anim = null, lockUntil = 0, lastWheel = 0;
+    var filmPush = 0, filmAt = 0;
+    function onFilm() { return window.pageYOffset < top0() - 40; }
     function top0() { return root.getBoundingClientRect().top + window.pageYOffset; }
     function fNow() { return -root.getBoundingClientRect().top / stage.clientHeight; }
     function inside() { var f = fNow(); return f > -.02 && f < N - 1 + .02; }
@@ -309,6 +338,12 @@
       if (e.ctrlKey || Math.abs(e.deltaY) < 1 || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
       e.preventDefault();
       var now = performance.now(), fresh = now - lastWheel > 180; lastWheel = now;
+      // on the film, leaving takes a deliberate scroll: small nudges add up and fade after a pause
+      if (e.deltaY > 0 && onFilm()) {
+        if (now - filmAt > 700) filmPush = 0; filmAt = now; filmPush += e.deltaY;
+        if (filmPush > 420 && !busy()) { filmPush = 0; step(1); }
+        return;
+      }
       // a trackpad keeps sending momentum events after the finger lifts: only a new gesture moves again
       if (fresh && !busy()) step(e.deltaY > 0 ? 1 : -1);
     }, { passive: false });
@@ -318,7 +353,7 @@
       if (ty === null || e.touches.length > 1) return;
       var dy = ty - e.touches[0].clientY, dx = tx - e.touches[0].clientX;
       if (Math.abs(dx) > Math.abs(dy)) return;
-      e.preventDefault(); if (Math.abs(dy) > 24) tdir = dy > 0 ? 1 : -1;
+      e.preventDefault(); tdir = Math.abs(dy) > (dy > 0 && onFilm() ? 150 : 24) ? (dy > 0 ? 1 : -1) : 0;
     }, { passive: false });
     window.addEventListener('touchend', function () { if (tdir) step(tdir); ty = null; tdir = 0; }, { passive: true });
     window.addEventListener('keydown', function (e) {
@@ -405,6 +440,15 @@
     </div>
   </div>
 </section>
+<button class="totop" type="button" aria-label="回到頂部"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 15V3M3.5 8.5 9 3l5.5 5.5"/></svg></button>
+<script>
+  (function () {
+    var t = document.querySelector('.totop');
+    function show() { t.classList.toggle('on', window.pageYOffset > window.innerHeight * 0.8); }
+    window.addEventListener('scroll', show, { passive: true }); show();
+    t.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  })();
+</script>
 </main><footer class="pfoot"><span>© 2026 KUØ WORKS 杰構工作室</span><span><a href="https://www.instagram.com/kuoworks.tw/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.threads.net/@kuoworks.tw" target="_blank" rel="noopener">Threads</a></span></footer>
 </body>
 </html>
