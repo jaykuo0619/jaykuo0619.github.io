@@ -29,10 +29,10 @@
       "platforms": {
         "android": {
           "label": "Android",
-          "version": "1.3.1",
-          "apk": "/apps/partytable/download/partytable-1.3.1.apk",
+          "version": "1.4.0",
+          "apk": "/apps/partytable/download/partytable-1.4.0.apk",
           "size": "0.3 MB",
-          "sha256": "ebe66b143a77d5be13c102a2154a6a5df40aec7108b1ce3234a65700566e0605",
+          "sha256": "8be38205703ba5d95998a08aa71b9a1be76d526d8f742464b31238ae69e0cea2",
           "requires": "Android 7.0 以上",
           "note": "直接下載安裝。跟 iPhone、iPad 和網頁版（partytable-jay.web.app）可以同一桌玩。",
           "firstRun": "第一次開啟就能玩，不用註冊。"
@@ -69,6 +69,15 @@
         }
       ],
       "versions": [
+        {
+          "version": "1.4.0",
+          "date": "2026-10-14",
+          "notes": [
+            "全新的首頁：每個遊戲都有自己的顏色和插圖，一頁往下滑就能看完全部遊戲，不用再左右滑。",
+            "分類列可以多選（例如同時看撲克牌和派對），往下滑會固定在最上面。",
+            "不知道玩什麼？按「隨便抽一個」；釘選的遊戲變成大卡排在最前面。"
+          ]
+        },
         {
           "version": "1.3.1",
           "date": "2026-10-13",
