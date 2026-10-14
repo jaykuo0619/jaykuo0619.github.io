@@ -94,6 +94,10 @@
   .glyphs div + div { border-left: 1px solid #3A3A38; }
   .glyphs b { display: block; font-size: clamp(4rem, 11vw, 7rem); font-weight: 300; line-height: 1; }
   .glyphs span { display: block; margin-top: 0.75rem; color: #C4C4C0; font-size: 0.9375rem; line-height: 1.6; }
+  /* 關於這個網站: the brand film */
+  .about-film .slot { width: min(62rem, 100%); margin: 1.25rem auto 0; }
+  .about-film video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 12px; }
+  @media (max-width: 44rem) and (orientation: portrait) { .about-film video { aspect-ratio: 9 / 16; width: auto; max-width: 100%; max-height: 72vh; margin: 0 auto; } }
 </style>
 
   <section class="tile hero" id="hero" aria-label="KUØ WORKS">
@@ -187,6 +191,19 @@
       </div>
     </div>
   </section>
+
+  <section class="tile wide about-film" id="about-site" aria-label="About this website">
+    <p class="eyebrow">About this website</p>
+    <h2>A two-minute tour.</h2>
+    <div class="slot"><video id="site-film" controls playsinline preload="none" src="../video/kuoworks-film-en-16x9.mp4" poster="../video/kuoworks-film-en-16x9.jpg" data-tall="../video/kuoworks-film-en-9x16" aria-label="About this website"></video></div>
+  </section>
+  <script>
+    (function () {
+      var v = document.getElementById('site-film');
+      if (window.matchMedia('(max-width: 44rem) and (orientation: portrait)').matches) { v.src = v.dataset.tall + '.mp4'; v.poster = v.dataset.tall + '.jpg'; }
+    })();
+  </script>
+
 
 <script>
   (function () {
