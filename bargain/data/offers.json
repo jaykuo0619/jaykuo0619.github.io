@@ -1,0 +1,22 @@
+{
+  "updated": "2026-10-01",
+  "note": "範例資料：價格與活動為示意，尚未與門市核對。",
+  "offers": [
+    { "id": "s1", "chain": "7-11", "product": "茶裏王 日式無糖綠茶 600ml", "keywords": ["茶裏王", "綠茶", "無糖", "茶"], "category": "飲料", "original": 25, "promo": { "type": "second_discount", "rate": 0.6 }, "start": "2026-10-01", "end": "2026-10-31", "source": "範例" },
+    { "id": "s2", "chain": "全家", "product": "茶裏王 日式無糖綠茶 600ml", "keywords": ["茶裏王", "綠茶", "無糖", "茶"], "category": "飲料", "original": 25, "promo": { "type": "multi", "qty": 2, "total": 39 }, "start": "2026-10-01", "end": "2026-10-31", "source": "範例" },
+    { "id": "s3", "chain": "全聯", "product": "茶裏王 日式無糖綠茶 600ml", "keywords": ["茶裏王", "綠茶", "無糖", "茶"], "category": "飲料", "original": 22, "promo": { "type": "none" }, "start": "2026-10-01", "end": "2026-12-31", "source": "範例" },
+    { "id": "s4", "chain": "7-11", "product": "可口可樂 600ml", "keywords": ["可樂", "可口可樂", "汽水"], "category": "飲料", "original": 30, "promo": { "type": "bogo" }, "start": "2026-10-01", "end": "2026-10-14", "source": "範例" },
+    { "id": "s5", "chain": "全家", "product": "可口可樂 600ml", "keywords": ["可樂", "可口可樂", "汽水"], "category": "飲料", "original": 30, "promo": { "type": "second_discount", "rate": 0.5 }, "start": "2026-10-01", "end": "2026-10-31", "source": "範例" },
+    { "id": "s6", "chain": "全聯", "product": "可口可樂 600ml", "keywords": ["可樂", "可口可樂", "汽水"], "category": "飲料", "original": 26, "promo": { "type": "price", "price": 22 }, "start": "2026-10-01", "end": "2026-10-15", "source": "範例" },
+    { "id": "s7", "chain": "7-11", "product": "光泉 全脂鮮乳 936ml", "keywords": ["鮮乳", "牛奶", "光泉"], "category": "乳品", "original": 92, "promo": { "type": "none" }, "start": "2026-10-01", "end": "2026-12-31", "source": "範例" },
+    { "id": "s8", "chain": "全家", "product": "光泉 全脂鮮乳 936ml", "keywords": ["鮮乳", "牛奶", "光泉"], "category": "乳品", "original": 92, "promo": { "type": "price", "price": 85 }, "start": "2026-10-01", "end": "2026-10-21", "source": "範例" },
+    { "id": "s9", "chain": "全聯", "product": "光泉 全脂鮮乳 936ml", "keywords": ["鮮乳", "牛奶", "光泉"], "category": "乳品", "original": 85, "promo": { "type": "multi", "qty": 2, "total": 155 }, "start": "2026-10-01", "end": "2026-10-31", "source": "範例" },
+    { "id": "s10", "chain": "7-11", "product": "統一布丁 3 入", "keywords": ["布丁", "統一"], "category": "零食", "original": 39, "promo": { "type": "none" }, "start": "2026-10-01", "end": "2026-12-31", "source": "範例" },
+    { "id": "s11", "chain": "全聯", "product": "統一布丁 3 入", "keywords": ["布丁", "統一"], "category": "零食", "original": 35, "promo": { "type": "price", "price": 29 }, "start": "2026-10-01", "end": "2026-10-20", "source": "範例" },
+    { "id": "s12", "chain": "7-11", "product": "維力 炸醬麵 單包", "keywords": ["泡麵", "炸醬麵", "維力"], "category": "泡麵", "original": 25, "promo": { "type": "multi", "qty": 3, "total": 66 }, "start": "2026-10-01", "end": "2026-10-31", "source": "範例" },
+    { "id": "s13", "chain": "全家", "product": "維力 炸醬麵 單包", "keywords": ["泡麵", "炸醬麵", "維力"], "category": "泡麵", "original": 25, "promo": { "type": "none" }, "start": "2026-10-01", "end": "2026-12-31", "source": "範例" },
+    { "id": "s14", "chain": "全聯", "product": "維力 炸醬麵 5 包入", "keywords": ["泡麵", "炸醬麵", "維力"], "category": "泡麵", "original": 109, "unitCount": 5, "promo": { "type": "price", "price": 99 }, "start": "2026-10-01", "end": "2026-10-31", "source": "範例" },
+    { "id": "s15", "chain": "全聯", "product": "舒潔 抽取式衛生紙 100 抽 x 12 包", "keywords": ["衛生紙", "舒潔", "面紙"], "category": "日用品", "original": 239, "unitCount": 12, "promo": { "type": "price", "price": 199 }, "start": "2026-10-01", "end": "2026-10-31", "source": "範例" },
+    { "id": "s16", "chain": "全家", "product": "舒潔 抽取式衛生紙 100 抽 x 6 包", "keywords": ["衛生紙", "舒潔", "面紙"], "category": "日用品", "original": 149, "unitCount": 6, "promo": { "type": "second_discount", "rate": 0.5 }, "start": "2026-10-01", "end": "2026-10-31", "source": "範例" }
+  ]
+}
