@@ -29,10 +29,10 @@
       "platforms": {
         "android": {
           "label": "Android",
-          "version": "1.4.0",
-          "apk": "/apps/partytable/download/partytable-1.4.0.apk",
+          "version": "1.5.1",
+          "apk": "/apps/partytable/download/partytable-1.5.1.apk",
           "size": "0.3 MB",
-          "sha256": "8be38205703ba5d95998a08aa71b9a1be76d526d8f742464b31238ae69e0cea2",
+          "sha256": "277049fa600ecd9d47a3b37a9c9d908f198dca40da87597bd8225bda7331e4da",
           "requires": "Android 7.0 以上",
           "note": "直接下載安裝。跟 iPhone、iPad 和網頁版（partytable-jay.web.app）可以同一桌玩。",
           "firstRun": "第一次開啟就能玩，不用註冊。"
@@ -69,6 +69,16 @@
         }
       ],
       "versions": [
+        {
+          "version": "1.5.1",
+          "date": "2026-10-18",
+          "notes": [
+            "表情角色：10 個原創角色、6 種會動的表情，同桌的人都看得到你的表情。",
+            "新的「我的等級」：等級、積分、最近的戰績一頁看完；自己玩只有第一名加分，電腦會跟著你的等級變強。",
+            "結果畫面的積分動畫；心臟病輪流自己翻牌；抽鬼牌看得到對方停在哪張。",
+            "大老二可以選「最後一個還有牌的輸」；象棋、暗棋直著拿版面更大；拱豬規則修正；擲到 1 歸零按下去馬上搖。"
+          ]
+        },
         {
           "version": "1.4.0",
           "date": "2026-10-14",
