@@ -426,6 +426,37 @@ for i,d in enumerate(DATES):
         vt+=w
     out['national'].append(dict(d=d.isoformat(),seats=seats,exp={k:round(v,2) for k,v in exp.items()},vb=round(vb/vt*100,2),vg=round(vg/vt*100,2)))
 
+
+# ===== 2024 總統大選以來的趨勢 =====
+# 2024 總統大選各縣市得票率（賴清德 D／侯友宜 K／柯文哲 T），來源：維基百科 2024 Taiwanese presidential election
+PRES24={'台北市':(38.13,38.08,23.79),'新北市':(38.59,35.17,26.24),'基隆市':(34.77,38.63,26.60),'宜蘭縣':(44.74,28.99,26.27),
+ '桃園市':(35.27,34.12,30.61),'新竹縣':(27.42,37.03,35.55),'新竹市':(34.79,30.90,34.30),'苗栗縣':(28.81,41.18,30.01),
+ '台中市':(37.58,32.37,30.05),'彰化縣':(38.11,32.93,28.96),'南投縣':(35.95,38.00,26.05),'雲林縣':(44.54,29.33,26.13),
+ '嘉義縣':(47.69,29.28,23.03),'嘉義市':(43.26,31.40,25.34),'台南市':(50.95,25.61,23.44),'高雄市':(48.89,29.23,21.88),
+ '屏東縣':(47.51,30.84,21.65),'台東縣':(27.41,49.32,23.28),'花蓮縣':(24.78,50.50,24.72),'澎湖縣':(38.60,36.63,24.76),
+ '金門縣':(10.02,61.40,28.58),'連江縣':(10.52,62.67,26.81)}
+# 全國走勢的各個點：vote=實際投票（得票率），pid=政黨偏好（政大選研中心，其餘為中立或無反應），fc=本站預測
+TREND=[
+ dict(d='2022-11-26',k='vote',lab='2022 縣市長',G=41.62,B=50.03,W=None,src='中選會（國民黨＋民進黨候選人合計）'),
+ dict(d='2024-01-13',k='vote',lab='2024 總統',G=40.05,B=33.49,W=26.46,src='https://en.wikipedia.org/wiki/2024_Taiwanese_presidential_election'),
+ dict(d='2024-01-13',k='party',lab='2024 立委政黨票',G=36.16,B=34.58,W=22.07,src='中選會'),
+ dict(d='2024-12-31',k='pid',lab='2024 全年政黨偏好',G=32.3,B=20.5,W=11.8,src='政大選研中心（自由時報 2025 報導回推）'),
+ dict(d='2025-06-30',k='pid',lab='2025 上半年政黨偏好',G=31.6,B=18.9,W=10.6,src='https://news.ltn.com.tw/news/politics/breakingnews/5100547'),
+ dict(d='2025-12-31',k='pid',lab='2025 全年政黨偏好',G=30.8,B=20.1,W=10.9,src='政大選研中心（2026 年中報導回推）'),
+ dict(d='2026-06-30',k='pid',lab='2026 上半年政黨偏好',G=33.8,B=21.0,W=8.8,src='https://disp.cc/b/HatePolitics/i8ht'),
+]
+TREND_EV=[
+ ('2024-01-13','賴清德當選總統，立法院藍白合計過半'),
+ ('2024-05-20','賴清德就職；國會改革法案引發青鳥行動'),
+ ('2024-09-05','柯文哲因京華城案遭羈押，民眾黨支持度下滑'),
+ ('2024-12-20','立法院三讀財劃法、選罷法修正，朝野對立升高'),
+ ('2025-07-26','大罷免投票，24 案全數未通過'),
+ ('2025-08-23','第二波罷免 7 案未通過、核三公投未達門檻'),
+ ('2025-10-18','鄭麗文當選國民黨主席'),
+ ('2026-11-28','2026 縣市長選舉'),
+]
+for c,r in out['races'].items(): r['pres24']=PRES24[c]
+out['trend']=dict(pts=TREND,ev=TREND_EV)
 out['method']=dict(house={h:v for h,v in sorted(HOUSE_EFFECT.items(),key=lambda x:-abs(x[1]))},house_n={h:len(v) for h,v in HE_RAW.items()},swing=SWING,audit=[dict(r=p['r'],org=p['org'],house=house(p['org']),fe=p['fe'].isoformat(),t=p['t'],sp=p.get('sp'),q=p['q'],cf=p['cf'],dev=p['dev'],res=p['res'],frn=FR_N[p['au']['fr']],disc=p['au']['disc'],und=p['au'].get('und')) for p in sorted(P,key=lambda x:x['fe'],reverse=True)])
 json.dump(out,open('data.json','w'),ensure_ascii=False)
 last=out['national'][-1]; print('today',last)

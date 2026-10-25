@@ -68,6 +68,16 @@ h1 .seat{font-family:var(--f-num);font-weight:600;font-size:1.08em}
 .arrow.toL::after{left:-2px;border-right:8px solid var(--focus);border-left:0}
 .arrow.toR::after{right:-2px;border-left:8px solid var(--focus);border-right:0}
 .rope .cap{font-size:14px;margin:18px 0 0;text-align:center;text-wrap:balance}
+.rtabs{position:absolute;top:8px;left:50%;transform:translateX(-50%);display:flex;gap:2px;background:var(--soft);border-radius:999px;padding:2px;z-index:2}
+.rtabs button{font:inherit;font-size:11.5px;border:0;background:none;color:var(--muted);border-radius:999px;padding:2px 10px;cursor:pointer;white-space:nowrap}
+.rtabs button[aria-selected="true"]{background:var(--paper);color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.rope.tr .sides,.rope.tr .track,.rope.tr .cap{display:none}
+.trend{display:flex;flex-direction:column;padding-top:24px;gap:4px}
+.trend svg{display:block;max-width:100%;height:auto;overflow:visible}
+.trend svg text{font-size:10px;fill:var(--muted)}
+.trend .tcap{font-size:12.5px;line-height:1.45;text-wrap:pretty}
+.trend .tkey{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:11px;color:var(--muted)}
+.trend .evd{cursor:help}
 
 /* 3. 方塊地圖＋縣市卡 */
 .board{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;align-items:start}
@@ -214,6 +224,9 @@ footer .full{font-size:13.5px}
 /* ===== 互動細節：玻璃質感、游標聚光、指令面板、View Transitions ===== */
 .rope{position:relative}
 @media (min-width:780px){.card{position:relative!important;top:0!important}}
+.p24 .lab{font-size:12.5px;color:var(--muted);margin-bottom:4px}
+.p24 .split i{display:block;height:100%}
+.p24n{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;margin-top:3px;font-family:var(--f-num)}
 .rope::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;opacity:0;transition:opacity .3s;
   background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--focus) 12%,transparent),transparent 60%)}
 .rope:hover::before,.card:hover::after{opacity:1}
@@ -256,6 +269,8 @@ footer .full{font-size:13.5px}
 </header>
 
 <section class="rope" aria-label="22 縣市合計得票">
+  <div class="rtabs" role="tablist"><button type="button" role="tab" aria-selected="true" data-v="now">現在 vs 2022</button><button type="button" role="tab" aria-selected="false" data-v="trend">2024 總統以來</button></div>
+  <div class="trend" id="trend" hidden></div>
   <div class="sides">
     <div class="side"><div class="who g">綠營</div><div class="pct g" id="pg"></div><div class="v" id="vg"></div></div>
     <div class="side r"><div class="who b">藍營</div><div class="pct b" id="pb"></div><div class="v" id="vb"></div></div>
@@ -334,6 +349,45 @@ function drawHead(){
 }
 
 // ===== 2. 拔河繩 =====
+
+// ===== 2024 總統大選以來的走勢 =====
+function drawTrend(){
+  const T=DATA.trend, el=document.getElementById('trend'); if(!T) return;
+  const n=DATA.national[N-1], W=Math.max(280,el.clientWidth||360), H=innerWidth<780||innerHeight<760?140:190;
+  const t0=Date.parse('2022-10-01'), t1=Date.parse('2026-12-31');
+  const X=d=>8+(W-16)*(Date.parse(d)-t0)/(t1-t0), Y=v=>6+(H-20)*(1-v/62);
+  const col={G:'var(--dpp)',B:'var(--kmt)',W:'var(--tpp)'};
+  let g='';
+  for (const v of [0,20,40,60]) g+=`<line x1="8" x2="${W-8}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width="1"></line><text x="${W-8}" y="${Y(v)-2}" text-anchor="end">${v}%</text>`;
+  for (const yr of ['2023','2024','2025','2026']) g+=`<text x="${X(yr+'-01-01')}" y="${H-2}" text-anchor="middle">${yr}</text>`;
+  // 事件刻度
+  T.ev.forEach(([d,t])=>{ g+=`<g class="evd"><title>${fmtD(d)}／${d.slice(0,4)}：${esc(t)}</title><line x1="${X(d)}" x2="${X(d)}" y1="${Y(62)}" y2="${H-12}" stroke="var(--focus)" stroke-dasharray="2 3" stroke-width="1" opacity=".55"></line><circle cx="${X(d)}" cy="${Y(61)}" r="3" fill="var(--focus)"></circle></g>`; });
+  // 政黨偏好（細線、空心點）
+  const pid=T.pts.filter(p=>p.k==='pid');
+  for (const k of ['G','B','W']){
+    g+=`<polyline points="${pid.map(p=>X(p.d)+','+Y(p[k])).join(' ')}" fill="none" stroke="${col[k]}" stroke-width="1.5" opacity=".7"></polyline>`;
+    pid.forEach(p=>g+=`<circle cx="${X(p.d)}" cy="${Y(p[k])}" r="3" fill="var(--paper)" stroke="${col[k]}" stroke-width="1.5"><title>${p.lab}：${k==='G'?'民進黨':k==='B'?'國民黨':'民眾黨'} ${p[k]}%</title></circle>`); }
+  // 實際選票（實心點）→ 2026 預測（虛線＋菱形）
+  const v22=T.pts[0], v24=T.pts[1], fc={d:'2026-11-28',G:n.vg,B:n.vb};
+  for (const k of ['G','B']){
+    g+=`<polyline points="${X(v22.d)},${Y(v22[k])} ${X(v24.d)},${Y(v24[k])}" fill="none" stroke="${col[k]}" stroke-width="2.5"></polyline>`;
+    g+=`<line x1="${X(v24.d)}" y1="${Y(v24[k])}" x2="${X(fc.d)}" y2="${Y(fc[k])}" stroke="${col[k]}" stroke-width="2.5" stroke-dasharray="5 4"></line>`;
+    g+=`<rect x="${X(fc.d)-5}" y="${Y(fc[k])-5}" width="10" height="10" transform="rotate(45 ${X(fc.d)} ${Y(fc[k])})" fill="${col[k]}"><title>2026 縣市長預測：${k==='G'?'綠營':'藍營'} ${pct(fc[k])}%</title></rect>`; }
+  g+=`<rect x="${X(v24.d)-4}" y="${Y(v24.B+v24.W)-4}" width="8" height="8" fill="var(--paper)" stroke="var(--kmt)" stroke-width="1.5" stroke-dasharray="2 1.5"><title>2024 總統 藍＋白合計 ${pct(v24.B+v24.W)}%</title></rect><text x="${X(v24.d)+7}" y="${Y(v24.B+v24.W)+3}" text-anchor="start">藍＋白 ${pct(v24.B+v24.W)}%</text>`;
+  for (const p of [v22,v24]) for (const k of ['G','B','W']) if(p[k]!=null) g+=`<circle cx="${X(p.d)}" cy="${Y(p[k])}" r="4.5" fill="${col[k]}"><title>${p.lab}：${p[k]}%</title></circle>`;
+  const last=pid[pid.length-1], first=pid[0];
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="2024 總統大選以來藍綠白走勢">${g}</svg>
+    <div class="tkey"><span>● 實際選票（2022 縣市長、2024 總統）</span><span>○ 政黨偏好（政大選研中心）</span><span>◆ 2026 本站預測</span><span style="color:var(--focus)">┆ 重大事件（游標移上去看）</span></div>
+    <p class="tcap">2024 總統賴清德 <b class="g">${v24.G}%</b>，侯友宜 ${v24.B}%、柯文哲 ${v24.W}%，藍白合計過半。之後政黨偏好綠營 ${first.G}%→<b class="g">${last.G}%</b>，民眾黨 ${first.W}%→${last.W}% 一路下滑；2026 縣市長預測綠營 <b class="g">${pct(n.vg)}%</b>、藍營 <b class="b">${pct(n.vb)}%</b>。</p>`;
+}
+let ropeView='now';
+document.querySelectorAll('.rtabs button').forEach(b=>b.addEventListener('click',()=>{
+  const rope=document.querySelector('.rope'); if(b.dataset.v===ropeView) return;
+  ropeView=b.dataset.v; rope.classList.toggle('tr',ropeView==='trend'); document.getElementById('trend').hidden=ropeView!=='trend';
+  document.querySelectorAll('.rtabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  if(ropeView==='trend') drawTrend(); }));
+addEventListener('resize',()=>{ if(ropeView==='trend') drawTrend(); });
+
 function drawRope(){
   const n=DATA.national[day], g=n.vg, b=n.vb, pg=DATA.prev_national.D, pb=DATA.prev_national.K;
   countTo('pg',g); countTo('pb',b);
@@ -399,6 +453,12 @@ function drawTiles(){
 }
 
 // ===== 4. 縣市卡 =====
+function pres24(c){ const p=DATA.races[c].pres24; if(!p) return '';
+  const [d,k,t]=p; const pv=DATA.races[c].prev, g22=pv.w[1]==='D'?pv.w[2]:pv.r[1]==='D'?pv.r[2]:null; const n=DATA.races[c].series[day], gNow=DATA.races[c].cands.filter(x=>x.camp==='G').reduce((s,x)=>s+(n.s[x.n]||0),0);
+  return `<div class="p24"><div class="lab">2024 總統大選（${c}）</div>
+    <div class="split" style="height:12px"><i style="width:${d}%;background:var(--dpp)"></i><i style="width:${k}%;background:var(--kmt)"></i><i style="width:${t}%;background:var(--tpp)"></i></div>
+    <div class="p24n"><span class="g">賴清德 ${pct(d)}%</span><span class="b">侯友宜 ${pct(k)}%</span><span style="color:var(--tpp)">柯文哲 ${pct(t)}%</span></div>
+    ${gNow>0?`<div class="muted" style="font-size:12px">綠營得票：${g22!=null?`2022 縣市長 ${pct(g22)}% → `:''}2024 總統 ${pct(d)}% → 2026 預測 <b class="g">${pct(gNow)}%</b>（${gNow-d>=0?'多':'少'} ${pct(Math.abs(gNow-d))} 點）</div>`:''}</div>`; }
 function h2h(lab,a,pa,va,b,pb,vb,votes,past){
   const tot=va+vb;
   return `<div class="h2h${past?' past':''}"><div class="lab"><span>${lab}</span></div>
@@ -489,6 +549,7 @@ function drawCard(){
     ${h2h(`${fmtD(s.d)} 預測（11/28 預估票數）`,a,pa,s.s[a],b,pb,s.s[b],[to.valid*s.s[a]/100,to.valid*s.s[b]/100])}
     ${others>0.5?`<div class="muted" style="font-size:12.5px;margin-top:-8px">其他候選人合計 ${pct(others)}%</div>`:''}
     ${h2h('2022 實際結果',pv.w[0],pv.w[1],pv.w[2],pv.r[0],pv.r[1],pv.r[2],null,true)}
+    ${pres24(c)}
     <div class="swing">${sw}</div>
     <div class="spark"><div class="muted" style="font-size:12.5px;margin-bottom:4px">6/1 以來兩人差距（▼▲ 為重大新聞）</div>${spark(c,W)}</div>
     ${pollBlock(c)}

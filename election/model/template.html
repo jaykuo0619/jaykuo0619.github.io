@@ -320,6 +320,14 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   <div class="tbl-wrap"><table id="alltbl"></table></div>
 </section>
 
+<section class="panel" aria-label="2024 總統大選以來的走勢">
+  <h2 style="margin-bottom:6px">2024 總統大選以來的走勢</h2>
+  <p class="muted small" style="margin:0 0 10px">實心點是實際投票（2022 縣市長、2024 總統與立委政黨票），空心點是政大選研中心的政黨偏好（其餘為中立或無反應，所以數字偏低），菱形是本站 2026 縣市長預測。橘色虛線是重大事件。</p>
+  <div id="trend24"></div>
+  <div class="tbl-wrap"><table id="trendtbl" class="small"></table></div>
+  <ul id="trendev" class="small" style="margin:10px 0 0;padding-left:18px;line-height:1.7"></ul>
+</section>
+
 <section class="panel" aria-label="方法說明">
   <h2 style="margin-bottom:12px">預測怎麼算</h2>
   <div class="method">
@@ -849,6 +857,31 @@ document.getElementById('days').textContent = EDAYS+' 天';
 document.getElementById('updated').textContent = DATA.today.replaceAll('-','/');
 document.getElementById('foot').textContent = DATA.today.replaceAll('-','/');
 
+
+(()=>{ const T=DATA.trend; if(!T) return; const el=document.getElementById('trend24');
+  const n=DATA.national[N-1], W=Math.max(320,Math.min(1100,el.clientWidth||900)), H=W<600?220:300;
+  const t0=Date.parse('2022-10-01'), t1=Date.parse('2026-12-31');
+  const X=d=>40+(W-60)*(Date.parse(d)-t0)/(t1-t0), Y=v=>10+(H-34)*(1-v/65);
+  const col={G:'var(--dpp)',B:'var(--kmt)',W:'var(--tpp)'}; let g='';
+  for (const v of [0,10,20,30,40,50,60]) g+=`<line x1="40" x2="${W-20}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"></line><text x="34" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${v}%</text>`;
+  for (const yr of ['2023','2024','2025','2026']) g+=`<text x="${X(yr+'-01-01')}" y="${H-6}" text-anchor="middle" font-size="11" fill="var(--muted)">${yr}</text>`;
+  T.ev.forEach(([d,t],i)=>{ g+=`<g><title>${d}：${esc(t)}</title><line x1="${X(d)}" x2="${X(d)}" y1="${Y(64)}" y2="${H-20}" stroke="var(--focus)" stroke-dasharray="2 3" opacity=".6"></line><circle cx="${X(d)}" cy="${Y(63)}" r="8" fill="var(--focus)"></circle><text x="${X(d)}" y="${Y(63)+3.5}" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">${i+1}</text></g>`; });
+  const pid=T.pts.filter(p=>p.k==='pid'), v22=T.pts[0], v24=T.pts[1], pl=T.pts[2], fc={d:'2026-11-28',G:n.vg,B:n.vb};
+  for (const k of ['G','B','W']){
+    g+=`<polyline points="${pid.map(p=>X(p.d)+','+Y(p[k])).join(' ')}" fill="none" stroke="${col[k]}" stroke-width="1.5" opacity=".75"></polyline>`;
+    pid.forEach(p=>g+=`<circle cx="${X(p.d)}" cy="${Y(p[k])}" r="4" fill="var(--paper)" stroke="${col[k]}" stroke-width="2"><title>${p.lab}：${p[k]}%</title></circle>`); }
+  for (const k of ['G','B']){
+    g+=`<polyline points="${X(v22.d)},${Y(v22[k])} ${X(v24.d)},${Y(v24[k])}" fill="none" stroke="${col[k]}" stroke-width="3"></polyline>`;
+    g+=`<line x1="${X(v24.d)}" y1="${Y(v24[k])}" x2="${X(fc.d)}" y2="${Y(fc[k])}" stroke="${col[k]}" stroke-width="3" stroke-dasharray="6 5"></line>`;
+    g+=`<rect x="${X(fc.d)-6}" y="${Y(fc[k])-6}" width="12" height="12" transform="rotate(45 ${X(fc.d)} ${Y(fc[k])})" fill="${col[k]}"></rect><text x="${X(fc.d)-10}" y="${Y(fc[k])+(k==='G'?-10:16)}" text-anchor="end" font-size="12" font-weight="700" fill="${col[k]}">${pct(fc[k])}%</text>`; }
+  for (const p of [v22,v24,pl]) for (const k of ['G','B','W']) if(p[k]!=null) g+=`<circle cx="${X(p.d)}" cy="${Y(p[k])}" r="${p===pl?3.5:5}" fill="${col[k]}" opacity="${p===pl?.6:1}"><title>${p.lab}：${p[k]}%</title></circle>`;
+  g+=`<rect x="${X(v24.d)-5}" y="${Y(v24.B+v24.W)-5}" width="10" height="10" fill="var(--paper)" stroke="var(--kmt)" stroke-width="1.5" stroke-dasharray="2 1.5"></rect><text x="${X(v24.d)+9}" y="${Y(v24.B+v24.W)+4}" font-size="11" fill="var(--muted)">2024 藍＋白 ${pct(v24.B+v24.W)}%</text>`;
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="2024 總統大選以來藍綠白走勢">${g}</svg>`;
+  const rows=[...T.pts, {lab:'2026 縣市長（本站預測）',k:'fc',G:n.vg,B:n.vb,W:null,src:'本站模型（藍營含藍白合推薦）'}];
+  const kn={vote:'實際投票',party:'實際投票（政黨票）',pid:'政黨偏好',fc:'預測'};
+  document.getElementById('trendtbl').innerHTML=`<tr><th>時間點</th><th>類型</th><th class="r">綠</th><th class="r">藍</th><th class="r">白</th><th>來源</th></tr>`+rows.map(p=>`<tr><td>${esc(p.lab)}</td><td>${kn[p.k]}</td><td class="r num">${p.G!=null?pct(p.G)+'%':'—'}</td><td class="r num">${p.B!=null?pct(p.B)+'%':'—'}</td><td class="r num">${p.W!=null?pct(p.W)+'%':'—'}</td><td>${/^https?:/.test(p.src)?`<a href="${esc(p.src)}" target="_blank" rel="noopener">連結</a>`:esc(p.src)}</td></tr>`).join('');
+  document.getElementById('trendev').innerHTML=T.ev.map(([d,t],i)=>`<li><b>${i+1}.</b> ${d.replace(/-/g,'/')}　${esc(t)}</li>`).join('');
+})();
 (()=>{ const A=(DATA.method||{}).audit||[]; if(!A.length) return;
   const QS=q=>Math.round(Math.min(100,q/1.1*100)), avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
   const grp=f=>{const x=A.filter(a=>a.dev!=null&&f(a)).map(a=>Math.abs(a.dev)); return x.length?avg(x).toFixed(1):'—';};
