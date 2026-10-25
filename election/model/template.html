@@ -325,7 +325,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   <div class="method">
     <div>
       <h3>1. AI 結構基準</h3>
-      <p>每個縣市先給一個基準得票率，由 Claude 依 2022 年選舉結果、政黨基本盤（含遠見 3–4 月 22 縣市政黨支持調查）、現任優勢與選情評論綜合判斷。這是判斷值，不是調查數據；沒有民調的縣市，預測主要就是這個基準。</p>
+      <p>每個縣市的基準由兩半組成：一半是 Claude 依政黨基本盤、現任優勢與選情評論的判斷；另一半是「2022 年實際差距＋全國擺盪」，全國擺盪＝有民調縣市的「民調差距減 2022 差距」加權平均（目前 <b id="swingv"></b>）。沒有民調的縣市，預測主要就是這個基準。</p>
     </div>
     <div>
       <h3>2. 民調加權平均</h3>
@@ -334,12 +334,15 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
         <li>電話調查 1.0、網路問卷 0.6、AI 模擬 0.35</li>
         <li>政黨委託或政黨相關單位公布 × 0.7</li>
         <li>時間衰減：距調查結束每 40 天權重降為 1/e</li>
+        <li>樣本數：√(樣本 ÷ 1000)，介於 0.63–1.41；未載明樣本 × 0.8</li>
+        <li>機構偏差：同縣市前後 45 天內，和其他機構比較「綠營減藍營」差距，平均偏差經收縮後先扣掉（見下表）</li>
       </ul>
+      <div id="housetbl" class="small"></div>
       <p>民調總權重越高，越壓過基準（上限 85%）。歷史上每一天只使用當天已公布的民調。</p>
     </div>
     <div>
       <h3>3. 每日聲量調整</h3>
-      <p>每位候選人有一條每日淨聲量指數（−1 到 +1）：平滑的隨機底噪，加上依新聞事件設定的正負衝擊，約 4 天半衰。取 7 日滾動平均後，相對於同選區對手換算成 ±2.5 個百分點以內的調整。</p>
+      <p>收錄對選情有實質影響的新聞（醜聞、司法、重量級輔選、失言等）與民調公布（帶動話題、西瓜效應）。民調數字本身另外算進民調平均，這裡只算公布後的話題效應。每則新聞給一個 −1 到 +1 的強度，影響七成在約 4 天內淡化、三成以約 30 天的長尾慢慢消退。取 7 日滾動平均後，相對於同選區對手換算成 ±2.5 個百分點以內的調整。每則新聞的影響＝「有這則新聞」減「拿掉這則新聞重算」。</p>
       <p><b style="color:var(--warn)">聲量是估計值。</b>本頁沒有接上社群監測資料（如 PTT、Facebook、Dcard），事件時間點來自新聞報導，強度與底噪是模型設定。</p>
     </div>
     <div>
@@ -740,8 +743,8 @@ function drawDetail(){
     <details class="more"><summary>更多：差距與勝率、每兩週變化、聲量、民調</summary><div class="inner">
     ${wpChart(c,W)}
     ${weekTable(c)}
-    <div class="chart"><h3 style="margin-bottom:4px">每日淨聲量 <span class="tag warn">估計值</span></h3>${buzzChart(c,W)}<div class="muted" style="font-size:12px">前兩名候選人的每日正負聲量指數，依新聞事件與模型底噪估計，非社群實測。</div></div>`;
-  h += `<div><h3 style="margin-bottom:6px">聲量事件</h3>${r.events.length? `<ul class="events">${r.events.map(e=>`<li><span class="num muted">${fmtD(e.d)}</span><span class="${e.k>=0?'pos':'neg'}">${e.k>=0?'▲':'▼'}</span><span>${esc(e.n)}：${esc(e.t)}</span></li>`).join('')}</ul>`:'<p class="muted" style="margin:0;font-size:13px">沒有納入的重大事件，聲量只有底噪。</p>'}</div>`;
+    <div class="chart"><h3 style="margin-bottom:4px">每日淨聲量 <span class="tag warn">估計值</span></h3>${buzzChart(c,W)}<div class="muted" style="font-size:12px">前兩名候選人的每日輿情指數，只由收錄的新聞事件構成，強度為模型判斷，非社群實測。</div></div>`;
+  h += `<div><h3 style="margin-bottom:6px">影響選情的新聞（目前影響）</h3>${r.events.length? `<ul class="events">${r.events.map(e=>`<li><span class="num muted">${fmtD(e.d)}</span><span class="${e.k>=0?'pos':'neg'}">${e.k>=0?'▲':'▼'}</span><span>${esc(e.n)}：${esc(e.t)} <b class="num">${(()=>{const v=e.eff[Math.max(0,Math.min(day-e.i0,e.eff.length-1))];return day<e.i0?'—':(v>=0?'+':'−')+Math.abs(v).toFixed(1)+' 點';})()}</b></span></li>`).join('')}</ul>`:'<p class="muted" style="margin:0;font-size:13px">沒有足以影響選情的重大新聞。</p>'}</div>`;
   h += `<div><h3 style="margin-bottom:6px">本縣市民調（${r.polls.length} 份）</h3>`;
   if (r.polls.length){
     h += `<div class="tbl-wrap"><table><tr><th>機構</th><th>調查</th><th>結果</th></tr>${r.polls.map(p=>`<tr${p.rel>s.d?' style="opacity:.4"':''}><td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.org)}</a>${p.t!=='phone'?`<span class="tag warn">${p.t==='ai'?'AI 模擬':'網路'}</span>`:''}${p.sp?'<span class="tag">政黨相關</span>':''}</td><td class="num">${fmtD(p.fe)}${p.est?'*':''}</td><td>${Object.entries(p.v).map(([n,v])=>`${esc(n)} <span class="num">${v}</span>`).join('、')}</td></tr>`).join('')}</table></div>${r.polls.some(p=>p.est)?'<div class="muted" style="font-size:12px">* 報導未載明調查日期，以發布日前數日估計。</div>':''}`;
@@ -838,5 +841,7 @@ try{ const s=localStorage.getItem('sel'); if(s&&DATA.races[s]) sel=s; }catch(e){
 document.getElementById('days').textContent = EDAYS+' 天';
 document.getElementById('updated').textContent = DATA.today.replaceAll('-','/');
 document.getElementById('foot').textContent = DATA.today.replaceAll('-','/');
+(()=>{ const M=DATA.method||{}; const sw=M.swing; if(sw!=null) document.getElementById('swingv').textContent=(sw<0?'往綠 ':'往藍 ')+Math.abs(sw).toFixed(1)+' 點';
+  const h=M.house||{}; document.getElementById('housetbl').innerHTML = Object.keys(h).length? `<table><tr><th>機構</th><th class="r">平均偏差（已收縮）</th><th class="r">比較次數</th></tr>${Object.entries(h).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="r num">${v>0?'偏綠 ':v<0?'偏藍 ':''}${Math.abs(v).toFixed(1)}</td><td class="r num">${(M.house_n||{})[k]||''}</td></tr>`).join('')}</table>`:''; })();
 drawPollTable(); showView(location.hash==='#pinned'?'pinned':'overview');
 </script>

@@ -12,9 +12,9 @@ def wrap(t, split):
 j = json.loads(d)
 for r in j['races'].values():
     r['npolls'] = len(r['polls'])
-    for k in ('buzz', 'polls', 'events', 'base_ref', 'note', 'proj'): r.pop(k, None)
+    for k in ('buzz', 'base_ref', 'note', 'proj'): r.pop(k, None)
     for x in r['series']:
-        for k in ('adj', 'pa', 'pw'): x.pop(k, None)
+        for k in ('adj', 'pa'): x.pop(k, None)
 simple = open('simple.html', encoding='utf-8').read().replace('__DATA__', json.dumps(j, ensure_ascii=False, separators=(',', ':')))
 open('../index.html', 'w', encoding='utf-8').write(wrap(simple, '<div class="wrap">'))
 full = open('template.html', encoding='utf-8').read().replace('__DATA__', d).replace('__SHAPES__', open('shapes.json', encoding='utf-8').read())

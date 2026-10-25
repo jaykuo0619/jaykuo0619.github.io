@@ -136,50 +136,52 @@ BASE_REF = {
 
 # 聲量事件（依新聞報導整理的時間點；強度為模型估計值）
 # (縣市, 日期, 候選人, 強度 -1~+1, 說明)
+# 輿情事件：新聞（醜聞、司法、重量級輔選、失言等）與民調公布（帶動話題與西瓜效應）都納入。
+# 民調數字本身另外算進民調平均；這裡的「民調公布」只算公布後的聲量與話題效應。
+# 格式：(縣市, 日期, 受影響候選人, 強度 -1~+1, 說明, 來源網址, 類型 news/poll)
 EV = [
- ('台北市', D(2026,9,22),'沈伯洋', 0.5,'信民民調差距縮至 1.2 個百分點'),
- ('台北市', D(2026,10,9),'蔣萬安', 0.4,'TVBS 民調蔣萬安領先 8 個百分點'),
- ('台北市', D(2026,10,20),'沈伯洋', 0.9,'信民民調沈伯洋反超 17 個百分點，網路熱議'),
- ('台北市', D(2026,10,21),'蔣萬安',-0.6,'《面對面》專訪「問 A 答 B」遭批'),
- ('台北市', D(2026,10,22),'沈伯洋', 0.4,'震傳媒民調沈伯洋領先 3.8 個百分點'),
- ('新北市', D(2026,10,7),'李四川', 0.5,'TVBS 民調李四川領先 6.7 個百分點'),
- ('新北市', D(2026,10,13),'蘇巧慧', 0.7,'信民民調蘇巧慧領先 13.1 個百分點'),
- ('新北市', D(2026,10,13),'李四川',-0.3,'藍營質疑民調為認知作戰，引發爭論'),
- ('台中市', D(2026,9,14),'江啓臣', 0.3,'TVBS 民調江啓臣領先 12.6 個百分點'),
- ('台南市', D(2026,10,21),'陳亭妃', 0.5,'民調大幅領先'),
- ('台南市', D(2026,10,21),'謝龍介',-0.4,'謝龍介批民調「侮辱選民」，爭議延燒'),
- ('高雄市', D(2026,9,5),'賴瑞隆',-0.5,'綠營負面新聞延燒，評論者下修評等'),
- ('高雄市', D(2026,9,11),'柯志恩', 0.5,'ETtoday 民調柯志恩小幅領先'),
- ('高雄市', D(2026,10,20),'賴瑞隆', 0.3,'TPOC 模擬賴瑞隆領先 10 個百分點'),
- ('基隆市', D(2026,10,14),'謝國樑', 0.3,'藍營委託民調謝國樑領先 4.6 個百分點'),
- ('新竹縣', D(2026,9,21),'鄭朝方', 0.6,'年代民調鄭朝方領先 6.4 個百分點'),
- ('彰化縣', D(2026,10,19),'陳素月', 0.4,'聯合報民調陳素月領先'),
- ('嘉義縣', D(2026,9,19),'蔡易餘', 0.4,'蔡英文前總統輔選'),
- ('嘉義縣', D(2026,9,27),'蔡易餘', 0.4,'賴清德總統輔選'),
- ('嘉義縣', D(2026,10,6),'吳品叡', 0.3,'在野大聯盟競總成立'),
- ('嘉義市', D(2026,10,19),'王美惠',-0.3,'幕後影響力爭議'),
- ('嘉義市', D(2026,10,20),'張啓楷',-0.2,'張啓楷提告王美惠等人，選戰轉趨負面'),
- ('台東縣', D(2026,9,20),'陳瑩', 0.5,'賴清德總統赴台東輔選'),
- ('台東縣', D(2026,10,20),'吳秀華',-1.0,'前縣長吳俊立（吳秀華家族）涉農路弊案遭約談、聲押'),
- ('台東縣', D(2026,10,21),'吳秀華',-0.6,'吳俊立交保境管，檢方抗告'),
- ('花蓮縣', D(2026,9,10),'游淑貞',-0.3,'縣府救災表現受批評，延燒至接班人'),
- ('花蓮縣', D(2026,10,13),'張峻', 0.7,'宣布童子賢出任競總主委'),
- ('澎湖縣', D(2026,10,1),'吳淑瑾',-0.3,'預期同情票未明顯出現'),
- ('宜蘭縣', D(2026,9,29),'林國漳', 0.2,'羅東掃街拜票'),
- ('台北市', D(2026,6,24),'蔣萬安', 0.4,'震傳媒民調蔣萬安領先近 28 個百分點'),
- ('台北市', D(2026,8,4),'沈伯洋', 0.5,'網路投票沈伯洋一度領先，社群熱議'),
- ('新北市', D(2026,6,8),'李四川', 0.4,'藍營公布民調李四川領先 6.2 個百分點'),
- ('新北市', D(2026,8,28),'蘇巧慧', 0.5,'年代民調蘇巧慧領先 5.6 個百分點'),
- ('高雄市', D(2026,6,12),'賴瑞隆', 0.4,'民調賴瑞隆領先近 18 個百分點'),
- ('高雄市', D(2026,8,10),'柯志恩', 0.5,'鉅聞天下民調雙方差距縮至 1.6 個百分點'),
- ('新竹縣', D(2026,6,17),'徐欣瑩', 0.3,'年代民調徐欣瑩小幅領先'),
- ('嘉義市', D(2026,7,20),'張啓楷', 0.4,'民調張啓楷差距縮至 3.5 個百分點'),
- ('台東縣', D(2026,6,1),'吳秀華', 0.4,'匯流民調吳秀華大幅領先'),
- ('花蓮縣', D(2026,7,29),'游淑貞', 0.3,'風傳媒民調游淑貞居首'),
- ('基隆市', D(2026,8,31),'童子瑋', 0.4,'上報民調：確定投票者雙方幾乎平手'),
- ('基隆市', D(2026,10,23),'童子瑋', 0.7,'鏡新聞民調童子瑋反超 0.7 個百分點'),
- ('基隆市', D(2026,10,23),'謝國樑',-0.4,'過半受訪者認同「換人做做看」'),
- ('新竹縣', D(2026,10,24),'徐欣瑩', 0.3,'竹檢搜索爭議引發「反司法介選」，評論指泛藍加速歸隊'),
+ ('台北市', D(2026,10,18),'蔣萬安', 0.4,'台中市長盧秀燕出任蔣萬安競總主委，藍營稱用以穩住基本盤','https://www.worldjournal.com/wj/story/121218/9823490','news'),
+ ('台北市', D(2026,10,21),'蔣萬安', -0.6,'《面對面》專訪「問 A 答 B」遭批','','news'),
+ ('新北市', D(2026,10,13),'李四川', -0.3,'藍營質疑不利民調為認知作戰，引發爭論','','news'),
+ ('台中市', D(2026,8,1),'江啓臣', 0.3,'現任市長盧秀燕出任江啓臣競總主委','https://www.nownews.com/news/6862116','news'),
+ ('台南市', D(2026,10,21),'謝龍介', -0.4,'謝龍介批民調「侮辱選民」，爭議延燒','','news'),
+ ('高雄市', D(2026,9,5),'賴瑞隆', -0.5,'綠營負面新聞延燒，評論者下修評等','','news'),
+ ('嘉義縣', D(2026,9,19),'蔡易餘', 0.4,'蔡英文前總統輔選','','news'),
+ ('嘉義縣', D(2026,9,27),'蔡易餘', 0.4,'賴清德總統輔選','','news'),
+ ('嘉義縣', D(2026,10,6),'吳品叡', 0.3,'在野大聯盟競總成立','','news'),
+ ('嘉義市', D(2026,10,19),'王美惠', -0.3,'幕後影響力爭議','','news'),
+ ('嘉義市', D(2026,10,20),'張啓楷', -0.2,'張啓楷提告王美惠等人，選戰轉趨負面','','news'),
+ ('台東縣', D(2026,9,20),'陳瑩', 0.5,'賴清德總統赴台東輔選','','news'),
+ ('台東縣', D(2026,10,20),'吳秀華', -1.0,'前縣長吳俊立（吳秀華家族）涉農路弊案遭約談、聲押','','news'),
+ ('台東縣', D(2026,10,21),'吳秀華', -0.6,'吳俊立交保境管，檢方抗告','','news'),
+ ('花蓮縣', D(2026,9,10),'游淑貞', -0.3,'縣府救災表現受批評，延燒至接班人','','news'),
+ ('花蓮縣', D(2026,10,13),'張峻', 0.7,'宣布童子賢出任競總主委','','news'),
+ ('新竹縣', D(2026,10,24),'徐欣瑩', 0.3,'竹檢搜索爭議引發「反司法介選」，評論指泛藍加速歸隊','','news'),
+ ('台北市', D(2026,9,22),'沈伯洋', 0.5,'信民民調差距縮至 1.2 個百分點','','poll'),
+ ('台北市', D(2026,10,9),'蔣萬安', 0.4,'TVBS 民調蔣萬安領先 8 個百分點','','poll'),
+ ('台北市', D(2026,10,20),'沈伯洋', 0.9,'信民民調沈伯洋反超 17 個百分點，網路熱議','','poll'),
+ ('台北市', D(2026,10,22),'沈伯洋', 0.4,'震傳媒民調沈伯洋領先 3.8 個百分點','','poll'),
+ ('新北市', D(2026,10,7),'李四川', 0.5,'TVBS 民調李四川領先 6.7 個百分點','','poll'),
+ ('新北市', D(2026,10,13),'蘇巧慧', 0.7,'信民民調蘇巧慧領先 13.1 個百分點','','poll'),
+ ('台中市', D(2026,9,14),'江啓臣', 0.3,'TVBS 民調江啓臣領先 12.6 個百分點','','poll'),
+ ('台南市', D(2026,10,21),'陳亭妃', 0.5,'民調大幅領先','','poll'),
+ ('高雄市', D(2026,9,11),'柯志恩', 0.5,'ETtoday 民調柯志恩小幅領先','','poll'),
+ ('高雄市', D(2026,10,20),'賴瑞隆', 0.3,'TPOC 模擬賴瑞隆領先 10 個百分點','','poll'),
+ ('基隆市', D(2026,10,14),'謝國樑', 0.3,'藍營委託民調謝國樑領先 4.6 個百分點','','poll'),
+ ('新竹縣', D(2026,9,21),'鄭朝方', 0.6,'年代民調鄭朝方領先 6.4 個百分點','','poll'),
+ ('彰化縣', D(2026,10,19),'陳素月', 0.4,'聯合報民調陳素月領先','','poll'),
+ ('台北市', D(2026,6,24),'蔣萬安', 0.4,'震傳媒民調蔣萬安領先近 28 個百分點','','poll'),
+ ('新北市', D(2026,6,8),'李四川', 0.4,'藍營公布民調李四川領先 6.2 個百分點','','poll'),
+ ('新北市', D(2026,8,28),'蘇巧慧', 0.5,'年代民調蘇巧慧領先 5.6 個百分點','','poll'),
+ ('高雄市', D(2026,6,12),'賴瑞隆', 0.4,'民調賴瑞隆領先近 18 個百分點','','poll'),
+ ('高雄市', D(2026,8,10),'柯志恩', 0.5,'鉅聞天下民調雙方差距縮至 1.6 個百分點','','poll'),
+ ('新竹縣', D(2026,6,17),'徐欣瑩', 0.3,'年代民調徐欣瑩小幅領先','','poll'),
+ ('嘉義市', D(2026,7,20),'張啓楷', 0.4,'民調張啓楷差距縮至 3.5 個百分點','','poll'),
+ ('台東縣', D(2026,6,1),'吳秀華', 0.4,'匯流民調吳秀華大幅領先','','poll'),
+ ('花蓮縣', D(2026,7,29),'游淑貞', 0.3,'風傳媒民調游淑貞居首','','poll'),
+ ('基隆市', D(2026,8,31),'童子瑋', 0.4,'上報民調：確定投票者雙方幾乎平手','','poll'),
+ ('基隆市', D(2026,10,23),'童子瑋', 0.7,'鏡新聞民調童子瑋反超 0.7 個百分點','','poll'),
+ ('基隆市', D(2026,10,23),'謝國樑', -0.4,'過半受訪者認同「換人做做看」','','poll'),
 ]
 
 def phi(x): return 0.5*(1+math.erf(x/math.sqrt(2)))
@@ -194,23 +196,48 @@ def daterange(a,b):
 def seeded(name):
     return random.Random(sum(ord(ch)*(i+1) for i,ch in enumerate(name)))
 
-out = {'prev_national':PREV_NATIONAL,'start':START.isoformat(),'today':TODAY.isoformat(),'eday':EDAY.isoformat(),'races':{},'national':[]}
+out = {'prev_national':PREV_NATIONAL,'method':{},'start':START.isoformat(),'today':TODAY.isoformat(),'eday':EDAY.isoformat(),'races':{},'national':[]}
 DATES=list(daterange(START,TODAY))
 
-for county,cfg in R.items():
-    names=[c[0] for c in cfg['c']]; party={c[0]:c[1] for c in cfg['c']}
-    prior={c[0]:c[2] for c in cfg['c']}
-    polls=[p for p in P if p['r']==county]
-    rng=seeded(county)
-    # 每日聲量（估計值）：平滑隨機底噪 + 事件衝擊（半衰期約 4 天）
+# ===== 民調校正 1：機構偏差（house effect）=====
+# 同一縣市、前後 45 天內，拿每家機構的「綠營減藍營」差距和其他機構的加權平均比；
+# 多次比較的平均偏差再做收縮（k/(k+2)，比較次數少就不太相信），最後從該機構數字中扣掉。
+HOUSES=['信民','TVBS','年代','山水','大地','匯流','新台灣國策','ETtoday','TPOC','趨勢','聯合報','鉅聞','關鍵','世新','風傳媒','震傳媒','藍白合']
+def house(org):
+    for h in HOUSES:
+        if h in org: return '山水' if h=='震傳媒' else h
+    return org
+CANDS={county:{c[0]:c for c in cfg['c']} for county,cfg in R.items()}
+def gmb(p):
+    cs=CANDS[p['r']]; tot=sum(p['v'].values())
+    g=sum(v for n,v in p['v'].items() if n in cs and cs[n][1]=='D')
+    b=sum(v for n,v in p['v'].items() if n in cs and camp(n,cs[n][1])=='B')
+    return None if (not g or not b) else (g-b)/tot*100
+HE_RAW={}
+for p in P:
+    m=gmb(p)
+    if m is None: continue
+    others=[q for q in P if q['r']==p['r'] and q is not p and house(q['org'])!=house(p['org']) and abs((q['fe']-p['fe']).days)<=45 and gmb(q) is not None]
+    if not others: continue
+    ws=[TYPE_W[q['t']]*math.exp(-abs((q['fe']-p['fe']).days)/40) for q in others]
+    ref=sum(w*gmb(q) for w,q in zip(ws,others))/sum(ws)
+    HE_RAW.setdefault(house(p['org']),[]).append(m-ref)
+HOUSE_EFFECT={h:round(sum(v)/(len(v)+2),2) for h,v in HE_RAW.items()}
+for p in P:
+    he=HOUSE_EFFECT.get(house(p['org']),0.0); cs=CANDS[p['r']]; tot=sum(p['v'].values())
+    p['he']=he if gmb(p) is not None else 0.0
+    p['vc']={n:(v-p['he']/2*tot/100 if n in cs and cs[n][1]=='D' else v+p['he']/2*tot/100 if n in cs and camp(n,cs[n][1])=='B' else v) for n,v in p['v'].items()}
+# ===== 民調校正 2：樣本數 =====
+def size_w(p):
+    return math.sqrt(min(max(p['n'],400),2000)/1000) if p.get('n') else 0.8
+
+def run(names,party,prior,polls,evs):
+    # 每日輿情指數：只由新聞事件構成（短期衝擊＋長尾），沒有事件就是 0
     buzz={n:[] for n in names}
     for n in names:
-        rng=seeded(county+n)  # 每位候選人各自的亂數序列，日期延長時歷史不會變動
-        level=0.0
         for d in DATES:
-            level=0.8*level+0.2*rng.gauss(0,0.35)
-            shock=sum(e[3]*math.exp(-days(e[1],d)/5.5) for e in EV if e[0]==county and e[2]==n and d>=e[1])
-            v=max(-1,min(1,level+shock)) if n not in ('其他',) else 0.0
+            shock=sum(e[3]*(0.7*math.exp(-days(e[1],d)/5.5)+0.3*math.exp(-days(e[1],d)/43)) for e in evs if e[2]==n and d>=e[1])
+            v=max(-1,min(1,shock)) if n!='其他' else 0.0
             buzz[n].append(round(v,3))
     series=[]
     for i,d in enumerate(DATES):
@@ -218,14 +245,14 @@ for county,cfg in R.items():
         acc={n:0.0 for n in names}; wsum=0.0; used=[]
         for p in avail:
             age=days(p['fe'],d)
-            w=TYPE_W[p['t']]*(0.7 if p.get('sp') else 1.0)*math.exp(-age/40)
-            named=[n for n in names if n in p['v']]
-            tot_named=sum(p['v'][n] for n in named)
+            w=TYPE_W[p['t']]*(0.7 if p.get('sp') else 1.0)*size_w(p)*math.exp(-age/40)
+            named=[n for n in names if n in p['vc']]
+            tot_named=sum(p['vc'][n] for n in named)
             prior_named=sum(prior[n] for n in named)
             # 民調只含部分候選人時，未列名者沿用基準占比
             for n in names:
-                if n in p['v']:
-                    acc[n]+=w*(p['v'][n]/tot_named*prior_named)
+                if n in p['vc']:
+                    acc[n]+=w*(p['vc'][n]/tot_named*prior_named)
                 else:
                     acc[n]+=w*prior[n]
             wsum+=w; used.append(round(w,3))
@@ -253,6 +280,49 @@ for county,cfg in R.items():
         series.append(dict(d=d.isoformat(), og=margin_og(sh,party), s={n:round(sh[n],2) for n in names}, adj={n:round(adj[n],2) for n in names},
                            pa={n:round(pollavg[n],2) for n in names} if pollavg else None, pw=round(pw,3),
                            lead=lead, m=round(m,2), wp=round(wp,4)))
+    return buzz, series
+
+# ===== 基準校正：2022 結果＋全國擺盪（uniform swing）=====
+# 有民調的縣市，算出「民調差距 − 2022 差距」，依民調權重平均成全國擺盪；
+# 每個縣市的 AI 基準再往「2022 差距＋全國擺盪」移一半，兩種基準各占一半。
+def m22_of(county):
+    pv=PREV[county]; tops=[pv['w'],pv['r']]
+    g=[x[2] for x in tops if x[1]=='D']; o=[x[2] for x in tops if x[1]!='D']
+    return round(max(o)-max(g),2) if g and o else None
+SW=[]
+for county,cfg in R.items():
+    names=[c[0] for c in cfg['c']]; party={c[0]:c[1] for c in cfg['c']}
+    prior={c[0]:c[2] for c in cfg['c']}
+    _, ser = run(names,party,prior,[p for p in P if p['r']==county],[])
+    pa=ser[-1]['pa']; m22=m22_of(county)
+    if pa and m22 is not None:
+        og=margin_og(pa,party)
+        if og is not None: SW.append((og-m22, ser[-1]['pw']))
+SWING=round(sum(a*w for a,w in SW)/sum(w for a,w in SW),2)
+def prior_blend(names,party,prior,county):
+    m22=m22_of(county); ogp=margin_og(prior,party)
+    if m22 is None or ogp is None: return dict(prior), None
+    target=m22+SWING; delta=(target-ogp)*0.5
+    g=max((n for n in names if party[n]=='D'),key=lambda n:prior[n])
+    o=max((n for n in names if party[n]!='D' and n!='其他'),key=lambda n:prior[n])
+    pr=dict(prior); pr[o]=max(1,pr[o]+delta/2); pr[g]=max(1,pr[g]-delta/2)
+    return pr, round(target,2)
+
+for county,cfg in R.items():
+    names=[c[0] for c in cfg['c']]; party={c[0]:c[1] for c in cfg['c']}
+    prior_ai={c[0]:c[2] for c in cfg['c']}
+    prior, fund_og = prior_blend(names,party,prior_ai,county)
+    polls=[p for p in P if p['r']==county]
+    evs=[e for e in EV if e[0]==county]
+    buzz, series = run(names,party,prior,polls,evs)
+    # 每則新聞的影響：拿掉這則新聞重算一次，兩者相減＝這則新聞讓該候選人得票率變動幾點
+    evout=[]
+    for e in evs:
+        if e[1] not in DATES: continue
+        _, wo = run(names,party,prior,polls,[x for x in evs if x is not e])
+        i0=DATES.index(e[1])
+        eff=[round(series[i]['s'][e[2]]-wo[i]['s'][e[2]],2) for i in range(i0,len(DATES))]
+        evout.append(dict(d=e[1].isoformat(),n=e[2],k=e[3],t=e[4],url=e[5],ty=e[6],i0=i0,eff=eff))
     pv=PREV[county]; last=series[-1]
     to=turnout_est(county,last['wp']); el=round(pv['e']*ELECTORATE_GROWTH)
     valid=el*to/100*VALID_RATIO
@@ -264,11 +334,11 @@ for county,cfg in R.items():
     tops={pv['w'][0]:pv['w'],pv['r'][0]:pv['r']}
     g22=[x[2] for x in tops.values() if x[1]=='D']; o22=[x[2] for x in tops.values() if x[1]!='D']
     if g22 and o22: m22=round(max(o22)-max(g22),2)
-    out['races'][county]=dict(cands=[{'n':n,'p':party[n],'prior':prior[n],'camp':camp(n,party[n])} for n in names], note=cfg['note'],
+    out['races'][county]=dict(cands=[{'n':n,'p':party[n],'prior':round(prior[n],2),'prior_ai':prior_ai[n],'camp':camp(n,party[n])} for n in names], fund_og=fund_og, note=cfg['note'],
         prev=dict(e=pv['e'],t=pv['t'],w=pv['w'],r=pv['r'],m=m22,note=pv.get('note')),
         turnout=dict(t=to,base=(62.0 if county=='嘉義市' else pv['t']),electorate=el,valid=int(round(valid,-2)),sig=round(sig,2)), proj=proj,
-        polls=[dict(org=p['org'],fe=p['fe'].isoformat(),rel=p['rel'].isoformat(),n=p['n'],t=p['t'],sp=p.get('sp'),est=p.get('est',False),v=p['v'],url=p['url']) for p in polls],
-        base_ref=BASE_REF.get(county,[]), events=[dict(d=e[1].isoformat(),n=e[2],k=e[3],t=e[4]) for e in EV if e[0]==county],
+        polls=[dict(org=p['org'],house=house(p['org']),he=p['he'],fe=p['fe'].isoformat(),rel=p['rel'].isoformat(),n=p['n'],t=p['t'],sp=p.get('sp'),est=p.get('est',False),v=p['v'],url=p['url']) for p in polls],
+        base_ref=BASE_REF.get(county,[]), events=evout,
         buzz=buzz, series=series)
 
 # 全國席次：依領先者政黨計席次，並以勝率加總為期望席次
@@ -288,6 +358,7 @@ for i,d in enumerate(DATES):
         vt+=w
     out['national'].append(dict(d=d.isoformat(),seats=seats,exp={k:round(v,2) for k,v in exp.items()},vb=round(vb/vt*100,2),vg=round(vg/vt*100,2)))
 
+out['method']=dict(house={h:v for h,v in sorted(HOUSE_EFFECT.items(),key=lambda x:-abs(x[1]))},house_n={h:len(v) for h,v in HE_RAW.items()},swing=SWING)
 json.dump(out,open('data.json','w'),ensure_ascii=False)
 last=out['national'][-1]; print('today',last)
 for c,r in out['races'].items():
