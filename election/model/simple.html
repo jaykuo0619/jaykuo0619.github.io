@@ -1,0 +1,333 @@
+<title>2026 縣市長選情預測</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* 一頁看懂：標題（席次）→ 拔河繩（得票）→ 方塊地圖（哪裡）→ 縣市卡（細節） */
+:root{
+  --bg:#f4f2ec; --paper:#fffdf8; --ink:#1c1f23; --muted:#646a70; --line:#dedad0; --soft:#ebe8df;
+  --kmt:#1f4fa3; --dpp:#16834a; --tpp:#13979b; --ind:#7d64a8;
+  --kmt-l:#a9c0e8; --dpp-l:#9fd6b4; --tpp-l:#93d6d8; --ind-l:#c3b2de;
+  --kmt-m:#5b84cf; --dpp-m:#4fae76; --tpp-m:#45b6b9; --ind-m:#9a83c2;
+  --focus:#c47b00;
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121417; --paper:#1b1e23; --ink:#ecebe6; --muted:#9ea3a9; --line:#2e3238; --soft:#24282e;
+  --kmt:#6f9cf0; --dpp:#47c784; --tpp:#3fcfd2; --ind:#b49ce0;
+  --kmt-l:#2a3d66; --dpp-l:#1e4a33; --tpp-l:#1c4a4b; --ind-l:#3d3357;
+  --kmt-m:#3f67c0; --dpp-m:#2c8a57; --tpp-m:#24898b; --ind-m:#6a54a0;
+  --focus:#ffb52e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121417; --paper:#1b1e23; --ink:#ecebe6; --muted:#9ea3a9; --line:#2e3238; --soft:#24282e;
+  --kmt:#6f9cf0; --dpp:#47c784; --tpp:#3fcfd2; --ind:#b49ce0;
+  --kmt-l:#2a3d66; --dpp-l:#1e4a33; --tpp-l:#1c4a4b; --ind-l:#3d3357;
+  --kmt-m:#3f67c0; --dpp-m:#2c8a57; --tpp-m:#24898b; --ind-m:#6a54a0;
+  --focus:#ffb52e; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding:max(18px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:1060px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+a{color:inherit;text-underline-offset:3px;text-decoration-color:var(--line)}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.g{color:var(--dpp)} .b{color:var(--kmt)}
+
+/* 1. 標題 */
+.kicker{font-size:13px;letter-spacing:.08em;color:var(--muted);display:flex;gap:6px 14px;flex-wrap:wrap}
+h1{font-family:var(--f-display);font-weight:900;font-size:clamp(30px,6.4vw,58px);line-height:1.15;margin:8px 0 10px;letter-spacing:.01em;text-wrap:balance}
+h1 .nw{white-space:nowrap}
+h1 .seat{font-family:var(--f-num);font-weight:600;font-size:1.08em}
+.sub{font-size:clamp(15px,2.2vw,18px);margin:0;max-width:44em;text-wrap:pretty}
+.sub button{font:inherit;border:0;background:none;padding:0;color:inherit;text-decoration:underline;text-decoration-color:var(--focus);text-underline-offset:4px;cursor:pointer}
+
+/* 2. 拔河繩 */
+.rope{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px clamp(16px,3vw,28px) 18px}
+.sides{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.side .who{font-weight:700;font-size:15px}
+.side .pct{font-family:var(--f-num);font-weight:600;font-size:clamp(34px,7vw,56px);line-height:1}
+.side .v{font-size:13px;color:var(--muted)}
+.side.r{text-align:right}
+.track{position:relative;height:64px;margin:14px 0 4px}
+.cord{position:absolute;left:0;right:0;top:30px;height:8px;border-radius:4px;
+  background:repeating-linear-gradient(115deg,color-mix(in srgb,var(--ink) 30%,transparent) 0 3px,color-mix(in srgb,var(--ink) 12%,transparent) 3px 7px)}
+.zone{position:absolute;top:22px;height:24px;border-radius:12px;opacity:.14}
+.mid{position:absolute;left:50%;top:14px;height:40px;border-left:2px dashed var(--muted)}
+.midl{position:absolute;left:50%;top:-4px;transform:translateX(-50%);font-size:12px;color:var(--muted);white-space:nowrap}
+.knot{position:absolute;top:34px;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:var(--ink);border:4px solid var(--paper);box-shadow:0 0 0 2px var(--ink);transition:left .35s}
+.ghost{position:absolute;top:34px;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px dashed var(--muted);background:var(--paper)}
+.tag{position:absolute;top:52px;transform:translateX(-50%);font-size:12px;white-space:nowrap}
+.arrow{position:absolute;top:34px;height:0;border-top:2px solid var(--focus);transition:all .35s}
+.arrow::after{content:"";position:absolute;top:-6px;border:5px solid transparent}
+.arrow.toL::after{left:-2px;border-right:8px solid var(--focus);border-left:0}
+.arrow.toR::after{right:-2px;border-left:8px solid var(--focus);border-right:0}
+.rope .cap{font-size:14px;margin:18px 0 0;text-align:center;text-wrap:balance}
+
+/* 3. 方塊地圖＋縣市卡 */
+.board{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;align-items:start}
+@media (min-width:780px){.board{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}}
+.mapcol{display:flex;flex-direction:column;gap:14px}
+.mapcol h2,.card h2{font-family:var(--f-display);font-weight:900;margin:0;font-size:22px}
+.tiles{container-type:inline-size;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-rows:1fr;gap:6px;max-width:520px;width:100%;margin:0 auto}
+.tile{aspect-ratio:1;position:relative;border:0;border-radius:10px;cursor:pointer;font:inherit;color:#fff;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow:hidden;transition:transform .15s,background .35s;line-height:1.15}
+.tile:hover{transform:scale(1.04)}
+.tile .nm{font-weight:900;font-size:clamp(13px,4.3cqi,21px)}
+.tile .ld{font-size:clamp(10px,2.5cqi,13px);opacity:.92;white-space:nowrap}
+.tile.light{color:var(--ink)}
+.tile.sel{outline:3px solid var(--ink);outline-offset:2px}
+.tile .was{position:absolute;top:0;right:0;width:36%;height:36%;clip-path:polygon(0 0,100% 0,100% 100%);box-shadow:none}
+.tile .was::before{content:"";position:absolute;inset:0}
+.isle{font-size:11px;color:var(--muted);align-self:end;justify-self:center;grid-column:1}
+.key{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12.5px;color:var(--muted);justify-content:center}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.key i{width:16px;height:16px;border-radius:4px;display:inline-block;position:relative;overflow:hidden}
+.time{display:flex;align-items:center;gap:10px;max-width:520px;width:100%;margin:0 auto}
+.time input{flex:1;accent-color:var(--ink)}
+.time .d{font-family:var(--f-num);font-weight:600;min-width:3.4em;text-align:right}
+.btn{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 14px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--soft)}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:16px}
+@media (min-width:780px){.card{position:sticky;top:16px}.card .x{display:none}}
+.chead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.x{font:inherit;font-size:22px;line-height:1;border:0;background:none;color:var(--muted);cursor:pointer;padding:4px 8px}
+.verdict{font-size:18px;margin:-6px 0 0}
+.verdict .wp{font-family:var(--f-num);font-weight:600}
+.h2h{display:flex;flex-direction:column;gap:6px}
+.h2h .lab{font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between}
+.h2h .names{display:flex;justify-content:space-between;gap:10px;font-size:15px}
+.h2h .names b{font-weight:700}
+.h2h .names .p{font-family:var(--f-num);font-weight:600;font-size:20px}
+.h2h .names .r{text-align:right}
+.split{display:flex;height:16px;border-radius:8px;overflow:hidden;position:relative;background:var(--soft)}
+.split i{display:block;height:100%;transition:width .35s}
+.split .half{position:absolute;left:50%;top:-3px;bottom:-3px;border-left:2px solid var(--paper)}
+.h2h .votes{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.h2h.past{opacity:.75}
+.h2h.past .names .p{font-size:16px}
+.swing{font-size:15px;background:var(--soft);border-radius:10px;padding:10px 12px;text-wrap:pretty}
+.spark svg{width:100%;height:auto;display:block}
+.spark text{font-family:var(--f-body);font-size:11.5px;fill:var(--muted);paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
+.facts{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:13.5px;color:var(--muted)}
+.facts b{color:var(--ink);font-family:var(--f-num);font-weight:600}
+.more{font-size:14px;font-weight:700}
+.hint{color:var(--muted);font-size:14px;text-align:center;margin:0}
+@media (min-width:780px){.hint{display:none}}
+/* 手機：縣市卡改成從底部滑出的面板 */
+@media (max-width:779px){
+  .card{position:fixed;left:0;right:0;bottom:0;z-index:20;border-radius:18px 18px 0 0;max-height:78vh;overflow:auto;
+    padding:16px max(16px,env(safe-area-inset-right,0px)) max(22px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+    box-shadow:0 -10px 30px rgba(0,0,0,.18);transform:translateY(105%);transition:transform .28s ease}
+  .card.open{transform:none}
+  .card::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--line);margin:-6px auto 0}
+}
+footer{font-size:13.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:8px}
+footer p{margin:0;max-width:62em}
+footer .full{font-size:16px;font-weight:700;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="kicker"><span>2026 縣市長選舉・11 月 28 日</span><span>距投票 <b class="num" id="days"></b> 天</span><span>預測更新 <span class="num" id="upd"></span></span></div>
+  <h1 id="headline"></h1>
+  <p class="sub" id="sub"></p>
+</header>
+
+<section class="rope" aria-label="22 縣市合計得票">
+  <div class="sides">
+    <div class="side"><div class="who g">綠營</div><div class="pct g" id="pg"></div><div class="v" id="vg"></div></div>
+    <div class="side r"><div class="who b">藍營</div><div class="pct b" id="pb"></div><div class="v" id="vb"></div></div>
+  </div>
+  <div class="track" id="track">
+    <div class="zone" style="left:0;width:50%;background:var(--dpp)"></div>
+    <div class="zone" style="left:50%;width:50%;background:var(--kmt)"></div>
+    <div class="cord"></div>
+    <div class="mid"></div><div class="midl">平手</div>
+    <div class="arrow" id="arrow"></div>
+    <div class="ghost" id="ghost"></div><div class="tag muted" id="gtag">2022</div>
+    <div class="knot" id="knot"></div><div class="tag" id="ktag"><b>現在</b></div>
+  </div>
+  <p class="cap" id="cap"></p>
+</section>
+
+<section class="board">
+  <div class="mapcol">
+    <h2>22 個縣市，誰領先？</h2>
+    <div class="tiles" id="tiles" role="group" aria-label="縣市方塊地圖"></div>
+    <div class="key">
+      <span><i style="background:var(--dpp)"></i><i style="background:var(--kmt)"></i>穩定領先</span>
+      <span><i style="background:var(--dpp-l)"></i><i style="background:var(--kmt-l)"></i>小幅領先</span>
+      <span><i style="background:repeating-linear-gradient(135deg,var(--dpp-l) 0 4px,var(--kmt-l) 4px 8px)"></i>難分勝負</span>
+      <span>方塊上的 % 是勝率</span>
+      <span><i style="background:var(--soft)"><span style="position:absolute;top:0;right:0;width:9px;height:9px;background:var(--kmt);clip-path:polygon(0 0,100% 0,100% 100%)"></span></i>角落＝2022 執政黨，代表可能翻盤</span>
+    </div>
+    <div class="time">
+      <button class="btn" id="play" type="button">▶ 重播 6/1 至今</button>
+      <input type="range" id="slider" min="0" max="0" aria-label="選擇日期">
+      <span class="d" id="date"></span>
+    </div>
+    <p class="hint">點任何一個縣市，看兩位主要候選人的對決。</p>
+  </div>
+  <aside class="card" id="card" aria-live="polite"></aside>
+</section>
+
+<footer>
+  <p><b style="color:var(--ink)">怎麼算的：</b>把 6/1 以來的公開民調加權平均（電話民調權重最高、越新越重要），沒有民調的縣市用 AI 依 2022 結果與政黨基本盤估計，再依新聞事件做小幅聲量調整（聲量為估計值，非社群實測）。票數＝2022 各縣市投票率（越膠著加 1–2 點）× 選舉人數 × 預測得票率，是依歷史投票率的推估，不是大數據模型。藍營＝國民黨加藍白合推薦的張啓楷、吳品叡。這是預測，不是結果。</p>
+  <a class="full" href="full.html">看完整數據：每日走勢、民調清單、聲量、方法 →</a>
+</footer>
+</div>
+
+<script>
+const DATA = __DATA__;
+const PARTY = {K:'國民黨',D:'民進黨',T:'民眾黨',I:'無黨籍'};
+const PV = {K:'kmt',D:'dpp',T:'tpp',I:'ind'};
+// 方塊地圖座標（欄, 列），大致依地理位置排列
+const GRID = {'連江縣':[1,1],'金門縣':[1,2],'澎湖縣':[1,5],
+  '台北市':[4,1],'基隆市':[5,1],'桃園市':[3,2],'新北市':[4,2],'宜蘭縣':[5,2],
+  '新竹市':[2,3],'新竹縣':[3,3],'苗栗縣':[4,3],
+  '彰化縣':[2,4],'台中市':[3,4],'南投縣':[4,4],'花蓮縣':[5,4],
+  '雲林縣':[2,5],'嘉義市':[3,5],'嘉義縣':[4,5],'台東縣':[5,5],
+  '台南市':[2,6],'高雄市':[3,6],'屏東縣':[4,6]};
+const C = Object.keys(DATA.races), N = DATA.national.length;
+let day = N-1, sel = null, timer = null;
+
+const fmtD = iso => { const [,m,d]=iso.split('-'); return `${+m}/${+d}`; };
+const pct = x => (Math.round(x*10)/10).toFixed(1);
+const wan = v => v>=1e4? (v/1e4).toFixed(v>=1e6?0:1)+' 萬' : (Math.round(v/100)*100).toLocaleString();
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const short = c => /^(新竹|嘉義)/.test(c)? c : c.replace(/[市縣]$/,'');
+const cand = (c,n) => DATA.races[c].cands.find(x=>x.n===n);
+const camp = (c,n) => { const k=cand(c,n).camp; return k==='X'?'O':k; };
+const camp22 = p => p==='K'?'B':p==='D'?'G':'O';
+const top2 = (c,i) => { const s=DATA.races[c].series[i].s; return Object.keys(s).filter(n=>n!=='其他').sort((a,b)=>s[b]-s[a]).slice(0,2); };
+const flipped = (c,i) => camp(c,DATA.races[c].series[i].lead) !== camp22(DATA.races[c].prev.w[1]);
+const SEATS22 = {B:0,G:0,O:0}; C.forEach(c=>SEATS22[camp22(DATA.races[c].prev.w[1])]++);
+const VALID = C.reduce((a,c)=>a+DATA.races[c].turnout.valid,0);
+
+// ===== 1. 標題 =====
+function drawHead(){
+  const st={B:0,G:0,O:0}; C.forEach(c=>st[camp(c,DATA.races[c].series[day].lead)]++);
+  const isToday = day===N-1, d=fmtD(DATA.national[day].d);
+  document.getElementById('headline').innerHTML = `${isToday?'如果今天投票':`如果 ${d} 投票`}，<br><span class="g nw">綠營 <span class="seat">${st.G}</span> 席</span>、<span class="b nw">藍營 <span class="seat">${st.B}</span> 席</span>`;
+  const dg=st.G-SEATS22.G, db=st.B-SEATS22.B, fl=C.filter(c=>flipped(c,day));
+  const n = x => x>0?`多 ${x}`:x<0?`少 ${-x}`:'持平';
+  document.getElementById('sub').innerHTML = `和 2022 年比，綠營${n(dg)}${dg?' 席':''}、藍營${n(db)}${db?' 席':''}${st.O?`，其他 ${st.O} 席`:''}。`+
+    (fl.length? `可能翻盤的有 ${fl.length} 個縣市：${fl.map(c=>`<button type="button" data-c="${c}">${short(c)}</button>`).join('、')}。` : '目前沒有縣市翻盤。');
+  document.querySelectorAll('#sub button').forEach(b=>b.addEventListener('click',()=>open(b.dataset.c)));
+}
+
+// ===== 2. 拔河繩 =====
+function drawRope(){
+  const n=DATA.national[day], g=n.vg, b=n.vb, pg=DATA.prev_national.D, pb=DATA.prev_national.K;
+  document.getElementById('pg').textContent = pct(g)+'%';
+  document.getElementById('pb').textContent = pct(b)+'%';
+  document.getElementById('vg').textContent = `約 ${wan(VALID*g/100)}票・2022 ${pct(pg)}%`;
+  document.getElementById('vb').textContent = `約 ${wan(VALID*b/100)}票・2022 ${pct(pb)}%`;
+  // 繩結位置：綠營領先就往左拉，藍營領先往右；±15 點拉到底
+  const X = d => 50 - Math.max(-15,Math.min(15,d))/15*45;
+  const now=X(g-b), was=X(pg-pb);
+  const set=(id,x)=>document.getElementById(id).style.left=x+'%';
+  set('knot',now); set('ktag',now); set('ghost',was); set('gtag',was);
+  const ar=document.getElementById('arrow'); const lo=Math.min(now,was), hi=Math.max(now,was);
+  ar.style.left=(lo+(now<was?1.5:1))+'%'; ar.style.width=Math.max(0,hi-lo-3)+'%'; ar.className='arrow '+(now<was?'toL':'toR');
+  // 標籤太近時錯開
+  document.getElementById('gtag').style.top = Math.abs(now-was)<9? '-4px':'52px';
+  const lead = g>b? `綠營領先 ${pct(g-b)} 點` : `藍營領先 ${pct(b-g)} 點`;
+  const move = (g-b)-(pg-pb);
+  document.getElementById('cap').innerHTML = `22 縣市合計，${lead}。和 2022 年藍營領先 ${pct(pb-pg)} 點相比，繩子往<b class="${move>0?'g':'b'}">${move>0?'綠營':'藍營'}拉過去 ${pct(Math.abs(move))} 點</b>。`;
+}
+
+// ===== 3. 方塊地圖 =====
+const tiles=document.getElementById('tiles');
+tiles.innerHTML = C.map(c=>{ const [x,y]=GRID[c]; return `<button type="button" class="tile" data-c="${c}" style="grid-column:${x};grid-row:${y}"><span class="nm">${short(c)}</span><span class="ld"></span></button>`; }).join('');
+tiles.querySelectorAll('.tile').forEach(t=>t.addEventListener('click',()=>open(t.dataset.c)));
+function tileStyle(c){
+  const s=DATA.races[c].series[day], p=cand(c,s.lead).p, [a,b]=top2(c,day), pb=cand(c,b).p;
+  if (s.wp<0.6) return {bg:`repeating-linear-gradient(135deg,var(--${PV[p]}-l) 0 7px,var(--${PV[pb]}-l) 7px 14px)`,light:true};
+  if (s.wp<0.85) return {bg:`var(--${PV[p]}-l)`,light:true};
+  return {bg:`var(--${PV[p]})`,light:false};
+}
+function drawTiles(){
+  tiles.querySelectorAll('.tile').forEach(t=>{ const c=t.dataset.c, r=DATA.races[c], s=r.series[day], st=tileStyle(c);
+    t.style.background=st.bg; t.classList.toggle('light',st.light); t.classList.toggle('sel',c===sel);
+    t.querySelector('.ld').textContent = `${s.lead} ${Math.round(s.wp*100)}%`;
+    let w=t.querySelector('.was');
+    if (flipped(c,day)){ if(!w){ w=document.createElement('span'); w.className='was'; t.appendChild(w); }
+      w.style.background=`var(--${PV[r.prev.w[1]]})`; }
+    else if (w) w.remove();
+    t.setAttribute('aria-label',`${c}：${s.lead} 領先，勝率 ${Math.round(s.wp*100)}%${flipped(c,day)?'，可能翻盤':''}`);
+  });
+}
+
+// ===== 4. 縣市卡 =====
+function h2h(lab,a,pa,va,b,pb,vb,votes,past){
+  const tot=va+vb;
+  return `<div class="h2h${past?' past':''}"><div class="lab"><span>${lab}</span></div>
+    <div class="names"><span><b>${esc(a)}</b> <span class="muted" style="font-size:12.5px">${PARTY[pa]}</span><br><span class="p" style="color:var(--${PV[pa]})">${pct(va)}%</span></span>
+      <span class="r"><b>${esc(b)}</b> <span class="muted" style="font-size:12.5px">${PARTY[pb]}</span><br><span class="p" style="color:var(--${PV[pb]})">${pct(vb)}%</span></span></div>
+    <div class="split"><i style="width:${va/tot*100}%;background:var(--${PV[pa]})"></i><i style="width:${vb/tot*100}%;background:var(--${PV[pb]})"></i><span class="half"></span></div>
+    ${votes?`<div class="votes"><span>約 ${wan(votes[0])}票</span><span>約 ${wan(votes[1])}票</span></div>`:''}</div>`;
+}
+function spark(c,W){
+  const r=DATA.races[c], [a,b]=top2(c,N-1), pa=cand(c,a).p, pb=cand(c,b).p;
+  const ms=r.series.map(s=>s.s[a]-s.s[b]); const mx=Math.max(8,...ms.map(Math.abs))*1.1;
+  const H=120, L=4, R=4, T=18, B=18, x=i=>L+(W-L-R)*i/(N-1), y=v=>T+(H-T-B)*(1-(v+mx)/(2*mx));
+  const pts=ms.map((m,i)=>`${x(i).toFixed(1)},${y(m).toFixed(1)}`).join(' ');
+  const area=`${x(0)},${y(0)} ${pts} ${x(N-1)},${y(0)}`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${c} 6/1 以來的差距走勢">
+    <defs><clipPath id="up"><rect x="0" y="0" width="${W}" height="${y(0)}"/></clipPath><clipPath id="dn"><rect x="0" y="${y(0)}" width="${W}" height="${H}"/></clipPath></defs>
+    <polygon points="${area}" fill="var(--${PV[pa]})" opacity=".25" clip-path="url(#up)"/><polygon points="${area}" fill="var(--${PV[pb]})" opacity=".25" clip-path="url(#dn)"/>
+    <line x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--muted)" stroke-dasharray="3 3"/>
+    <polyline points="${pts}" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
+    <line x1="${x(day)}" x2="${x(day)}" y1="${T}" y2="${H-B}" stroke="var(--ink)" stroke-dasharray="2 3" opacity=".5"/>
+    <circle cx="${x(day)}" cy="${y(ms[day])}" r="4.5" fill="var(--${PV[ms[day]>=0?pa:pb]})" stroke="var(--paper)" stroke-width="2"/>
+    <text x="${L}" y="12" style="fill:var(--${PV[pa]});font-weight:700">↑ ${esc(a)} 領先</text><text x="${L}" y="${H-3}" style="fill:var(--${PV[pb]});font-weight:700">↓ ${esc(b)} 領先</text>
+    <text x="${W-R}" y="12" text-anchor="end">6/1 → ${fmtD(r.series[day].d)}</text></svg>`;
+}
+function drawCard(){
+  const card=document.getElementById('card'); const c=sel||'台北市';
+  const r=DATA.races[c], s=r.series[day], pv=r.prev, to=r.turnout, [a,b]=top2(c,day);
+  const pa=cand(c,a).p, pb=cand(c,b).p, wp=Math.round(s.wp*100);
+  const word = s.wp<0.6?'難分勝負，暫時領先':s.wp<0.85?'小幅領先':'穩定領先';
+  const others=Object.keys(s.s).filter(n=>n!==a&&n!==b).reduce((t,n)=>t+s.s[n],0);
+  // 2022 → 2026 的差距變化（在野最高票減民進黨最高票）
+  let sw='';
+  const d22 = pv.w[2]-pv.r[2];
+  const was = `2022 年 <b>${esc(pv.w[0])}</b>（${PARTY[pv.w[1]]}）贏 ${pct(d22)} 點`;
+  const now = `現在 <b>${esc(s.lead)}</b>（${PARTY[cand(c,s.lead).p]}）領先 ${pct(s.m)} 點`;
+  if (pv.m!=null && s.og!=null){ const v=s.og-pv.m; sw = `${was}；${now}。<b class="${v<0?'g':'b'}">往${v<0?'綠營':'藍營'}移動 ${pct(Math.abs(v))} 點</b>${flipped(c,day)?'，<b style="color:var(--focus)">可能翻盤</b>':''}。`; }
+  else sw = `${was}；${now}。${s.og==null?'本屆沒有民進黨候選人。':''}`;
+  const W = Math.max(260, Math.min(560, card.clientWidth-40 || 360));
+  card.innerHTML = `<div class="chead"><h2>${c}</h2><button type="button" class="x" aria-label="關閉">✕</button></div>
+    <p class="verdict"><b style="color:var(--${PV[cand(c,s.lead).p]})">${esc(s.lead)}</b> ${word}，勝率 <span class="wp">${wp}%</span></p>
+    ${h2h(`${fmtD(s.d)} 預測（11/28 預估票數）`,a,pa,s.s[a],b,pb,s.s[b],[to.valid*s.s[a]/100,to.valid*s.s[b]/100])}
+    ${others>0.5?`<div class="muted" style="font-size:12.5px;margin-top:-8px">其他候選人合計 ${pct(others)}%</div>`:''}
+    ${h2h('2022 實際結果',pv.w[0],pv.w[1],pv.w[2],pv.r[0],pv.r[1],pv.r[2],null,true)}
+    <div class="swing">${sw}</div>
+    <div class="spark"><div class="muted" style="font-size:12.5px;margin-bottom:4px">6/1 以來兩人差距</div>${spark(c,W)}</div>
+    <div class="facts"><span>預估投票率 <b>${pct(to.t)}%</b>（2022 ${pct(pv.t)}%）</span><span>預估 <b>${wan(to.electorate*to.t/100)}</b>人投票</span><span>民調 ${r.npolls} 份</span></div>
+    <a class="more" href="full.html">${c}的民調與完整走勢 →</a>`;
+  card.querySelector('.x').addEventListener('click',()=>{ card.classList.remove('open'); });
+}
+function open(c){ sel=c; drawTiles(); drawCard(); document.getElementById('card').classList.add('open'); }
+
+function render(){ drawHead(); drawRope(); drawTiles(); drawCard();
+  document.getElementById('date').textContent = fmtD(DATA.national[day].d); document.getElementById('slider').value=day; }
+const slider=document.getElementById('slider'); slider.max=N-1;
+slider.addEventListener('input',()=>{ day=+slider.value; render(); });
+const play=document.getElementById('play');
+const stop=()=>{ clearInterval(timer); timer=null; play.textContent='▶ 重播 6/1 至今'; };
+play.addEventListener('click',()=>{ if(timer){stop();return;} day=0; play.textContent='❚❚ 暫停';
+  timer=setInterval(()=>{ day++; render(); if(day>=N-1) stop(); },70); });
+let lw=innerWidth; addEventListener('resize',()=>{ if(innerWidth!==lw){ lw=innerWidth; drawCard(); } });
+document.getElementById('days').textContent = Math.round((new Date(DATA.eday)-new Date(DATA.today))/864e5);
+document.getElementById('upd').textContent = fmtD(DATA.today);
+render();
+</script>

@@ -1,13 +1,21 @@
-# 把模型資料與地圖形狀填入網頁範本
-# 輸出：election-2026.html（Artifact 用，無 HTML 外殼）與 ../index.html（GitHub Pages 用，完整 HTML）
-import os
+# 把模型資料填入兩個網頁範本（GitHub Pages 用，輸出完整 HTML）
+#   ../index.html：一頁看懂（simple.html，資料精簡）
+#   ../full.html ：完整數據版（template.html＋地圖形狀）
+import os, json
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-t = open('template.html', encoding='utf-8').read()
-t = t.replace('__DATA__', open('data.json', encoding='utf-8').read()).replace('__SHAPES__', open('shapes.json', encoding='utf-8').read())
-open('election-2026.html', 'w', encoding='utf-8').write(t)
-# 標題、字型與樣式放進 <head>，其餘內容放進 <body>
-head, body = t.split('<div class="wrap">', 1)
-page = ('<!doctype html>\n<html lang="zh-Hant-TW">\n<head>\n<meta charset="utf-8">\n'
-        '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-        + head + '</head>\n<body>\n<div class="wrap">' + body + '\n</body>\n</html>\n')
-open('../index.html', 'w', encoding='utf-8').write(page)
+d = open('data.json', encoding='utf-8').read()
+def wrap(t, split):
+    head, body = t.split(split, 1)
+    return ('<!doctype html>\n<html lang="zh-Hant-TW">\n<head>\n<meta charset="utf-8">\n'
+            '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+            + head + '</head>\n<body>\n' + split + body + '\n</body>\n</html>\n')
+j = json.loads(d)
+for r in j['races'].values():
+    r['npolls'] = len(r['polls'])
+    for k in ('buzz', 'polls', 'events', 'base_ref', 'note', 'proj'): r.pop(k, None)
+    for x in r['series']:
+        for k in ('adj', 'pa', 'pw'): x.pop(k, None)
+simple = open('simple.html', encoding='utf-8').read().replace('__DATA__', json.dumps(j, ensure_ascii=False, separators=(',', ':')))
+open('../index.html', 'w', encoding='utf-8').write(wrap(simple, '<div class="wrap">'))
+full = open('template.html', encoding='utf-8').read().replace('__DATA__', d).replace('__SHAPES__', open('shapes.json', encoding='utf-8').read())
+open('../full.html', 'w', encoding='utf-8').write(wrap(full, '<div class="wrap">'))
