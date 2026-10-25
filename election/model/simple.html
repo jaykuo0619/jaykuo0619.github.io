@@ -230,7 +230,7 @@ footer .full{font-size:13.5px}
 .is3d .tiles{gap:10px}
 .is3d .tile::after{content:"";position:absolute;inset:6%;transform:translateZ(calc(-1 * var(--h,0px)));background:rgba(0,0,0,.18);filter:blur(6px);border-radius:6px;pointer-events:none}
 .rope{position:relative}
-@media (min-width:780px){.card{position:relative!important}}
+@media (min-width:780px){.card{position:relative!important;top:0!important}}
 .rope::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;opacity:0;transition:opacity .3s;
   background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--focus) 12%,transparent),transparent 60%)}
 .rope:hover::before,.card:hover::after{opacity:1}
@@ -256,6 +256,8 @@ footer .full{font-size:13.5px}
 .polls .why{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px}
 .polls .why span{font-size:11px;border:1px solid var(--line);border-radius:4px;padding:0 5px;color:var(--muted);white-space:nowrap}
 .polls .why .bad{border-color:#c2410c;color:#c2410c}
+.polls .why .good{border-color:#15803d;color:#15803d}
+.polls .aud{grid-column:1/-1;font-size:12px;line-height:1.5;color:var(--muted);margin-top:2px}
 .polls .wt{text-align:right;font-family:var(--f-num);font-weight:600}
 .polls .wbar{grid-column:1/-1;height:4px;border-radius:2px;background:var(--soft);overflow:hidden}
 .polls .wbar i{display:block;height:100%;background:var(--ink);opacity:.55}
@@ -444,7 +446,13 @@ function newsBlock(c){
 // 民調採納：每份民調的權重與校正（和模型同一套算法）
 const TW={phone:1,online:.6,ai:.35}, TN={phone:'電話',online:'網路問卷',ai:'AI 模擬'};
 function pollW(p,d){ const age=(new Date(d)-new Date(p.fe))/864e5; const sz=p.n? Math.sqrt(Math.min(Math.max(p.n,400),2000)/1000):0.8;
-  return {w:TW[p.t]*(p.sp?0.7:1)*sz*Math.exp(-age/40), age:Math.round(age), sz}; }
+  return {w:TW[p.t]*(p.sp?0.7:1)*sz*(p.q||1)*(p.cf||1)*Math.exp(-age/40), age:Math.round(age), sz}; }
+// AI 方法評分（0–100）與趨勢一致性標籤
+const QS=q=>Math.round(Math.min(100,(q||1)/1.1*100));
+function trendTag(p){ if(p.dev==null) return '<span>無同期他家民調可對照</span>';
+  const a=Math.abs(p.dev), dir=p.dev>0?'綠':'藍';
+  if(a<4) return `<span class="good">符合趨勢（差 ${a.toFixed(1)} 點）</span>`;
+  return `<span class="bad">${a<8?'略偏':'偏離'}趨勢：比共識偏${dir} ${a.toFixed(1)} 點${p.cf<1?' ×'+p.cf.toFixed(2):''}</span>`; }
 function pollBlock(c){
   const r=DATA.races[c], s=r.series[day], d=s.d;
   const base = r.fund_og!=null? `AI 判斷與「2022 結果＋全國擺盪 ${(DATA.method.swing>0?'往藍 ':'往綠 ')+Math.abs(DATA.method.swing).toFixed(1)} 點」各半` : 'AI 判斷（缺少藍綠對照，無法套用 2022 擺盪）';
@@ -458,11 +466,12 @@ function pollBlock(c){
       p.sp?`<span class="bad">${p.sp==='K'?'國民黨':'民進黨'}相關委託 ×0.7</span>`:'',
       `<span${o.sz<1?' class="bad"':''}>樣本 ${p.n?p.n.toLocaleString():'未載明'}${o.sz.toFixed(2)!=='1.00'?' ×'+o.sz.toFixed(2):''}</span>`,
       `<span${o.age>40?' class="bad"':''}>${o.age} 天前 ×${Math.exp(-o.age/40).toFixed(2)}</span>`,
-      Math.abs(p.he)>=0.3?`<span class="bad">${esc(p.house)} 平均偏${p.he>0?'綠':'藍'} ${Math.abs(p.he).toFixed(1)} 點，已校正</span>`:''].join('');
+      Math.abs(p.he)>=0.3?`<span class="bad">${esc(p.house)} 平均偏${p.he>0?'綠':'藍'} ${Math.abs(p.he).toFixed(1)} 點，已校正</span>`:'',
+      `<span class="${QS(p.q)>=85?'good':QS(p.q)<65?'bad':''}">AI 方法評分 ${QS(p.q)}｜${esc(p.frn||'')} ×${(p.q||1).toFixed(2)}</span>`, trendTag(p)].join('');
     return `<li><span><span class="org">${esc(p.org)}</span> <span class="res">${fmtD(p.fe)}｜${res}</span></span><span class="wt">${share.toFixed(0)}%</span>
-      <span class="wbar"><i style="width:${share}%"></i></span><span class="why">${why}</span></li>`; }).join('');
+      <span class="wbar"><i style="width:${share}%"></i></span><span class="why">${why}</span>${p.note?`<span class="aud">${esc(p.note)}</span>`:''}</li>`; }).join('');
   return `<div class="polls"><h3>民調怎麼被採納</h3>
-    <p class="net">這天的預測有 <b>${Math.round(s.pw*100)}%</b> 來自民調、${100-Math.round(s.pw*100)}% 來自基準（${base}）。右邊百分比是每份民調在民調部分占的權重：電話調查、非政黨委託、樣本大、越新的權重越高；機構若長期比同期其他民調偏藍或偏綠，先扣掉偏差再算。</p>
+    <p class="net">這天的預測有 <b>${Math.round(s.pw*100)}%</b> 來自民調、${100-Math.round(s.pw*100)}% 來自基準（${base}）。右邊百分比是每份民調在民調部分占的權重：電話調查、非政黨委託、樣本大、越新的權重越高；機構若長期比同期其他民調偏藍或偏綠，先扣掉偏差再算。每份民調另經 AI 查核抽樣方式、加權、揭露程度與未表態比例給方法分，和同期他家差太多的也會降權。</p>
     <ul>${rows}</ul></div>`;
 }
 function drawCard(){

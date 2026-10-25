@@ -199,6 +199,59 @@ def seeded(name):
 out = {'prev_national':PREV_NATIONAL,'method':{},'start':START.isoformat(),'today':TODAY.isoformat(),'eday':EDAY.isoformat(),'races':{},'national':[]}
 DATES=list(daterange(START,TODAY))
 
+# ===== 民調方法 AI 查核 =====
+# 逐份讀過民調公布的方法說明後，依「抽樣框、加權、揭露程度、未表態比例、題目」評分。
+# fr: dual=市話＋手機雙底冊, land=只打市話, tel=電話但未說明市話/手機, web=網路問卷, ai=AI 模擬, none=方法未揭露
+# wt: 有說明加權, disc: 2 完整揭露 / 1 部分 / 0 幾乎沒有, und: 未表態 %, qw: 公布題目, fl: skew=樣本政黨傾向失衡、adv=業配或政黨挑選公布
+# 新增民調時，用 (縣市, 調查結束日) 當 key 補一筆；沒補的會以「部分揭露、未知抽樣框」處理。
+AUDIT={
+ ('台北市','2026-09-18'):dict(fr='dual',wt=True,disc=2,und=None,qw=False,fl=[],note='市話 70%＋手機 30% 雙底冊、CATI、性別／區域／年齡／教育多變數加權，方法是這批裡最完整的之一；但主辦協會立場偏綠，題目原文未公布。'),
+ ('台北市','2026-10-07'):dict(fr='land',wt=True,disc=2,und=11,qw=True,fl=[],note='市話尾數隨機、拒訪率 12.8%、多變數加權、未表態僅 11%，程序嚴謹；只打市話，年輕族群代表性不足，可能讓藍營數字偏高。'),
+ ('台北市','2026-10-17'):dict(fr='none',wt=None,disc=0,und=None,qw=False,fl=[],note='報導只有結果，沒有樣本數、抽樣框、加權與調查日期；同一機構一個月內從差 1 點變成差 17 點，變動幅度遠超過抽樣誤差，可信度低。'),
+ ('台北市','2026-10-19'):dict(fr='land',wt=True,disc=2,und=None,qw=True,fl=[],note='CATI 市話、區域／性別／年齡／教育加權、樣本 1074，程序完整；只打市話。「一定投票」者沈 51.2 比 38.6，顯示動員差異。'),
+ ('台北市','2026-05-25'):dict(fr='land',wt=True,disc=1,und=None,qw=False,fl=[],note='TVBS 例行電訪，方法沿用其標準程序；距今較久，權重已大幅衰減。'),
+ ('台北市','2026-06-21'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='報導未完整列出抽樣與加權；時間較早，權重低。'),
+ ('新北市','2026-08-26'):dict(fr='land',wt=False,disc=1,und=26,qw=False,fl=['skew'],note='住宅電話簿＋尾數隨機分層抽樣，但未提加權；樣本政黨認同民進黨 30.4%、國民黨 17.9%，明顯偏綠，李四川陣營也提出質疑。'),
+ ('新北市','2026-10-03'):dict(fr='tel',wt=None,disc=1,und=19.9,qw=False,fl=['adv'],note='由國民黨議會黨團挑選公布，抽樣框與加權未說明；TVBS 執行品質通常穩定，但「委託方決定公不公布」本身就有選擇偏誤。'),
+ ('新北市','2026-10-10'):dict(fr='none',wt=None,disc=0,und=None,qw=False,fl=[],note='調查日期、樣本數、抽樣框、加權全部未揭露，只能當參考訊號；與同期其他民調方向相反，差距 13 點也偏大。'),
+ ('新北市','2026-06-06'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=['adv'],note='國民黨議會黨團委託並公布，方法揭露有限；時間較早。'),
+ ('桃園市','2026-09-29'):dict(fr='ai',wt=None,disc=1,und=None,qw=False,fl=[],note='用大型語言模型扮演選民的「矽基樣本」，不是真的問人；沒有對實際選舉結果做過驗證，樣本數再大也不等於準確。'),
+ ('台中市','2026-09-12'):dict(fr='none',wt=None,disc=0,und=None,qw=False,fl=['adv'],note='國民黨議會黨團公布，報導沒有任何方法資訊（日期、樣本、抽樣、加權皆無）。'),
+ ('台中市','2026-10-04'):dict(fr='tel',wt=True,disc=2,und=29.7,qw=False,fl=[],note='CATI 分層抽樣、性別／年齡／行政區加權；未表態近 3 成，雙方數字都偏低，差距的不確定性較大。'),
+ ('台中市','2026-05-12'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='時間較早，方法揭露有限。'),
+ ('台中市','2026-10-16'):dict(fr='tel',wt=True,disc=2,und=30,qw=False,fl=['adv'],note='學術單位執行、多變數加權，但由國民黨黨團委託，且刊登頁面標示為廣告；未表態約 3 成。'),
+ ('台南市','2026-10-15'):dict(fr='land',wt=True,disc=2,und=17,qw=True,fl=[],note='市話、加權、公布題目，程序完整；但由凱達格蘭基金會出資的智庫執行，屬綠營自家民調，差距 37 點明顯大於基本盤推估。'),
+ ('高雄市','2026-08-30'):dict(fr='web',wt=None,disc=1,und=12.5,qw=False,fl=[],note='以 EDM／簡訊邀請填答的網路問卷，屬非機率樣本，未說明加權；結果與同期電話民調差距大。'),
+ ('高雄市','2026-10-19'):dict(fr='ai',wt=None,disc=1,und=None,qw=False,fl=[],note='AI 矽基樣本模擬，以 2024 年選民結構為底，沒有實際受訪者，無法驗證。'),
+ ('高雄市','2026-04-29'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='樣本 2027 較大；時間很早，權重已衰減。'),
+ ('高雄市','2026-06-10'):dict(fr='land',wt=True,disc=1,und=None,qw=False,fl=[],note='綠營智庫電訪，時間較早。'),
+ ('高雄市','2026-08-08'):dict(fr='none',wt=None,disc=0,und=None,qw=False,fl=[],note='機構與方法都未載明，參考價值很低。'),
+ ('基隆市','2026-08-24'):dict(fr='land',wt=True,disc=1,und=None,qw=False,fl=[],note='山水市話電訪，媒體委託；時間較早。'),
+ ('基隆市','2026-10-09'):dict(fr='land',wt=True,disc=2,und=None,qw=False,fl=['adv','skew'],note='電話簿＋尾數隨機、raking 加權；國民黨市黨部委託，且未公布原始未表態比例，報導指樣本中民進黨支持者多於國民黨。'),
+ ('基隆市','2026-10-21'):dict(fr='land',wt=True,disc=2,und=25.9,qw=True,fl=[],note='依行政區比例抽市話、raking 加權、候選人順序隨機、公布題目，程序是這批裡最嚴謹的之一；未表態 25.9%，兩人差距在誤差內。'),
+ ('新竹縣','2026-09-18'):dict(fr='tel',wt=True,disc=2,und=29.2,qw=True,fl=[],note='分層隨機抽樣、性別／年齡／鄉鎮加權、公布題目；未表態近 3 成，部分鄉鎮樣本只有個位數。'),
+ ('新竹縣','2026-06-16'):dict(fr='tel',wt=True,disc=1,und=None,qw=False,fl=[],note='年代例行電訪，時間較早。'),
+ ('彰化縣','2026-10-15'):dict(fr='tel',wt=None,disc=1,und=42,qw=False,fl=[],note='聯合報系執行品質一向穩定，但這次報導未列抽樣框與加權；未表態高達 42%，排名可信、差距不穩。'),
+ ('新竹市','2026-05-20'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='時間很早，方法揭露有限。'),
+ ('嘉義市','2026-05-03'):dict(fr='land',wt=True,disc=1,und=None,qw=False,fl=[],note='時間很早，報導僅列結果。'),
+ ('嘉義市','2026-07-12'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='媒體轉述，抽樣與加權未完整說明。'),
+ ('宜蘭縣','2026-05-02'):dict(fr='none',wt=None,disc=0,und=None,qw=False,fl=['adv'],note='藍白整合用的協調民調，執行機構與方法都未公開。'),
+ ('台東縣','2026-05-28'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='兩人對決題、樣本 905 偏小，時間較早。'),
+ ('花蓮縣','2026-07-23'):dict(fr='tel',wt=None,disc=1,und=29.2,qw=False,fl=[],note='CATI、樣本 1068，但抽樣框、加權、題目都未公布；未表態近 3 成。'),
+}
+FR_W={'dual':1.10,'land':0.92,'tel':0.95,'web':1.0,'ai':1.0,'none':0.85}
+FR_N={'dual':'市話＋手機','land':'只打市話','tel':'電話（未說明手機）','web':'網路問卷','ai':'AI 模擬','none':'方法未揭露'}
+def audit_q(a):
+    q=FR_W[a['fr']]*(1.0 if a['wt'] else 0.92)*{2:1.0,1:0.9,0:0.7}[a['disc']]
+    u=a.get('und'); q*=0.95 if u is None else 0.85 if u>=40 else 0.92 if u>=30 else 0.97 if u>=20 else 1.0
+    if a.get('qw'): q*=1.03
+    if 'skew' in a['fl']: q*=0.9
+    if 'adv' in a['fl']: q*=0.95
+    return round(max(0.4,min(1.15,q)),3)
+for p in P:
+    a=AUDIT.get((p['r'],p['fe'].isoformat()),dict(fr='tel' if p['t']=='phone' else p['t'] if p['t']=='ai' else 'web',wt=None,disc=1,und=None,qw=False,fl=[],note='方法說明尚未查核。'))
+    p['au']=a; p['q']=audit_q(a)
+
 # ===== 民調校正 1：機構偏差（house effect）=====
 # 同一縣市、前後 45 天內，拿每家機構的「綠營減藍營」差距和其他機構的加權平均比；
 # 多次比較的平均偏差再做收縮（k/(k+2)，比較次數少就不太相信），最後從該機構數字中扣掉。
@@ -219,14 +272,29 @@ for p in P:
     if m is None: continue
     others=[q for q in P if q['r']==p['r'] and q is not p and house(q['org'])!=house(p['org']) and abs((q['fe']-p['fe']).days)<=45 and gmb(q) is not None]
     if not others: continue
-    ws=[TYPE_W[q['t']]*math.exp(-abs((q['fe']-p['fe']).days)/40) for q in others]
+    ws=[TYPE_W[q['t']]*q['q']*math.exp(-abs((q['fe']-p['fe']).days)/40) for q in others]
     ref=sum(w*gmb(q) for w,q in zip(ws,others))/sum(ws)
-    HE_RAW.setdefault(house(p['org']),[]).append(m-ref)
-HOUSE_EFFECT={h:round(sum(v)/(len(v)+2),2) for h,v in HE_RAW.items()}
+    HE_RAW.setdefault(house(p['org']),[]).append((m-ref,p['q']))
+# 方法分數高的民調，在推估機構偏差時說話比較大聲；收縮項 2 不變
+HOUSE_EFFECT={h:round(sum(d*q for d,q in v)/(sum(q for d,q in v)+2),2) for h,v in HE_RAW.items()}
 for p in P:
     he=HOUSE_EFFECT.get(house(p['org']),0.0); cs=CANDS[p['r']]; tot=sum(p['v'].values())
     p['he']=he if gmb(p) is not None else 0.0
     p['vc']={n:(v-p['he']/2*tot/100 if n in cs and cs[n][1]=='D' else v+p['he']/2*tot/100 if n in cs and camp(n,cs[n][1])=='B' else v) for n,v in p['v'].items()}
+
+# ===== 民調校正 3：趨勢一致性 =====
+# 每份民調「公布的數字」和同縣市前後 45 天、其他機構（已校正偏差）的加權共識比，得到 dev。
+# 原始差距（dev）和扣掉機構偏差後的差距（res）都超過 5 點，才開始降權（最低 0.6）。
+def gmb_c(p): m=gmb(p); return None if m is None else m-p['he']
+for p in P:
+    m=gmb(p); p['dev']=None; p['res']=None; p['cf']=1.0
+    if m is None: continue
+    others=[q for q in P if q['r']==p['r'] and house(q['org'])!=house(p['org']) and abs((q['fe']-p['fe']).days)<=45 and gmb(q) is not None]
+    if not others: continue
+    ws=[TYPE_W[q['t']]*q['q']*(0.7 if q.get('sp') else 1)*math.exp(-abs((q['fe']-p['fe']).days)/40) for q in others]
+    ref=sum(w*gmb_c(q) for w,q in zip(ws,others))/sum(ws)
+    p['dev']=round(m-ref,2); p['res']=round(m-p['he']-ref,2); d=min(abs(p['dev']),abs(p['res']))  # 原始或校正後任一符合共識就不降權
+    p['cf']=1.0 if d<=5 else round(max(0.6,math.exp(-(d-5)/12)),3)
 # ===== 民調校正 2：樣本數 =====
 def size_w(p):
     return math.sqrt(min(max(p['n'],400),2000)/1000) if p.get('n') else 0.8
@@ -245,7 +313,7 @@ def run(names,party,prior,polls,evs):
         acc={n:0.0 for n in names}; wsum=0.0; used=[]
         for p in avail:
             age=days(p['fe'],d)
-            w=TYPE_W[p['t']]*(0.7 if p.get('sp') else 1.0)*size_w(p)*math.exp(-age/40)
+            w=TYPE_W[p['t']]*(0.7 if p.get('sp') else 1.0)*size_w(p)*p['q']*p['cf']*math.exp(-age/40)
             named=[n for n in names if n in p['vc']]
             tot_named=sum(p['vc'][n] for n in named)
             prior_named=sum(prior[n] for n in named)
@@ -337,7 +405,7 @@ for county,cfg in R.items():
     out['races'][county]=dict(cands=[{'n':n,'p':party[n],'prior':round(prior[n],2),'prior_ai':prior_ai[n],'camp':camp(n,party[n])} for n in names], fund_og=fund_og, note=cfg['note'],
         prev=dict(e=pv['e'],t=pv['t'],w=pv['w'],r=pv['r'],m=m22,note=pv.get('note')),
         turnout=dict(t=to,base=(62.0 if county=='嘉義市' else pv['t']),electorate=el,valid=int(round(valid,-2)),sig=round(sig,2)), proj=proj,
-        polls=[dict(org=p['org'],house=house(p['org']),he=p['he'],fe=p['fe'].isoformat(),rel=p['rel'].isoformat(),n=p['n'],t=p['t'],sp=p.get('sp'),est=p.get('est',False),v=p['v'],url=p['url']) for p in polls],
+        polls=[dict(org=p['org'],house=house(p['org']),he=p['he'],fe=p['fe'].isoformat(),rel=p['rel'].isoformat(),n=p['n'],t=p['t'],sp=p.get('sp'),est=p.get('est',False),v=p['v'],url=p['url'],q=p['q'],cf=p['cf'],dev=p['dev'],res=p['res'],nd=(None if gmb_c(p) is None or m22_of(county) is None else round(-gmb_c(p)-m22_of(county)-SWING,2)),fr=p['au']['fr'],frn=FR_N[p['au']['fr']],wt=p['au']['wt'],disc=p['au']['disc'],und=p['au'].get('und'),fl=p['au']['fl'],note=p['au']['note']) for p in polls],
         base_ref=BASE_REF.get(county,[]), events=evout,
         buzz=buzz, series=series)
 
@@ -358,7 +426,7 @@ for i,d in enumerate(DATES):
         vt+=w
     out['national'].append(dict(d=d.isoformat(),seats=seats,exp={k:round(v,2) for k,v in exp.items()},vb=round(vb/vt*100,2),vg=round(vg/vt*100,2)))
 
-out['method']=dict(house={h:v for h,v in sorted(HOUSE_EFFECT.items(),key=lambda x:-abs(x[1]))},house_n={h:len(v) for h,v in HE_RAW.items()},swing=SWING)
+out['method']=dict(house={h:v for h,v in sorted(HOUSE_EFFECT.items(),key=lambda x:-abs(x[1]))},house_n={h:len(v) for h,v in HE_RAW.items()},swing=SWING,audit=[dict(r=p['r'],org=p['org'],house=house(p['org']),fe=p['fe'].isoformat(),t=p['t'],sp=p.get('sp'),q=p['q'],cf=p['cf'],dev=p['dev'],res=p['res'],frn=FR_N[p['au']['fr']],disc=p['au']['disc'],und=p['au'].get('und')) for p in sorted(P,key=lambda x:x['fe'],reverse=True)])
 json.dump(out,open('data.json','w'),ensure_ascii=False)
 last=out['national'][-1]; print('today',last)
 for c,r in out['races'].items():

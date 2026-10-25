@@ -335,9 +335,16 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
         <li>政黨委託或政黨相關單位公布 × 0.7</li>
         <li>時間衰減：距調查結束每 40 天權重降為 1/e</li>
         <li>樣本數：√(樣本 ÷ 1000)，介於 0.63–1.41；未載明樣本 × 0.8</li>
-        <li>機構偏差：同縣市前後 45 天內，和其他機構比較「綠營減藍營」差距，平均偏差經收縮後先扣掉（見下表）</li>
+        <li>機構偏差：同縣市前後 45 天內，和其他機構比較「綠營減藍營」差距，平均偏差經收縮後先扣掉（見下表）；方法分越高的民調，在估偏差時占比越大</li>
+        <li>AI 方法評分：逐份查核抽樣框（市話＋手機最佳、只打市話小扣）、有無加權、方法揭露程度、未表態比例、是否公布題目、樣本政黨傾向是否失衡，乘上 0.4–1.15</li>
+        <li>趨勢一致性：和同期其他機構共識差超過 5 點（原始數字與校正後都超過）才降權，最低 × 0.6</li>
       </ul>
       <div id="housetbl" class="small"></div>
+    </div>
+    <div style="grid-column:1/-1">
+      <h3>AI 民調方法查核</h3>
+      <div id="auditsum"></div>
+      <div class="tbl-wrap"><table id="audittbl" class="small"></table></div>
       <p>民調總權重越高，越壓過基準（上限 85%）。歷史上每一天只使用當天已公布的民調。</p>
     </div>
     <div>
@@ -841,6 +848,21 @@ try{ const s=localStorage.getItem('sel'); if(s&&DATA.races[s]) sel=s; }catch(e){
 document.getElementById('days').textContent = EDAYS+' 天';
 document.getElementById('updated').textContent = DATA.today.replaceAll('-','/');
 document.getElementById('foot').textContent = DATA.today.replaceAll('-','/');
+
+(()=>{ const A=(DATA.method||{}).audit||[]; if(!A.length) return;
+  const QS=q=>Math.round(Math.min(100,q/1.1*100)), avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+  const grp=f=>{const x=A.filter(a=>a.dev!=null&&f(a)).map(a=>Math.abs(a.dev)); return x.length?avg(x).toFixed(1):'—';};
+  const fit=A.filter(a=>a.dev!=null&&Math.abs(a.dev)<5&&a.disc==2&&!a.sp).map(a=>a.house+'（'+a.r.replace(/[市縣]$/,'')+'）');
+  const off=A.filter(a=>a.dev!=null&&Math.abs(a.dev)>=8).map(a=>`${a.house}（${a.r.replace(/[市縣]$/,'')} ${a.fe.slice(5).replace('-','/')}，偏${a.dev>0?'綠':'藍'} ${Math.abs(a.dev).toFixed(0)} 點）`);
+  const sw=DATA.method.swing;
+  document.getElementById('auditsum').innerHTML=`<p><b>AI 結論：</b>方法完整揭露（抽樣框、加權、題目都公布）的民調，和同期他家共識平均只差 <b>${grp(a=>a.disc==2)}</b> 點；部分揭露 ${grp(a=>a.disc==1)} 點；完全沒揭露的差到 <b>${grp(a=>a.disc==0)}</b> 點。揭露越完整，越貼近整體趨勢。</p>
+  <p>以目前資料看，最符合整體趨勢的是：電話 CATI、依性別／年齡／區域／教育做多變數加權、最好含手機樣本、非政黨委託、並公布題目與未表態比例的民調，例如 ${[...new Set(fit)].slice(0,6).join('、')||'—'}。只打市話的民調長輩比例高，要靠加權補年輕人，常略為偏藍；網路問卷與 AI 模擬沒有機率抽樣，只當輔助。</p>
+  <p>偏離共識較大的有：${off.join('、')||'無'}。這些不直接丟掉，但會降權並在卡片上標示。整體趨勢是各縣市和 2022 相比平均${sw<0?'往綠':'往藍'}擺盪約 ${Math.abs(sw).toFixed(0)} 點。</p>
+  <p class="small">注意：台灣民調普遍不公布原始問卷與加權前資料，AI 評分只能依公開說明判斷；未表態比例高（3 成以上）時，差距本身就不穩。</p>`;
+  const tg=a=>a.dev==null?'無對照':Math.abs(a.dev)<4?'✓ 符合':(Math.abs(a.dev)<8?'略偏':'偏離')+(a.dev>0?'綠 ':'藍 ')+Math.abs(a.dev).toFixed(1);
+  document.getElementById('audittbl').innerHTML=`<tr><th>縣市</th><th>機構</th><th>調查結束</th><th>方式</th><th class="r">未表態</th><th class="r">AI 方法分</th><th>趨勢一致性</th><th class="r">權重乘數</th></tr>`+
+    A.map(a=>`<tr><td>${esc(a.r)}</td><td>${esc(a.org)}</td><td class="num">${a.fe.slice(5).replace('-','/')}</td><td>${esc(a.frn)}${a.sp?'・政黨委託':''}</td><td class="r num">${a.und!=null?a.und+'%':'—'}</td><td class="r num">${QS(a.q)}</td><td>${tg(a)}</td><td class="r num">×${(a.q*a.cf).toFixed(2)}</td></tr>`).join('');
+})();
 (()=>{ const M=DATA.method||{}; const sw=M.swing; if(sw!=null) document.getElementById('swingv').textContent=(sw<0?'往綠 ':'往藍 ')+Math.abs(sw).toFixed(1)+' 點';
   const h=M.house||{}; document.getElementById('housetbl').innerHTML = Object.keys(h).length? `<table><tr><th>機構</th><th class="r">平均偏差（已收縮）</th><th class="r">比較次數</th></tr>${Object.entries(h).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="r num">${v>0?'偏綠 ':v<0?'偏藍 ':''}${Math.abs(v).toFixed(1)}</td><td class="r num">${(M.house_n||{})[k]||''}</td></tr>`).join('')}</table>`:''; })();
 drawPollTable(); showView(location.hash==='#pinned'?'pinned':'overview');
