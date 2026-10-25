@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <style>
-/* 版面：上方席次計分板 → 地圖＋縣市詳情雙欄 → 時間軸 → 全縣市表 → 方法與資料來源 */
+/* 版面：一眼看懂（席次、得票率、易手）→ 藍綠起伏 → 地圖＋縣市詳情 → 與 2022 相比 → 全縣市表 → 方法 */
 :root{
   --bg:#f3f4f1; --paper:#ffffff; --ink:#1b1f24; --muted:#5d6670; --line:#d9ddd8; --soft:#e9ece7;
   --kmt:#1f4fa3; --dpp:#16834a; --tpp:#13979b; --ind:#7d64a8;
@@ -12,7 +12,7 @@
   --dpp-1:#d6efdf; --dpp-2:#9fd6b4; --dpp-3:#4fae76;
   --tpp-1:#d3eff0; --tpp-2:#93d6d8; --tpp-3:#45b6b9;
   --ind-1:#e6def2; --ind-2:#c3b2de; --ind-3:#9a83c2;
-  --warn:#b4541c; --focus:#c47b00;
+  --warn:#b4541c; --focus:#c47b00; --up:#16834a; --down:#b4541c;
   --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
   --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   --f-num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
@@ -35,97 +35,172 @@
   --warn:#f0965a; --focus:#ffb52e; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;margin:0;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
-.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.25}
 h1{font-size:clamp(26px,4.4vw,40px);font-weight:900;letter-spacing:.02em}
-h2{font-size:21px;font-weight:900}
-h3{font-size:16px;font-weight:600}
+h2{font-size:20px;font-weight:900}
+h3{font-size:15.5px;font-weight:600}
 .num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}
-.eyebrow{font-size:12px;letter-spacing:.12em;color:var(--muted);font-weight:500}
+.small{font-size:12.5px}
+.eyebrow{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:500}
 a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
 a:hover{text-decoration-color:currentColor}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.panel{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:18px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:18px}
+.phead{display:flex;justify-content:space-between;align-items:baseline;gap:8px 14px;flex-wrap:wrap;margin-bottom:10px}
+@media (max-width:520px){.panel{padding:14px}}
 
 header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px;border-bottom:3px double var(--line);padding-bottom:14px}
 .countdown{display:flex;gap:18px;align-items:flex-end}
 .countdown .big{font-family:var(--f-num);font-size:34px;font-weight:600;line-height:1}
-.notice{font-size:13px;color:var(--muted);max-width:68ch}
+.notice{font-size:13px;color:var(--muted);max-width:72ch}
 .notice b{color:var(--warn);font-weight:700}
 
-/* 席次條 */
-.scoreboard{display:flex;flex-direction:column;gap:10px}
-.sb-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:baseline}
-.sb-counts{display:flex;gap:22px;flex-wrap:wrap}
-.sb-counts div{display:flex;flex-direction:column}
-.sb-counts .n{font-family:var(--f-num);font-size:30px;font-weight:600;line-height:1.1}
-.sb-counts .l{font-size:12px;color:var(--muted)}
-.seatbar{display:flex;height:30px;gap:2px;position:relative}
-.seatbar .seat{flex:1;border-radius:2px;cursor:pointer;border:0;padding:0}
-.seatbar .mid{position:absolute;left:50%;top:-6px;bottom:-6px;border-left:2px dashed var(--ink);opacity:.45;pointer-events:none}
+/* 黏在上方的分頁＋日期列 */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px;padding-top:6px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.tabs{display:flex;gap:2px}
+.tab{font:inherit;font-size:15px;font-weight:700;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);padding:8px 12px;cursor:pointer;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.scrub{display:flex;align-items:center;gap:10px;flex:1;min-width:260px;padding-block:4px}
+.scrub input[type=range]{flex:1;min-width:120px;accent-color:var(--ink)}
+.scrub .d{font-family:var(--f-num);font-size:15px;font-weight:600;min-width:4.6em}
+button.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:6px;padding:4px 10px;cursor:pointer;white-space:nowrap}
+button.btn:hover{background:var(--soft)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper)}
+.seg button{font:inherit;font-size:13px;border:0;background:none;color:var(--muted);padding:4px 11px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 
-.main{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:22px;align-items:start}
-@media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}}
+.view{display:flex;flex-direction:column;gap:20px}
+
+/* 一眼看懂 */
+.lede{font-size:clamp(16px,2.1vw,19px);line-height:1.55;margin:0 0 14px;max-width:62em}
+.lede b{font-weight:700}
+.hero{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+@media (min-width:700px){.hero{grid-template-columns:repeat(2,minmax(0,1fr))}.hero .wide{grid-column:1/-1}}
+@media (min-width:1100px){.hero{grid-template-columns:1.15fr 1fr 1fr}.hero .wide{grid-column:auto}}
+.card{border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0;background:var(--paper)}
+.card h3{font-size:14.5px}
+.bigs{display:flex;gap:14px 22px;flex-wrap:wrap;align-items:flex-end}
+.bigs .b{display:flex;flex-direction:column;line-height:1.15}
+.bigs .n{font-family:var(--f-num);font-size:32px;font-weight:600}
+.bigs .l{font-size:12px;color:var(--muted)}
+.chg{font-family:var(--f-num);font-size:12px;font-weight:600;border-radius:4px;padding:0 5px;display:inline-block;margin-top:2px}
+.chg.up{background:color-mix(in srgb,var(--up) 14%,transparent);color:var(--up)}
+.chg.down{background:color-mix(in srgb,var(--down) 14%,transparent);color:var(--down)}
+.chg.flat{background:var(--soft);color:var(--muted)}
+.strip-l{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.strip{display:flex;height:22px;gap:2px;position:relative}
+.strip .seat{flex:1;border-radius:2px;cursor:pointer;border:0;padding:0;min-width:0}
+.strip .mid{position:absolute;left:50%;top:-4px;bottom:-4px;border-left:2px dashed var(--ink);opacity:.4;pointer-events:none}
+.tug{display:flex;height:26px;border-radius:4px;overflow:hidden;position:relative;background:var(--soft)}
+.tug i{display:block;height:100%}
+.tug .half{position:absolute;left:50%;top:0;bottom:0;border-left:2px solid var(--paper)}
+.tug-l{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px}
+.tug-l .v{font-family:var(--f-num);font-weight:600;font-size:20px}
+.flips{display:flex;flex-wrap:wrap;gap:6px}
+.flip{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:2px 10px 2px 4px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.flip .arr{display:inline-flex;align-items:center;gap:2px;font-size:11px}
+.flip .arr i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.movers{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 14px;font-size:13px}
+.movers b{font-weight:700}
+
+/* 起伏圖 */
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart text{font-family:var(--f-num);font-size:11px;fill:var(--muted)}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .today{stroke:var(--ink);stroke-dasharray:2 3;opacity:.6}
+.keyrow{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12.5px;color:var(--muted)}
+.keyrow .k{display:inline-flex;align-items:center;gap:6px}
+.keyrow .ln{width:18px;height:0;border-top:2.5px solid}
+.keyrow .ln.dash{border-top-style:dashed;border-top-width:2px}
+
+/* 地圖＋詳情 */
+.main{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
+@media (min-width:960px){.main{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.mapbox{position:sticky;top:64px}}
 .mapbox{position:relative}
-#map{width:100%;height:auto;display:block;max-height:78vh}
+#map{width:100%;height:auto;display:block;max-height:76vh}
+@media (max-width:600px){#map{max-height:62vh}}
 #map path.cty{stroke:var(--paper);stroke-width:.9;cursor:pointer;transition:fill .35s}
 #map path.cty:hover{stroke:var(--ink);stroke-width:1.4}
-#map path.cty.sel{stroke:var(--ink);stroke-width:2.2}
+#map path.cty.flip{stroke:var(--focus);stroke-width:2;stroke-dasharray:4 2}
+#map path.cty.sel{stroke:var(--ink);stroke-width:2.4;stroke-dasharray:none}
 #map .inset{fill:none;stroke:var(--line);stroke-dasharray:3 3}
 #map text{font-family:var(--f-body);font-size:10.5px;fill:var(--ink);pointer-events:none;paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
 #map text.insetlab{font-size:10px;fill:var(--muted);stroke:none}
-.legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);margin-top:8px}
 .legend .sw{display:inline-flex;gap:2px;vertical-align:middle;margin-right:5px}
-.legend .sw i{width:14px;height:12px;display:inline-block;border-radius:2px}
-.tip{position:absolute;pointer-events:none;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:6px 9px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.12);white-space:nowrap}
+.legend .sw i{width:13px;height:11px;display:inline-block;border-radius:2px}
+.tip{position:absolute;pointer-events:none;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:6px 9px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.12);white-space:nowrap;z-index:3}
 
-/* 縣市詳情 */
 .detail{display:flex;flex-direction:column;gap:14px}
 .dhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
-.pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;font-weight:700;color:#fff}
+.pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;font-weight:700;color:#fff;white-space:nowrap}
 .rating{font-size:13px;color:var(--muted)}
-.cands{display:flex;flex-direction:column;gap:8px}
-.cand{display:grid;grid-template-columns:7.5em minmax(0,1fr) 4.4em;gap:10px;align-items:center}
-.cand .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cand .nm small{font-weight:400;color:var(--muted);margin-left:4px}
-.cand .bar{height:14px;background:var(--soft);border-radius:2px;overflow:hidden}
-.cand .bar i{display:block;height:100%;transition:width .35s}
-.cand .pct{text-align:right;font-family:var(--f-num)}
+.final{border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:10px;background:color-mix(in srgb,var(--soft) 45%,var(--paper))}
+.cands{display:flex;flex-direction:column;gap:9px}
+.cand{display:grid;grid-template-columns:6.8em minmax(0,1fr) 5.6em;gap:10px;align-items:center}
+.cand .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25}
+.cand .nm small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+.cand .bar{height:16px;background:var(--soft);border-radius:2px;position:relative}
+.cand .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;transition:width .35s}
+.cand .bar u{position:absolute;top:50%;height:0;border-top:1.5px solid var(--ink);opacity:.55}
+.cand .bar u::before,.cand .bar u::after{content:"";position:absolute;top:-5px;height:8px;border-left:1.5px solid var(--ink)}
+.cand .bar u::after{right:0}
+.cand .pct{text-align:right;font-family:var(--f-num);line-height:1.2}
+.cand .pct small{display:block;color:var(--muted);font-size:11.5px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px 14px;font-size:13px}
+.facts .v{font-family:var(--f-num);font-size:17px;font-weight:600;display:block;line-height:1.2}
+.vs22{font-size:13.5px;border-top:1px dashed var(--line);padding-top:8px}
 .breakdown{font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 16px}
-.chart svg{width:100%;height:auto;display:block}
-.chart text{font-family:var(--f-num);font-size:10px;fill:var(--muted)}
-.chart .grid{stroke:var(--line);stroke-width:1}
-.chart .today{stroke:var(--ink);stroke-dasharray:2 3;opacity:.6}
 .trendgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 16px;font-size:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:10px}
 .trendgrid>div{min-width:0}
 .events{list-style:none;margin:0;padding:0;font-size:13px;display:flex;flex-direction:column;gap:4px;max-height:180px;overflow:auto}
 .events li{display:grid;grid-template-columns:3.6em 1.4em minmax(0,1fr);gap:6px}
 .events .pos{color:var(--dpp)} .events .neg{color:var(--warn)}
+details.more{border-top:1px solid var(--line);padding-top:10px}
+details.more summary{cursor:pointer;font-weight:700;font-size:14px}
+details.more[open] summary{margin-bottom:10px}
+details.more .inner{display:flex;flex-direction:column;gap:14px}
+
+/* 與 2022 相比：啞鈴圖（HTML 百分比定位，任何寬度都清楚） */
+.db{display:flex;flex-direction:column}
+.db-row{min-height:40px;display:grid;grid-template-columns:4.6em minmax(0,1fr) 6.4em;gap:10px;align-items:center;padding:5px 4px;border-radius:4px;cursor:pointer;border:0;background:none;font:inherit;color:inherit;text-align:left;width:100%}
+.db-row:hover,.db-row.sel{background:var(--soft)}
+.db-name{font-weight:700;font-size:14px;white-space:nowrap}
+.db-track{position:relative;height:22px}
+.db-track .z{position:absolute;left:50%;top:-5px;bottom:-5px;border-left:1.5px solid var(--muted);opacity:.5}
+.db-track .g{position:absolute;top:0;bottom:0;border-left:1px dashed var(--line)}
+.db-track .ln{position:absolute;top:50%;height:4px;margin-top:-2px;border-radius:2px;opacity:.55}
+.db-track .o,.db-track .f{position:absolute;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%}
+.db-track .o{border:2px solid var(--muted);background:var(--paper)}
+.db-track .f{border:2px solid var(--paper);box-shadow:0 0 0 1px var(--ink)}
+.db-val{font-family:var(--f-num);font-size:12.5px;text-align:right;white-space:nowrap}
+.db-val .t{display:block;font-family:var(--f-body);font-size:11px}
+.db-axis{display:grid;grid-template-columns:4.6em minmax(0,1fr) 6.4em;gap:10px;font-size:11.5px;color:var(--muted);padding:0 4px 6px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.db-axis .ax{position:relative;height:30px}
+.db-axis .ax span{position:absolute;transform:translateX(-50%);font-family:var(--f-num);bottom:0}
+.db-axis .ax .side{font-family:var(--f-body);top:0;bottom:auto;transform:none;white-space:nowrap}
+.db-cols{display:grid;grid-template-columns:minmax(0,1fr);gap:0 28px}
+@media (min-width:1100px){.db-cols{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media (max-width:1099px){.db+.db .db-axis{display:none}}
+@media (max-width:440px){.db-row,.db-axis{grid-template-columns:3.6em minmax(0,1fr) 5.4em;gap:6px}.db-name{font-size:13px}}
+
 .tbl-wrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-weight:500;color:var(--muted);font-size:12px;white-space:nowrap}
 td.r,th.r{text-align:right}
+td{white-space:nowrap}
 tr.click{cursor:pointer} tr.click:hover{background:var(--soft)}
 .tag{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:3px;padding:0 5px;color:var(--muted);margin-left:4px;white-space:nowrap}
 .tag.warn{border-color:var(--warn);color:var(--warn)}
+.tag.flipt{border-color:var(--focus);color:var(--focus)}
 
-/* 時間軸 */
-.timeline{display:flex;flex-direction:column;gap:10px}
-.tl-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.tl-row input[type=range]{flex:1;min-width:180px;accent-color:var(--ink)}
-button.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:4px;padding:5px 12px;cursor:pointer}
-button.btn:hover{background:var(--soft)}
-.tl-date{font-family:var(--f-num);font-size:18px;font-weight:600;min-width:7.5em}
-
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;padding-top:6px}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-.tab{font:inherit;font-size:15px;font-weight:700;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);padding:8px 14px;cursor:pointer;margin-bottom:-1px}
-.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
-.view{display:flex;flex-direction:column;gap:22px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 11px 4px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .chip .dot{width:9px;height:9px;border-radius:50%}
@@ -151,7 +226,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
     <span class="eyebrow">2026 年 11 月 28 日・直轄市長及縣市長選舉</span>
     <h1>2026 縣市長選情預測</h1>
-    <p class="notice" style="margin:0">綜合 6/1 以來公開民調、AI 結構基準與每日網路聲量的滾動預測。<b>網路聲量為模型依新聞事件估計之指數，並非實際抓取的社群數據。</b>這是預測，不是選舉結果。</p>
+    <p class="notice" style="margin:0">綜合 6/1 以來公開民調、AI 結構基準與每日網路聲量的滾動預測，並以 2022 年各縣市投票率推估最終票數。<b>網路聲量為模型依新聞事件估計之指數，並非實際抓取的社群數據。</b>這是預測，不是選舉結果。</p>
   </div>
   <div class="countdown">
     <div><div class="eyebrow">資料更新</div><div class="num" id="updated" style="font-size:15px"></div></div>
@@ -159,46 +234,87 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   </div>
 </header>
 
-<nav class="tabs" aria-label="頁面">
-  <button type="button" class="tab" id="tab-overview" data-view="overview">總覽</button>
-  <button type="button" class="tab" id="tab-pinned" data-view="pinned">關注縣市 <span class="num" id="pincount"></span></button>
+<nav class="bar" aria-label="頁面與日期">
+  <div class="tabs">
+    <button type="button" class="tab" id="tab-overview" data-view="overview">總覽</button>
+    <button type="button" class="tab" id="tab-pinned" data-view="pinned">關注縣市 <span class="num" id="pincount"></span></button>
+  </div>
+  <div class="scrub">
+    <button class="btn" id="play" type="button" aria-label="播放 6/1 至今">▶ 播放</button>
+    <span class="d" id="tldate"></span>
+    <input type="range" id="slider" min="0" max="0" value="0" aria-label="選擇日期">
+  </div>
 </nav>
 
 <div id="view-overview" class="view">
 
-<section class="panel scoreboard" aria-label="全國席次">
-  <div class="sb-top">
-    <div class="sb-counts" id="counts"></div>
-    <div class="muted" style="font-size:13px" id="sbnote"></div>
+<section class="panel" aria-label="一眼看懂">
+  <p class="lede" id="lede"></p>
+  <div class="hero">
+    <div class="card">
+      <h3>縣市長席次・2026 預測 vs 2022 實際</h3>
+      <div class="bigs" id="seatbig"></div>
+      <div>
+        <div class="strip-l"><span>2026 預測</span><span>過半 12 席</span></div>
+        <div class="strip" id="strip26"><span class="mid"></span></div>
+      </div>
+      <div>
+        <div class="strip-l"><span>2022 實際</span></div>
+        <div class="strip" id="strip22"><span class="mid"></span></div>
+      </div>
+      <div class="muted small">每格一個縣市，顏色越深越穩。點格子看該縣市。</div>
+    </div>
+    <div class="card">
+      <h3>22 縣市合計得票率・藍營 vs 綠營</h3>
+      <div id="tug"></div>
+    </div>
+    <div class="card wide">
+      <h3>和 2022 比，誰在消、誰在長</h3>
+      <div id="flips"></div>
+      <div id="movers"></div>
+    </div>
   </div>
-  <div class="seatbar" id="seatbar"><span class="mid" title="過半 12 席"></span></div>
-  <div class="muted" style="font-size:12px">每格代表一個縣市，依領先者政黨與勝率深淺排列；虛線為 22 席的一半。點任一格查看該縣市。</div>
 </section>
 
-<section class="panel timeline" aria-label="時間軸">
-  <div class="tl-row">
-    <button class="btn" id="play" type="button">▶ 播放 6/1 至今</button>
-    <span class="tl-date" id="tldate"></span>
-    <input type="range" id="slider" min="0" max="0" value="0" aria-label="選擇日期">
+<section class="panel" aria-label="藍綠起伏">
+  <div class="phead">
+    <h2>藍綠起伏</h2>
+    <div class="seg" role="group" aria-label="切換指標">
+      <button type="button" data-nat="seat" aria-pressed="true">期望席次</button>
+      <button type="button" data-nat="vote" aria-pressed="false">合計得票率</button>
+    </div>
   </div>
   <div class="chart" id="natchart"></div>
 </section>
 
 <div class="main">
   <section class="panel mapbox" aria-label="台灣地圖">
-    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap">
-      <h2>各縣市領先政黨</h2><span class="muted num" id="mapdate" style="font-size:13px"></span>
+    <div class="phead">
+      <h2 id="maptitle">各縣市領先陣營</h2>
+      <div class="seg" role="group" aria-label="地圖模式">
+        <button type="button" data-mode="now" aria-pressed="true">2026 預測</button>
+        <button type="button" data-mode="prev" aria-pressed="false">2022 結果</button>
+        <button type="button" data-mode="swing" aria-pressed="false">消長</button>
+      </div>
     </div>
-    <svg id="map" role="img" aria-label="台灣各縣市預測領先政黨地圖"></svg>
+    <svg id="map" role="img" aria-label="台灣各縣市地圖"></svg>
     <div class="tip" id="tip" hidden></div>
     <div class="legend" id="legend"></div>
   </section>
   <section class="panel detail" id="detail" aria-live="polite"></section>
 </div>
 
+<section class="panel" aria-label="與 2022 相比">
+  <div class="phead">
+    <h2>與 2022 相比，各縣市往哪邊移動</h2>
+    <span class="muted small">空心圓＝2022 實際差距，實心圓＝2026 預測差距。線越長，消長越大。</span>
+  </div>
+  <div id="dumbbell"></div>
+</section>
+
 <section class="panel" aria-label="全部縣市">
-  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px">
-    <h2>22 縣市一覽</h2><span class="muted" style="font-size:13px">依差距由小到大排序，越上面越膠著。點列查看詳情。</span>
+  <div class="phead">
+    <h2>22 縣市一覽</h2><span class="muted small">依差距由小到大排序，越上面越膠著。點列查看詳情。</span>
   </div>
   <div class="tbl-wrap"><table id="alltbl"></table></div>
 </section>
@@ -208,7 +324,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   <div class="method">
     <div>
       <h3>1. AI 結構基準</h3>
-      <p>每個縣市先給一個基準得票率，由 Claude 依 2022 年選舉結果、政黨基本盤（含遠見 3–4 月 22 縣市政黨支持調查）、現任優勢與選情評論綜合判斷。這是判斷值，不是調查數據；沒有 9 月後民調的 11 個縣市，預測主要就是這個基準。</p>
+      <p>每個縣市先給一個基準得票率，由 Claude 依 2022 年選舉結果、政黨基本盤（含遠見 3–4 月 22 縣市政黨支持調查）、現任優勢與選情評論綜合判斷。這是判斷值，不是調查數據；沒有民調的縣市，預測主要就是這個基準。</p>
     </div>
     <div>
       <h3>2. 民調加權平均</h3>
@@ -232,6 +348,20 @@ s₀ = 6（已有民調）或 8.5（沒有民調）
 勝率 = Φ(領先差距 ÷ σ)</div>
       <p>距投票日越遠、民調越少，不確定性越大。勝率只比較前兩名。台灣民調過去常有數個百分點的系統性誤差，實際不確定性可能更大。</p>
     </div>
+    <div>
+      <h3>5. 投票率與最終票數</h3>
+      <div class="formula">投票率 = 2022 投票率 + 競爭加成
+  （勝率 &lt; 65% 加 2 點，&lt; 85% 加 1 點）
+選舉人數 = 2022 選舉人數 × 1.005
+有效票 = 選舉人數 × 投票率 × 98.5%
+得票數 = 有效票 × 預測得票率
+區間 = 預測得票率 ± 0.64σ</div>
+      <p>以 2022 各縣市實際投票率為基礎，越膠著的選區加一點動員效應。嘉義市 2022 因延期投票只有 44%，改用 62% 為基準。區間約涵蓋一半的可能結果。<b style="color:var(--warn)">這是依歷史投票率的規則推估，不是大數據模型</b>；本頁沒有接上投票意向或人口流動等即時資料。</p>
+    </div>
+    <div>
+      <h3>6. 藍營、綠營與 2022 比較</h3>
+      <p>綠營＝民進黨。藍營＝國民黨，加上藍白合推薦的張啓楷（嘉義市）與吳品叡（嘉義縣）。其餘為無黨籍或其他。「差距」是在野最高票減民進黨最高票，2022 用同樣算法；花蓮、金門、連江缺少民進黨或 2022 對照，不畫消長。2022 數字取自中選會公告的報導整理，台南與全國合計為約略值。</p>
+    </div>
   </div>
   <h3 style="margin:18px 0 8px">納入的民調（5 月起公布）</h3>
   <div class="tbl-wrap"><table id="polltbl"></table></div>
@@ -241,8 +371,8 @@ s₀ = 6（已有民調）或 8.5（沒有民調）
 
 <div id="view-pinned" class="view" hidden>
   <section class="panel" aria-label="選擇關注縣市">
-    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-      <h2>關注縣市</h2><span class="muted" style="font-size:13px" id="pinnote"></span>
+    <div class="phead">
+      <h2>關注縣市</h2><span class="muted small" id="pinnote"></span>
     </div>
     <div class="chips" id="chips"></div>
   </section>
@@ -250,28 +380,148 @@ s₀ = 6（已有民調）或 8.5（沒有民調）
 </div>
 
 <footer>
-  候選人名單依中選會 2026/9/4 登記結果（中央社、公視整理）。民調數字取自各媒體報導，請點連結查看原始報導與抽樣說明。本頁未收錄的民調或錯誤歡迎指正。模型與資料截至 <span class="num" id="foot"></span>。
+  候選人名單依中選會 2026/9/4 登記結果（中央社、公視整理）。2022 結果與投票率依中選會公告之報導整理。民調數字取自各媒體報導，請點連結查看原始報導與抽樣說明。本頁未收錄的民調或錯誤歡迎指正。模型與資料截至 <span class="num" id="foot"></span>。
 </footer>
 </div>
 
 <script>
 const DATA = __DATA__;
 const SHAPES = __SHAPES__;
-const PARTY = {K:'國民黨',D:'民進黨',T:'民眾黨',I:'無黨籍／其他'};
+const PARTY = {K:'國民黨',D:'民進黨',T:'民眾黨',I:'無黨籍'};
+const PSHORT = {K:'國',D:'民',T:'眾',I:'無'};
 const PVAR = {K:'kmt',D:'dpp',T:'tpp',I:'ind'};
-const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const CAMP = {B:'藍營',G:'綠營',O:'其他'};
 const counties = Object.keys(DATA.races);
 const N = DATA.national.length;
-const S0 = DATA.start.slice(5).replace(/^0/,'').replace('-0','/').replace('-','/');
-let day = N-1, sel = '台北市', timer = null;
+const S0 = fmtD(DATA.start);
+const EDAYS = Math.round((new Date(DATA.eday)-new Date(DATA.today))/864e5);
+let day = N-1, sel = '台北市', timer = null, mapMode = 'now', natMode = 'seat';
 
-function partyOf(c, name){ return DATA.races[c].cands.find(x=>x.n===name).p; }
-function tier(wp){ return wp<0.6?1: wp<0.8?2: wp<0.95?3:4; }
-function tierName(wp){ return ['','膠著','傾向','可能','穩定'][tier(wp)]; }
-function fillFor(p, wp){ const t=tier(wp); const v=PVAR[p]; return t===4? `var(--${v})` : `var(--${v}-${t})`; }
 function fmtD(iso){ const [y,m,d]=iso.split('-'); return `${+m}/${+d}`; }
 function pct(x){ return (Math.round(x*10)/10).toFixed(1); }
+function sgn(x,d=1){ const v=Math.round(x*10**d)/10**d; return (v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(d); }
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function wan(v){ return v>=10000? (v/10000).toFixed(v>=1e6?0:1)+' 萬' : Math.round(v/100)*100+''; }
+function cand(c,name){ return DATA.races[c].cands.find(x=>x.n===name); }
+function partyOf(c,name){ return cand(c,name).p; }
+function campOf(c,name){ const k=cand(c,name); return k.camp==='X'?'O':k.camp; }
+function camp22(p){ return p==='K'?'B':p==='D'?'G':'O'; }
+function tier(wp){ return wp<0.6?1: wp<0.8?2: wp<0.95?3:4; }
+function tierName(wp){ return ['','膠著','傾向','可能','穩定'][tier(wp)]; }
+function fillT(v,t){ return t>=4? `var(--${v})` : `var(--${v}-${t})`; }
+function fillFor(p,wp){ return fillT(PVAR[p],tier(wp)); }
+function chg(d,unit='',dec=1){ // 正值綠底、負值橘底；dec 為小數位數
+  const v=Math.round(d*10**dec)/10**dec; const cls = v===0?'flat':(v>0?'up':'down');
+  return `<span class="chg ${cls}">${v===0?'持平':sgn(v,dec)+unit}</span>`; }
+function rank(s){ return Object.keys(s.s).filter(n=>n!=='其他').sort((a,b)=>s.s[b]-s.s[a]); }
+function second(c,i){ return rank(DATA.races[c].series[i])[1]; }
+function sigma(c,i){ const r=DATA.races[c], d=r.series[i].d;
+  const s0 = r.polls.some(p=>p.rel<=d)? 6 : 8.5;
+  const left = Math.round((new Date(DATA.eday)-new Date(d))/864e5);
+  return Math.sqrt(s0*s0+0.12*left); }
+// 陣營勝率：領先者勝率 wp，次位 1−wp
+function campWin(c,i,cp){ const s=DATA.races[c].series[i]; let p=0;
+  if (campOf(c,s.lead)===cp) p+=s.wp;
+  const b=second(c,i); if (b && campOf(c,b)===cp) p+=1-s.wp; return p; }
+const EB=[], EG=[];
+for (let i=0;i<N;i++){ let b=0,g=0; for(const c of counties){ b+=campWin(c,i,'B'); g+=campWin(c,i,'G'); } EB.push(b); EG.push(g); }
+const VALID = counties.reduce((a,c)=>a+DATA.races[c].turnout.valid,0);
+const CAST26 = counties.reduce((a,c)=>{const t=DATA.races[c].turnout; return a+t.electorate*t.t/100;},0);
+const CAST22 = counties.reduce((a,c)=>{const p=DATA.races[c].prev; return a+p.e*p.t/100;},0);
+const E26 = counties.reduce((a,c)=>a+DATA.races[c].turnout.electorate,0);
+const E22 = counties.reduce((a,c)=>a+DATA.races[c].prev.e,0);
+const SEATS22 = {B:0,G:0,O:0}; counties.forEach(c=>SEATS22[camp22(DATA.races[c].prev.w[1])]++);
+
+function leadInfo(c,i){ const r=DATA.races[c], s=r.series[i]; const cp=campOf(c,s.lead), p=partyOf(c,s.lead);
+  return {c,s,cp,p,v:PVAR[p],wp:s.wp}; }
+function prevInfo(c){ const pv=DATA.races[c].prev; const m=pv.w[2]-pv.r[2];
+  const t = m<5?1: m<10?2: m<20?3:4; return {c,cp:camp22(pv.w[1]),p:pv.w[1],v:PVAR[pv.w[1]],t,m}; }
+function swing(c,i){ const r=DATA.races[c], og=r.series[i].og, m=r.prev.m; return (og==null||m==null)? null : og-m; }
+// 在野最高票者的陣營（決定「往藍」還是「往在野」）
+function oppCamp(c,i){ const s=DATA.races[c].series[i]; const o=rank(s).find(n=>campOf(c,n)!=='G'); return o? campOf(c,o):'B'; }
+function swingWord(c,i,v){ return v<0? '往綠' : (oppCamp(c,i)==='B'?'往藍':'往在野'); }
+function flipped(c,i){ return leadInfo(c,i).cp !== prevInfo(c).cp; }
+function campColor(cp,p){ return cp==='B'?'var(--kmt)':cp==='G'?'var(--dpp)':`var(--${PVAR[p]||'ind'})`; }
+
+// ===== 一眼看懂 =====
+function seatsNow(i){ const o={B:0,G:0,O:0}; counties.forEach(c=>o[leadInfo(c,i).cp]++); return o; }
+function drawHero(){
+  const st=seatsNow(day), nat=DATA.national[day], other=Math.max(0,100-nat.vb-nat.vg);
+  const pk=DATA.prev_national.K, pd=DATA.prev_national.D;
+  const fl=counties.filter(c=>flipped(c,day));
+  const g2b=fl.filter(c=>prevInfo(c).cp==='G'&&leadInfo(c,day).cp==='B').length, b2g=fl.filter(c=>prevInfo(c).cp==='B'&&leadInfo(c,day).cp==='G').length;
+  const lead = nat.vg>nat.vb? `綠營以 <b class="num">${pct(nat.vg)}%</b> 對 <b class="num">${pct(nat.vb)}%</b> 小幅領先` : `藍營以 <b class="num">${pct(nat.vb)}%</b> 對 <b class="num">${pct(nat.vg)}%</b> 領先`;
+  document.getElementById('lede').innerHTML =
+    `以 <b class="num">${fmtD(nat.d)}</b> 的預測，<b style="color:var(--dpp)">綠營可望拿下 ${st.G} 席</b>（2022 為 ${SEATS22.G} 席），<b style="color:var(--kmt)">藍營 ${st.B} 席</b>（2022 為 ${SEATS22.B} 席）。`+
+    `${fl.length? `共 ${fl.length} 個縣市可能易手，其中 ${b2g} 個由藍轉綠${g2b?`、${g2b} 個由綠轉藍`:''}。`:'目前沒有縣市易手。'}22 縣市合計得票率${lead}，2022 是藍 ${pct(pk)}% 對綠 ${pct(pd)}%。`;
+  const big=(cp,lab,col)=>`<div class="b"><span class="n" style="color:${col}">${st[cp]}</span><span class="l">${lab}・2022 ${SEATS22[cp]} 席</span>${chg(st[cp]-SEATS22[cp],' 席',0)}</div>`;
+  document.getElementById('seatbig').innerHTML = big('B','藍營','var(--kmt)')+big('G','綠營','var(--dpp)')+big('O','其他','var(--ind)')+
+    `<div class="b"><span class="l">期望席次</span><span class="num" style="font-size:14px"><span style="color:var(--kmt)">藍 ${EB[day].toFixed(1)}</span>・<span style="color:var(--dpp)">綠 ${EG[day].toFixed(1)}</span></span></div>`;
+  const order={B:0,O:1,G:2};
+  const r26=counties.map(c=>leadInfo(c,day)).sort((a,b)=>order[a.cp]-order[b.cp]||(a.cp==='G'?a.wp-b.wp:b.wp-a.wp));
+  const r22=counties.map(prevInfo).sort((a,b)=>order[a.cp]-order[b.cp]||(a.cp==='G'?a.m-b.m:b.m-a.m));
+  fillStrip('strip26', r26.map(o=>({c:o.c,bg:fillFor(o.p,o.wp),t:`${o.c}：${esc(o.s.lead)}（${PARTY[o.p]}）${tierName(o.wp)}，勝率 ${Math.round(o.wp*100)}%`})));
+  fillStrip('strip22', r22.map(o=>{const pv=DATA.races[o.c].prev; return {c:o.c,bg:fillT(o.v,o.t),t:`${o.c}：2022 ${pv.w[0]}（${PARTY[o.p]}）當選，贏 ${pct(o.m)} 點`};}));
+  const tug=(b,o,g,lab)=>`<div><div class="strip-l"><span>${lab}</span></div><div class="tug"><i style="width:${b}%;background:var(--kmt)"></i><i style="width:${o}%;background:var(--soft)"></i><i style="width:${g}%;background:var(--dpp)"></i><span class="half"></span></div></div>`;
+  document.getElementById('tug').innerHTML =
+    `<div class="tug-l"><span><span class="v" style="color:var(--kmt)">${pct(nat.vb)}%</span> 藍營 ${chg(nat.vb-pk,' 點')}</span><span style="text-align:right">綠營 <span class="v" style="color:var(--dpp)">${pct(nat.vg)}%</span> ${chg(nat.vg-pd,' 點')}</span></div>`+
+    tug(nat.vb,other,nat.vg,'2026 預測')+tug(pk,100-pk-pd,pd,'2022 實際（國民黨 vs 民進黨）')+
+    `<div class="facts"><div><span class="muted small">預估總投票數</span><span class="v">${wan(CAST26)}</span><span class="muted small">2022 約 ${wan(CAST22)}</span></div>`+
+    `<div><span class="muted small">預估投票率</span><span class="v">${pct(CAST26/E26*100)}%</span><span class="muted small">2022 ${pct(CAST22/E22*100)}%</span></div>`+
+    `<div><span class="muted small">藍營預估得票</span><span class="v" style="color:var(--kmt)">${wan(VALID*nat.vb/100)}</span></div>`+
+    `<div><span class="muted small">綠營預估得票</span><span class="v" style="color:var(--dpp)">${wan(VALID*nat.vg/100)}</span></div></div>`;
+  const dot=(cp,p)=>`<i style="background:${campColor(cp,p)}"></i>`;
+  document.getElementById('flips').innerHTML = fl.length? `<div class="muted small" style="margin-bottom:6px">可能易手（${fl.length}）</div><div class="flips">${fl.map(c=>{const a=prevInfo(c),b=leadInfo(c,day);
+      return `<button type="button" class="flip" data-c="${c}" title="${c}：2022 ${CAMP[a.cp]} → 2026 ${CAMP[b.cp]}（勝率 ${Math.round(b.wp*100)}%）"><span class="arr">${dot(a.cp,a.p)}→${dot(b.cp,b.p)}</span>${c}<span class="muted num small">${Math.round(b.wp*100)}%</span></button>`;}).join('')}</div>` : '<div class="muted small">目前沒有縣市易手。</div>';
+  const sw=counties.map(c=>({c,v:swing(c,day)})).filter(o=>o.v!=null);
+  const tg=[...sw].sort((a,b)=>a.v-b.v).slice(0,3), tb=[...sw].sort((a,b)=>b.v-a.v).filter(o=>o.v>0).slice(0,3);
+  document.getElementById('movers').innerHTML = `<div class="movers"><div><div class="muted small">差距往綠移最多</div>${tg.map(o=>`<div><b>${o.c}</b> <span class="num" style="color:var(--dpp)">${pct(-o.v)}</span> 點</div>`).join('')}</div><div><div class="muted small">差距往藍／在野移最多</div>${tb.length?tb.map(o=>`<div><b>${o.c}</b> <span class="num" style="color:var(--kmt)">${pct(o.v)}</span> 點</div>`).join(''):'<div class="muted">沒有縣市往藍移動</div>'}</div></div>`;
+  document.querySelectorAll('#flips .flip').forEach(b=>b.addEventListener('click',()=>goDetail(b.dataset.c)));
+}
+function fillStrip(id, items){
+  const bar=document.getElementById(id); bar.querySelectorAll('.seat').forEach(x=>x.remove());
+  const mid=bar.querySelector('.mid');
+  items.forEach(it=>{ const b=document.createElement('button'); b.className='seat'; b.type='button'; b.style.background=it.bg; b.title=it.t; b.setAttribute('aria-label',it.t);
+    b.addEventListener('click',()=>goDetail(it.c)); bar.insertBefore(b,mid); });
+}
+
+// ===== 藍綠起伏 =====
+function cw(el,fallback){ const w=el? el.clientWidth:0; return w>0? w : fallback; }
+function monthTicks(x,H){ let g=''; DATA.national.forEach((n,i)=>{ if(n.d.endsWith('-01')) g+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle">${+n.d.slice(5,7)}月</text>`; }); return g; }
+function drawNat(){
+  const el=document.getElementById('natchart');
+  const W=Math.max(300,cw(el,1100)), H=W<560?210:240, L=34, R=W<560?66:80, T=14, B=24;
+  const seat = natMode==='seat';
+  const sB = seat? EB : DATA.national.map(n=>n.vb), sG = seat? EG : DATA.national.map(n=>n.vg);
+  const ref = seat? {B:SEATS22.B,G:SEATS22.G} : {B:DATA.prev_national.K,G:DATA.prev_national.D};
+  const all=[...sB,...sG,ref.B,ref.G];
+  const lo = seat? 0 : Math.floor((Math.min(...all)-2)/5)*5, hi = seat? 16 : Math.ceil((Math.max(...all)+2)/5)*5;
+  const step = seat? 4 : 5;
+  const x=i=>L+(W-L-R)*i/(N-1), y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo));
+  let g='';
+  for (let v=lo; v<=hi; v+=step) g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"></line><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}${seat?'':'%'}</text>`;
+  if (seat) g+=`<line x1="${L}" x2="${W-R}" y1="${y(11.5)}" y2="${y(11.5)}" stroke="var(--ink)" stroke-dasharray="1 4" opacity=".5"></line><text x="${(L+W-R)/2}" y="${y(11.5)-5}" text-anchor="middle">過半 12</text>`;
+  g+=monthTicks(x,H);
+  for (const [k,v] of [['B','kmt'],['G','dpp']]){
+    g+=`<line x1="${L}" x2="${W-R}" y1="${y(ref[k])}" y2="${y(ref[k])}" stroke="var(--${v})" stroke-dasharray="6 4" stroke-width="1.5" opacity=".7"></line>`;
+    g+=`<text x="${L+4}" y="${y(ref[k])-5}" style="fill:var(--${v})">2022 ${seat?ref[k]:pct(ref[k])+'%'}</text>`;
+  }
+  for (const [s,v] of [[sB,'kmt'],[sG,'dpp']]){
+    g+=`<polyline points="${s.map((n,i)=>`${x(i).toFixed(1)},${y(n).toFixed(1)}`).join(' ')}" fill="none" stroke="var(--${v})" stroke-width="2.6" stroke-linejoin="round"></polyline>`;
+    g+=`<circle cx="${x(day)}" cy="${y(s[day])}" r="5" fill="var(--${v})" stroke="var(--paper)" stroke-width="2"></circle>`;
+  }
+  // 當日數值標籤（避免重疊）
+  let yb=y(sB[day]), yg=y(sG[day]); if (Math.abs(yb-yg)<14){ const m=(yb+yg)/2; if(yb<yg){yb=m-7;yg=m+7;} else {yb=m+7;yg=m-7;} }
+  const lx = x(day)+9, an = 'start';
+  g+=`<text x="${lx}" y="${yb+4}" text-anchor="${an}" style="fill:var(--kmt);font-weight:600;font-size:12px">藍 ${seat?sB[day].toFixed(1):pct(sB[day])+'%'}</text>`;
+  g+=`<text x="${lx}" y="${yg+4}" text-anchor="${an}" style="fill:var(--dpp);font-weight:600;font-size:12px">綠 ${seat?sG[day].toFixed(1):pct(sG[day])+'%'}</text>`;
+  g+=`<line class="today" x1="${x(day)}" x2="${x(day)}" y1="${T}" y2="${H-B}"></line>`;
+  const cB=sB[day]-sB[0], cG=sG[day]-sG[0];
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="藍綠${seat?'期望席次':'合計得票率'}走勢">${g}</svg>
+    <div class="keyrow" style="margin-top:6px"><span class="k"><span class="ln" style="border-color:var(--kmt)"></span>藍營</span><span class="k"><span class="ln" style="border-color:var(--dpp)"></span>綠營</span><span class="k"><span class="ln dash" style="border-color:var(--muted)"></span>2022 實際</span>
+    <span>${S0} 到 ${fmtD(DATA.national[day].d)}：藍 ${chg(cB,seat?' 席':' 點')} 綠 ${chg(cG,seat?' 席':' 點')}</span></div>
+    <div class="muted small" style="margin-top:4px">${seat?'期望席次＝各縣市該陣營的勝率加總，比單純數領先縣市更能看出微幅起伏。':'合計得票率＝各縣市預估有效票 × 預測得票率，加總 22 縣市。2022 線為國民黨與民進黨合計得票率（約略值）。'}</div>`;
+}
 
 // ===== 地圖 =====
 const map = document.getElementById('map');
@@ -281,7 +531,6 @@ for (const [n,[x0,y0,x1,y1]] of Object.entries(SHAPES.insets)){
   mhtml += `<rect class="inset" x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" rx="4"></rect><text class="insetlab" x="${x0+6}" y="${y0+14}">${n}</text>`;
 }
 for (const n of counties){ mhtml += `<path class="cty" data-c="${n}" d="${SHAPES.shapes[n]}" tabindex="0" role="button" aria-label="${n}"></path>`; }
-const small = new Set(['台北市','基隆市','新竹市','嘉義市']);
 for (const n of counties){
   if (SHAPES.insets[n]) continue;
   let [x,y] = SHAPES.labels[n];
@@ -291,76 +540,85 @@ for (const n of counties){
 }
 map.innerHTML = mhtml;
 const tip = document.getElementById('tip');
+function tipText(c){
+  const L=leadInfo(c,day), pv=DATA.races[c].prev;
+  if (mapMode==='prev') return `<b>${c}</b>　2022 ${esc(pv.w[0])}（${PSHORT[pv.w[1]]}）<span class="num">${pct(pv.w[2])}%</span> 勝 ${esc(pv.r[0])} <span class="num">${pct(pv.r[2])}%</span>`;
+  if (mapMode==='swing'){ const v=swing(c,day); return v==null? `<b>${c}</b>　缺少藍綠對照，不計消長` : `<b>${c}</b>　${swingWord(c,day,v)} <span class="num">${pct(Math.abs(v))}</span> 點${flipped(c,day)?'・<b style="color:var(--focus)">易手</b>':''}`; }
+  return `<b>${c}</b>　${esc(L.s.lead)} 領先 ${esc(second(c,day))} <span class="num">${pct(L.s.m)}</span> 點・勝率 <span class="num">${Math.round(L.wp*100)}%</span>`;
+}
 map.querySelectorAll('path.cty').forEach(p=>{
   const c = p.dataset.c;
   p.addEventListener('click',()=>select(c));
   p.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();select(c);} });
   p.addEventListener('mousemove',e=>{
-    const s = DATA.races[c].series[day]; const box = map.parentElement.getBoundingClientRect();
-    const second = Object.keys(s.s).sort((a,b)=>s.s[b]-s.s[a])[1];
-    tip.innerHTML = `<b>${c}</b>　${esc(s.lead)} 領先 ${esc(second)} <span class="num">${pct(s.m)}</span> 點・勝率 <span class="num">${Math.round(s.wp*100)}%</span>`;
-    tip.hidden = false;
+    const box = map.parentElement.getBoundingClientRect();
+    tip.innerHTML = tipText(c); tip.hidden = false;
     let x = e.clientX-box.left+14, y = e.clientY-box.top+14;
     if (x+tip.offsetWidth > box.width) x = e.clientX-box.left-tip.offsetWidth-10;
     tip.style.left = x+'px'; tip.style.top = y+'px';
   });
   p.addEventListener('mouseleave',()=>tip.hidden=true);
 });
-document.getElementById('legend').innerHTML = ['K','D','T','I'].map(p=>`<span><span class="sw">${[1,2,3].map(t=>`<i style="background:var(--${PVAR[p]}-${t})"></i>`).join('')}<i style="background:var(--${PVAR[p]})"></i></span>${PARTY[p]}</span>`).join('') + `<span>顏色由淺到深：膠著（勝率 &lt;60%）、傾向、可能、穩定（&gt;95%）</span>`;
-
+function swingFill(v){ if (v==null) return 'var(--soft)'; const a=Math.abs(v); const t=a<3?1:a<8?2:a<15?3:4; return fillT(v<0?'dpp':'kmt',t); }
 function drawMap(){
   for (const p of map.querySelectorAll('path.cty')){
-    const c=p.dataset.c, s=DATA.races[c].series[day];
-    p.style.fill = fillFor(partyOf(c,s.lead), s.wp);
+    const c=p.dataset.c;
+    if (mapMode==='prev'){ const o=prevInfo(c); p.style.fill=fillT(o.v,o.t); }
+    else if (mapMode==='swing') p.style.fill=swingFill(swing(c,day));
+    else { const o=leadInfo(c,day); p.style.fill=fillFor(o.p,o.wp); }
+    p.classList.toggle('flip', mapMode!=='prev' && flipped(c,day));
     p.classList.toggle('sel', c===sel);
   }
-  document.getElementById('mapdate').textContent = `${fmtD(DATA.national[day].d)} 的預測`;
+  const sw=(cls)=>`<span class="sw">${cls.map(b=>`<i style="background:${b}"></i>`).join('')}</span>`;
+  const fl=`<span><span class="sw"><i style="background:none;border:2px dashed var(--focus)"></i></span>虛線外框：與 2022 相比易手</span>`;
+  let lg='', title='';
+  if (mapMode==='prev'){ title='2022 各縣市當選政黨';
+    lg = ['K','D','T','I'].map(p=>`<span>${sw([1,2,3,4].map(t=>fillT(PVAR[p],t)))}${PARTY[p]}</span>`).join('')+'<span>由淺到深：贏 5 點內、10 點內、20 點內、20 點以上</span>'; }
+  else if (mapMode==='swing'){ title=`${fmtD(DATA.national[day].d)} 與 2022 相比的消長`;
+    lg = `<span>${sw([4,3,2,1].map(t=>fillT('dpp',t)))}往綠</span><span>${sw([1,2,3,4].map(t=>fillT('kmt',t)))}往藍／在野</span><span>由淺到深：3、8、15 點以上</span><span>${sw(['var(--soft)'])}無對照</span>`+fl; }
+  else { title=`${fmtD(DATA.national[day].d)} 各縣市領先陣營`;
+    lg = ['K','D','T','I'].map(p=>`<span>${sw([1,2,3,4].map(t=>fillT(PVAR[p],t)))}${PARTY[p]}</span>`).join('')+'<span>由淺到深：膠著（勝率 &lt;60%）、傾向、可能、穩定（&gt;95%）</span>'+fl; }
+  document.getElementById('maptitle').textContent=title;
+  document.getElementById('legend').innerHTML=lg;
 }
+document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{ mapMode=b.dataset.mode;
+  document.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawMap(); }));
+document.querySelectorAll('[data-nat]').forEach(b=>b.addEventListener('click',()=>{ natMode=b.dataset.nat;
+  document.querySelectorAll('[data-nat]').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawNat(); }));
 
-// ===== 席次 =====
-function drawSeats(){
-  const nat = DATA.national[day];
-  const order = {K:0,T:1,I:2,D:3};
-  const rows = counties.map(c=>{const s=DATA.races[c].series[day]; return {c,p:partyOf(c,s.lead),wp:s.wp};})
-    .sort((a,b)=> order[a.p]-order[b.p] || (a.p==='D'? a.wp-b.wp : b.wp-a.wp));
-  const bar = document.getElementById('seatbar');
-  bar.querySelectorAll('.seat').forEach(x=>x.remove());
-  rows.forEach(r=>{ const b=document.createElement('button'); b.className='seat'; b.type='button'; b.style.background=fillFor(r.p,r.wp);
-    b.title=`${r.c}：${PARTY[r.p]}${tierName(r.wp)}（勝率 ${Math.round(r.wp*100)}%）`; b.setAttribute('aria-label',b.title);
-    b.addEventListener('click',()=>select(r.c)); bar.insertBefore(b, bar.querySelector('.mid')); });
-  const seg = (p,label)=>`<div><span class="n" style="color:var(--${PVAR[p]})">${nat.seats[p]}</span><span class="l">${label}・期望 <span class="num">${nat.exp[p].toFixed(1)}</span></span></div>`;
-  document.getElementById('counts').innerHTML = seg('K','國民黨領先')+seg('D','民進黨領先')+seg('T','民眾黨領先')+seg('I','無黨籍領先');
-  const toss = rows.filter(r=>r.wp<0.6).map(r=>r.c);
-  document.getElementById('sbnote').innerHTML = toss.length? `膠著縣市：${toss.join('、')}` : '目前沒有勝率低於 60% 的縣市';
-}
-
-// ===== 全國趨勢圖 =====
-function drawNat(){
-  const W=1100,H=150,L=34,R=10,T=12,B=22;
-  const x=i=>L+(W-L-R)*i/(N-1), y=v=>T+(H-T-B)*(1-v/16);
-  let g='';
-  for (const v of [4,8,12,16]) g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"></line><text x="${L-6}" y="${y(v)+3}" text-anchor="end">${v}</text>`;
-  g+=`<line x1="${L}" x2="${W-R}" y1="${y(11)}" y2="${y(11)}" stroke="var(--ink)" stroke-dasharray="4 4" opacity=".35"></line><text x="${W-R}" y="${y(11)-4}" text-anchor="end">過半 12 席</text>`;
-  g+=monthTicks(x,H);
-  for (const p of ['K','D']){
-    const pts = DATA.national.map((n,i)=>`${x(i).toFixed(1)},${y(n.exp[p]).toFixed(1)}`).join(' ');
-    g+=`<polyline points="${pts}" fill="none" stroke="var(--${PVAR[p]})" stroke-width="2.4"></polyline>`;
-    const last=DATA.national[day];
-    g+=`<circle cx="${x(day)}" cy="${y(last.exp[p])}" r="4.5" fill="var(--${PVAR[p]})" stroke="var(--paper)" stroke-width="2"></circle>`;
-  }
-  g+=`<line class="today" x1="${x(day)}" x2="${x(day)}" y1="${T}" y2="${H-B}"></line>`;
-  document.getElementById('natchart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="藍綠期望席次走勢">${g}</svg><div class="muted" style="font-size:12px">期望席次 = 各縣市勝率加總（<span style="color:var(--kmt)">藍線</span> 國民黨、<span style="color:var(--dpp)">綠線</span> 民進黨）</div>`;
+// ===== 與 2022 相比：啞鈴圖 =====
+function shortName(c){ return /^(新竹|嘉義)/.test(c)? c : c.replace(/[市縣]$/,''); }
+function drawDumbbell(){
+  const X=v=>50+Math.max(-42,Math.min(42,v))/84*100;
+  const rows=counties.map(c=>({c,m:DATA.races[c].prev.m,og:DATA.races[c].series[day].og,v:swing(c,day)}));
+  const ok=rows.filter(r=>r.v!=null).sort((a,b)=>a.v-b.v), no=rows.filter(r=>r.v==null);
+  const ticks=[-40,-20,0,20,40];
+  const axis=`<div class="db-axis"><span></span><div class="ax"><span class="side" style="left:0;color:var(--dpp)">← 綠營領先</span><span class="side" style="right:0;color:var(--kmt)">藍營／在野領先 →</span>${ticks.map(t=>`<span style="left:${X(t)}%">${t>0?'+':''}${t}</span>`).join('')}</div><span style="text-align:right">消長</span></div>`;
+  const row=r=>{ const a=X(r.m), b=X(r.og), L=leadInfo(r.c,day), toG=r.v<0;
+    const col=toG?'var(--dpp)':'var(--kmt)';
+    return `<button type="button" class="db-row${r.c===sel?' sel':''}" data-c="${r.c}" aria-label="${r.c}：2022 差距 ${pct(r.m)}，2026 ${pct(r.og)}，${swingWord(r.c,day,r.v)} ${pct(Math.abs(r.v))} 點">
+      <span class="db-name">${shortName(r.c)}</span>
+      <span class="db-track">${ticks.map(t=>`<i class="g" style="left:${X(t)}%"></i>`).join('')}<i class="z"></i>
+        <i class="ln" style="left:${Math.min(a,b)}%;width:${Math.abs(b-a)}%;background:${col}"></i>
+        <i class="o" style="left:${a}%" title="2022：${pct(r.m)}"></i>
+        <i class="f" style="left:${b}%;background:${campColor(L.cp,L.p)}" title="2026：${pct(r.og)}"></i></span>
+      <span class="db-val" style="color:${col}">${swingWord(r.c,day,r.v)} ${pct(Math.abs(r.v))}${flipped(r.c,day)?'<span class="t" style="color:var(--focus)">易手</span>':''}</span></button>`; };
+  const half=Math.ceil(ok.length/2);
+  document.getElementById('dumbbell').innerHTML =
+    `<div class="db-cols"><div class="db">${axis}${ok.slice(0,half).map(row).join('')}</div><div class="db">${axis}${ok.slice(half).map(row).join('')}</div></div>`+
+    `<div class="muted small" style="margin-top:10px">差距＝在野最高票 − 民進黨最高票（正值在野領先，負值綠營領先）。依消長由往綠最多排到往藍最多。未列入：${no.map(r=>`${r.c}（${DATA.races[r.c].series[day].og==null?'2026 無民進黨候選人':'2022 無民進黨候選人'}）`).join('、')}。</div>`;
+  document.querySelectorAll('#dumbbell .db-row').forEach(b=>b.addEventListener('click',()=>goDetail(b.dataset.c)));
 }
 
 // ===== 縣市詳情 =====
-function lineChart(c){
-  const r=DATA.races[c], W=520,H=200,L=30,R=8,T=10,B=22;
+function lineChart(c,W=520){
+  const r=DATA.races[c], H=210,L=30,R=8,T=10,B=24;
   const main = r.cands.filter(x=>x.n!=='其他').slice(0,3);
   const vals = r.series.flatMap(s=>main.map(m=>s.s[m.n]));
   let lo=Math.max(0,Math.floor((Math.min(...vals)-6)/10)*10), hi=Math.min(100,Math.ceil((Math.max(...vals)+6)/10)*10);
   const x=i=>L+(W-L-R)*i/(N-1), y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo));
   let g='';
-  for (let v=lo; v<=hi; v+=10) g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"></line><text x="${L-5}" y="${y(v)+3}" text-anchor="end">${v}</text>`;
+  for (let v=lo; v<=hi; v+=10) g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"></line><text x="${L-5}" y="${y(v)+4}" text-anchor="end">${v}</text>`;
   g+=monthTicks(x,H);
   const start = new Date(DATA.start);
   for (const p of r.polls){
@@ -379,23 +637,21 @@ function lineChart(c){
   g+=`<line class="today" x1="${x(day)}" x2="${x(day)}" y1="${T}" y2="${H-B}"></line>`;
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${c} 每日預測得票率">${g}</svg>`;
 }
-function buzzChart(c){
-  const r=DATA.races[c], W=520,H=96,L=30,R=8,T=8,B=16;
+function buzzChart(c,W=520){
+  const r=DATA.races[c], H=96,L=30,R=8,T=8,B=16;
   const main = r.cands.filter(x=>x.n!=='其他').slice(0,2);
   const x=i=>L+(W-L-R)*i/(N-1), y=v=>T+(H-T-B)*(1-(v+1)/2);
   let g=`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}"></line><text x="${L-5}" y="${y(1)+8}" text-anchor="end">+1</text><text x="${L-5}" y="${y(-1)}" text-anchor="end">−1</text>`;
   const bw=(W-L-R)/N/2.2;
   main.forEach((m,k)=>{
-    r.buzz[m.n].forEach((v,i)=>{ const yy=y(Math.max(0,v)), h=Math.abs(y(v)-y(0));
+    r.buzz[m.n].forEach((v,i)=>{ const h=Math.abs(y(v)-y(0));
       g+=`<rect x="${(x(i)+(k?bw*0.1:-bw*1.1)).toFixed(1)}" y="${(v>=0?y(v):y(0)).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(.5,h).toFixed(1)}" fill="var(--${PVAR[m.p]})" opacity="${i===day?1:.55}"></rect>`; });
   });
   g+=`<line class="today" x1="${x(day)}" x2="${x(day)}" y1="${T}" y2="${H-B}"></line>`;
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${c} 每日淨聲量估計">${g}</svg>`;
 }
-function monthTicks(x,H){ let g=''; DATA.national.forEach((n,i)=>{ if(n.d.endsWith('-01')) g+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle">${+n.d.slice(5,7)} 月</text>`; }); return g; }
-// ===== 6/1 以來走勢 =====
 // 以「最新一天」的前兩名作為對照組，整段期間都用同一組人比較
-function topTwo(c){ const last=DATA.races[c].series[N-1].s; return Object.keys(last).filter(n=>n!=='其他').sort((a,b)=>last[b]-last[a]).slice(0,2); }
+function topTwo(c){ return rank(DATA.races[c].series[N-1]).slice(0,2); }
 function sm(c,i){ const [a,b]=topTwo(c), s=DATA.races[c].series[i]; return s.s[a]-s.s[b]; }
 function winA(c,i){ const [a]=topTwo(c), s=DATA.races[c].series[i]; return s.lead===a? s.wp : 1-s.wp; }
 function trendBlock(c){
@@ -412,14 +668,14 @@ function trendBlock(c){
     `<div><span class="eyebrow">區間高低</span><div class="num" style="font-size:13px">${esc(a)} 最佳 ${fmtD(r.series[hi].d)}（${sm(c,hi)>=0?'+':''}${pct(sm(c,hi))}）</div><div class="num" style="font-size:13px">${esc(a)} 最差 ${fmtD(r.series[lo].d)}（${sm(c,lo)>=0?'+':''}${pct(sm(c,lo))}）</div></div>`];
   return `<div><h3 style="margin-bottom:8px">${S0} 以來走勢：${esc(a)} 對 ${esc(b)}</h3><div class="trendgrid">${items.join('')}</div></div>`;
 }
-function wpChart(c){
+function wpChart(c,W=520){
   const r=DATA.races[c], [a,b]=topTwo(c), pa=partyOf(c,a), pb=partyOf(c,b);
-  const W=520,H=170,L=34,R=8,T=10,B=22, mid=(T+H-B)/2;
+  const H=180,L=34,R=8,T=10,B=24, mid=(T+H-B)/2;
   const ms=r.series.map((_,i)=>sm(c,i)); const mx=Math.max(10,Math.ceil(Math.max(...ms.map(Math.abs))/5)*5);
   const x=i=>L+(W-L-R)*i/(N-1), yM=v=>mid-(mid-T)*v/mx, yP=p=>T+(H-T-B)*(1-p);
   const bw=(W-L-R)/N*0.8;
   let g='';
-  for (const v of [mx,mx/2,0,-mx/2,-mx]) g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${yM(v)}" y2="${yM(v)}"></line><text x="${L-5}" y="${yM(v)+3}" text-anchor="end">${v>0?'+':''}${v}</text>`;
+  for (const v of [mx,mx/2,0,-mx/2,-mx]) g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${yM(v)}" y2="${yM(v)}"></line><text x="${L-5}" y="${yM(v)+4}" text-anchor="end">${v>0?'+':''}${v}</text>`;
   g+=monthTicks(x,H);
   ms.forEach((m,i)=>{ const y0=yM(0), y1=yM(m);
     g+=`<rect x="${(x(i)-bw/2).toFixed(1)}" y="${Math.min(y0,y1).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(.6,Math.abs(y1-y0)).toFixed(1)}" fill="var(--${PVAR[m>=0?pa:pb]}-2)" opacity="${i===day?1:.9}"><title>${fmtD(r.series[i].d)} 差距 ${m>=0?'+':''}${pct(m)}</title></rect>`; });
@@ -441,43 +697,77 @@ function weekTable(c){
     return `<tr${i===day?' style="background:var(--soft)"':''}><td class="num">${fmtD(s.d)}</td><td class="r num">${pct(s.s[a])}</td><td class="r num">${pct(s.s[b])}</td><td class="r num">${m>=0?'+':''}${pct(m)}</td><td class="r num">${ch===null?'—':(ch>=0?'+':'')+pct(ch)}</td><td class="r num">${Math.round(winA(c,i)*100)}%</td><td class="r num">${np||'—'}</td></tr>`; });
   return `<div><h3 style="margin-bottom:6px">每兩週變化</h3><div class="tbl-wrap"><table><tr><th>日期</th><th class="r">${esc(a)}</th><th class="r">${esc(b)}</th><th class="r">差距</th><th class="r">兩週變化</th><th class="r">${esc(a)} 勝率</th><th class="r">新民調</th></tr>${rows.join('')}</table></div></div>`;
 }
-function drawDetail(){
-  const c=sel, r=DATA.races[c], s=r.series[day], s0=r.series[0];
-  const lp=partyOf(c,s.lead);
+// 最終得票預估：當日預測得票率 × 預估有效票
+function finalBlock(c){
+  const r=DATA.races[c], s=r.series[day], to=r.turnout, pv=r.prev, sg=sigma(c,day)*0.64;
   const order=[...r.cands].sort((a,b)=>s.s[b.n]-s.s[a.n]);
-  const max=Math.max(...order.map(k=>s.s[k.n]));
+  const hiMax=Math.min(100,Math.max(...order.map(k=>s.s[k.n]+sg)));
+  const rows=order.map(k=>{ const v=s.s[k.n], lo=Math.max(0,v-sg), hi=Math.min(100,v+sg), votes=to.valid*v/100;
+    return `<div class="cand"><span class="nm">${esc(k.n)}<small>${k.n==='其他'?'其他候選人':PARTY[k.p]}${k.camp==='B'&&k.p!=='K'?'・藍白合':''}</small></span>
+      <span class="bar"><i style="width:${v/hiMax*100}%;background:var(--${PVAR[k.p]})"></i><u style="left:${lo/hiMax*100}%;width:${(hi-lo)/hiMax*100}%"></u></span>
+      <span class="pct"><b>${pct(v)}%</b><small>${wan(votes)}票</small></span></div>`; }).join('');
+  const vs = (()=>{ const m=pv.m, og=s.og;
+    const line=`2022：<b>${esc(pv.w[0])}</b>（${PARTY[pv.w[1]]}）<span class="num">${pct(pv.w[2])}%</span> 勝 ${esc(pv.r[0])}（${PARTY[pv.r[1]]}）<span class="num">${pct(pv.r[2])}%</span>`;
+    if (m==null||og==null) return line+'。';
+    const v=og-m, w=swingWord(c,day,v);
+    const d=x=>x>=0? `在野領先 ${pct(x)}` : `綠營領先 ${pct(-x)}`;
+    return line+`。差距由「${d(m)}」變成「${d(og)}」，<b style="color:${v<0?'var(--dpp)':'var(--kmt)'}">${w} ${pct(Math.abs(v))} 點</b>${flipped(c,day)?'，<b style="color:var(--focus)">預測易手</b>':''}。`; })();
+  return `<div class="final"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline"><h3>11/28 最終預估：得票率與票數</h3><span class="muted small">細線為約五成機率的區間</span></div>
+    <div class="cands">${rows}</div>
+    <div class="facts">
+      <div><span class="muted small">預估投票率</span><span class="v">${pct(to.t)}%</span><span class="muted small">2022 ${pct(pv.t)}%${to.base!==pv.t?`（基準 ${pct(to.base)}%）`:''} ${chg(to.t-pv.t,' 點')}</span></div>
+      <div><span class="muted small">選舉人數</span><span class="v">${wan(to.electorate)}</span><span class="muted small">2022 ${wan(pv.e)}</span></div>
+      <div><span class="muted small">預估投票數</span><span class="v">${wan(to.electorate*to.t/100)}</span><span class="muted small">2022 ${wan(pv.e*pv.t/100)}</span></div>
+      <div><span class="muted small">預估有效票</span><span class="v">${wan(to.valid)}</span><span class="muted small">約 98.5%</span></div>
+    </div>
+    <div class="vs22">${vs}${pv.note?`<div class="muted small">${esc(pv.note)}</div>`:''}</div></div>`;
+}
+function detailWidth(){ const d=document.getElementById('detail'); const w=d? d.clientWidth-36:0; return w>200? Math.min(760,w) : 520; }
+function drawDetail(){
+  const c=sel, r=DATA.races[c], s=r.series[day], s0=r.series[0], W=detailWidth();
+  const lp=partyOf(c,s.lead);
   const [ta,tb] = topTwo(c);
   const delta = (s.s[ta]-s.s[tb]) - (s0.s[ta]-s0.s[tb]);
-  const pollsIn = r.polls.filter(p=>p.rel<=r.series[day].d);
+  const order=[...r.cands].sort((a,b)=>s.s[b.n]-s.s[a.n]).filter(k=>k.n!=='其他');
   let h = `<div class="dhead"><div><span class="eyebrow">縣市詳情・${fmtD(s.d)}</span><h2 style="font-size:26px">${c}</h2></div>
-    <div style="text-align:right"><button type="button" class="pinbtn" id="pinsel" aria-pressed="${pins.includes(c)}">${pins.includes(c)?'★ 已關注':'☆ 加入關注'}</button> <span class="pill" style="background:var(--${PVAR[lp]})">${PARTY[lp]}${tierName(s.wp)}</span><div class="rating">勝率 <b class="num">${Math.round(s.wp*100)}%</b>・差距 <b class="num">${pct(s.m)}</b> 點</div></div></div>
+    <div style="text-align:right"><button type="button" class="pinbtn" id="pinsel" aria-pressed="${pins.includes(c)}">${pins.includes(c)?'★ 已關注':'☆ 加入關注'}</button> <span class="pill" style="background:var(--${PVAR[lp]})">${PARTY[lp]}${tierName(s.wp)}</span><div class="rating">${esc(s.lead)} 勝率 <b class="num">${Math.round(s.wp*100)}%</b>・差距 <b class="num">${pct(s.m)}</b> 點</div></div></div>
     <p style="margin:0;font-size:13.5px">${esc(r.note)}</p>
-    <div class="cands">${order.map(k=>`<div class="cand"><span class="nm">${esc(k.n)}<small>${PARTY[k.p].replace('／其他','')}</small></span><span class="bar"><i style="width:${s.s[k.n]/max*100}%;background:var(--${PVAR[k.p]})"></i></span><span class="pct">${pct(s.s[k.n])}%</span></div>`).join('')}</div>
-    <div class="breakdown"><span>民調權重 <b class="num">${Math.round(s.pw*100)}%</b>（其餘為 AI 基準）</span><span>聲量調整：${order.filter(k=>k.n!=='其他').map(k=>`${esc(k.n)} <b class="num">${s.adj[k.n]>=0?'+':''}${s.adj[k.n].toFixed(1)}</b>`).join('、')}</span><span>與 ${S0} 相比，${esc(ta)} 對 ${esc(tb)} 的差距 <b class="num">${delta>=0?'+':''}${pct(delta)}</b> 點</span></div>
+    ${finalBlock(c)}
+    <div class="breakdown"><span>民調權重 <b class="num">${Math.round(s.pw*100)}%</b>（其餘為 AI 基準）</span><span>聲量調整：${order.map(k=>`${esc(k.n)} <b class="num">${s.adj[k.n]>=0?'+':''}${s.adj[k.n].toFixed(1)}</b>`).join('、')}</span><span>與 ${S0} 相比，${esc(ta)} 對 ${esc(tb)} 的差距 <b class="num">${delta>=0?'+':''}${pct(delta)}</b> 點</span></div>
     ${trendBlock(c)}
-    <div class="chart"><h3 style="margin-bottom:4px">${S0} 以來每日預測得票率</h3>${lineChart(c)}<div class="muted" style="font-size:12px">實線為每日預測；空心圓為單份民調（已換算為有效票占比）。</div></div>
-    ${wpChart(c)}
+    <div class="chart"><h3 style="margin-bottom:4px">${S0} 以來每日預測得票率</h3>${lineChart(c,W)}<div class="muted" style="font-size:12px">實線為每日預測；空心圓為單份民調（已換算為有效票占比）。</div></div>
+    <details class="more"><summary>更多：差距與勝率、每兩週變化、聲量、民調</summary><div class="inner">
+    ${wpChart(c,W)}
     ${weekTable(c)}
-    <div class="chart"><h3 style="margin-bottom:4px">每日淨聲量 <span class="tag warn">估計值</span></h3>${buzzChart(c)}<div class="muted" style="font-size:12px">前兩名候選人的每日正負聲量指數，依新聞事件與模型底噪估計，非社群實測。</div></div>`;
+    <div class="chart"><h3 style="margin-bottom:4px">每日淨聲量 <span class="tag warn">估計值</span></h3>${buzzChart(c,W)}<div class="muted" style="font-size:12px">前兩名候選人的每日正負聲量指數，依新聞事件與模型底噪估計，非社群實測。</div></div>`;
   h += `<div><h3 style="margin-bottom:6px">聲量事件</h3>${r.events.length? `<ul class="events">${r.events.map(e=>`<li><span class="num muted">${fmtD(e.d)}</span><span class="${e.k>=0?'pos':'neg'}">${e.k>=0?'▲':'▼'}</span><span>${esc(e.n)}：${esc(e.t)}</span></li>`).join('')}</ul>`:'<p class="muted" style="margin:0;font-size:13px">沒有納入的重大事件，聲量只有底噪。</p>'}</div>`;
   h += `<div><h3 style="margin-bottom:6px">本縣市民調（${r.polls.length} 份）</h3>`;
   if (r.polls.length){
     h += `<div class="tbl-wrap"><table><tr><th>機構</th><th>調查</th><th>結果</th></tr>${r.polls.map(p=>`<tr${p.rel>s.d?' style="opacity:.4"':''}><td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.org)}</a>${p.t!=='phone'?`<span class="tag warn">${p.t==='ai'?'AI 模擬':'網路'}</span>`:''}${p.sp?'<span class="tag">政黨相關</span>':''}</td><td class="num">${fmtD(p.fe)}${p.est?'*':''}</td><td>${Object.entries(p.v).map(([n,v])=>`${esc(n)} <span class="num">${v}</span>`).join('、')}</td></tr>`).join('')}</table></div>${r.polls.some(p=>p.est)?'<div class="muted" style="font-size:12px">* 報導未載明調查日期，以發布日前數日估計。</div>':''}`;
   } else h += `<p class="muted" style="margin:0;font-size:13px">5 月以來找不到公開民調，本縣市預測主要依 AI 結構基準。</p>`;
   if (r.base_ref.length) h += `<div class="muted" style="font-size:12.5px;margin-top:6px">其他參考資料（未納入民調平均）：${r.base_ref.map(esc).join('；')}</div>`;
-  h += `</div>`;
-  document.getElementById('detail').innerHTML = h;
+  h += `</div></div></details>`;
+  const det=document.getElementById('detail'); const open=det.querySelector('details.more')?.open;
+  det.innerHTML = h;
+  if (open) det.querySelector('details.more').open = true;
   document.getElementById('pinsel').addEventListener('click',()=>togglePin(c));
 }
 
 // ===== 全縣市表 =====
 function drawTable(){
-  const rows = counties.map(c=>{const r=DATA.races[c],s=r.series[day],s0=r.series[0];
-    const second=Object.keys(s.s).sort((a,b)=>s.s[b]-s.s[a])[1];
-    return {c,s,second,p:partyOf(c,s.lead),flip:s0.lead!==s.lead,np:r.polls.filter(p=>p.rel<=s.d).length};}).sort((a,b)=>a.s.m-b.s.m);
-  document.getElementById('alltbl').innerHTML = `<tr><th>縣市</th><th>領先</th><th>次位</th><th class="r">差距</th><th class="r">勝率</th><th class="r">民調數</th><th>評等</th></tr>` +
-   rows.map(o=>`<tr class="click" data-c="${o.c}" tabindex="0"><td><b>${o.c}</b>${o.flip?`<span class="tag warn">${S0} 後易位</span>`:''}</td><td><span style="color:var(--${PVAR[o.p]});font-weight:700">${esc(o.s.lead)}</span></td><td>${esc(o.second)}</td><td class="r num">${pct(o.s.m)}</td><td class="r num">${Math.round(o.s.wp*100)}%</td><td class="r num">${o.np||'—'}</td><td><span class="pill" style="background:${fillFor(o.p,o.s.wp)};color:${tier(o.s.wp)>=3?'#fff':'var(--ink)'}">${PARTY[o.p].replace('／其他','')}${tierName(o.s.wp)}</span></td></tr>`).join('');
-  document.querySelectorAll('#alltbl tr.click').forEach(tr=>{ const go=()=>{select(tr.dataset.c); document.getElementById('detail').scrollIntoView({behavior:'smooth',block:'start'});};
+  const rows = counties.map(c=>{const r=DATA.races[c],L=leadInfo(c,day);
+    return {c,r,L,second:second(c,day),v:swing(c,day),fl:flipped(c,day)};}).sort((a,b)=>a.L.s.m-b.L.s.m);
+  document.getElementById('alltbl').innerHTML = `<tr><th>縣市</th><th>2026 領先</th><th class="r">勝率</th><th class="r">與 2022 比</th><th>2022 當選</th><th class="r">差距</th><th class="r">預估投票率</th><th class="r">領先者預估票數</th><th>評等</th></tr>` +
+   rows.map(o=>{ const pv=o.r.prev, to=o.r.turnout;
+     return `<tr class="click" data-c="${o.c}" tabindex="0"><td><b>${o.c}</b>${o.fl?'<span class="tag flipt">易手</span>':''}</td>
+     <td><span style="color:var(--${o.L.v});font-weight:700">${esc(o.L.s.lead)}</span> <span class="muted small">${PSHORT[o.L.p]}</span></td>
+     <td class="r num">${Math.round(o.L.wp*100)}%</td>
+     <td class="r num" style="color:${o.v==null?'var(--muted)':o.v<0?'var(--dpp)':'var(--kmt)'}">${o.v==null?'—':`${swingWord(o.c,day,o.v)} ${pct(Math.abs(o.v))}`}</td>
+     <td><span style="color:var(--${PVAR[pv.w[1]]})">${esc(pv.w[0])}</span> <span class="muted small">${PSHORT[pv.w[1]]}</span></td>
+     <td class="r num">${pct(o.L.s.m)}</td>
+     <td class="r num">${pct(to.t)}%</td><td class="r num">${wan(to.valid*o.L.s.s[o.L.s.lead]/100)}</td>
+     <td><span class="pill" style="background:${fillFor(o.L.p,o.L.wp)};color:${tier(o.L.wp)>=3?'#fff':'var(--ink)'}">${PARTY[o.L.p]}${tierName(o.L.wp)}</span></td></tr>`; }).join('');
+  document.querySelectorAll('#alltbl tr.click').forEach(tr=>{ const go=()=>goDetail(tr.dataset.c);
     tr.addEventListener('click',go); tr.addEventListener('keydown',e=>{if(e.key==='Enter')go();}); });
 }
 function drawPollTable(){
@@ -495,23 +785,25 @@ function togglePin(c){ pins = pins.includes(c)? pins.filter(x=>x!==c) : [...pins
 function movePin(c,d){ const i=pins.indexOf(c), j=i+d; if(j<0||j>=pins.length) return; [pins[i],pins[j]]=[pins[j],pins[i]]; savePins(); drawPinned(); }
 function drawPinned(){
   document.getElementById('pincount').textContent = pins.length? `(${pins.length})` : '';
+  if (view!=='pinned') return;
   document.getElementById('pinnote').textContent = pinsDefault? '目前是預設範例，點下方縣市即可增減，選擇會記在這個瀏覽器' : '點縣市加入或移除，選擇會記在這個瀏覽器';
-  document.getElementById('chips').innerHTML = counties.map(c=>{ const s=DATA.races[c].series[day];
-    return `<button type="button" class="chip" data-c="${c}" aria-pressed="${pins.includes(c)}"><span class="dot" style="background:var(--${PVAR[partyOf(c,s.lead)]})"></span>${c}</button>`; }).join('');
+  document.getElementById('chips').innerHTML = counties.map(c=>{ const L=leadInfo(c,day);
+    return `<button type="button" class="chip" data-c="${c}" aria-pressed="${pins.includes(c)}"><span class="dot" style="background:var(--${L.v})"></span>${c}</button>`; }).join('');
   document.querySelectorAll('#chips .chip').forEach(b=>b.addEventListener('click',()=>togglePin(b.dataset.c)));
   const list = document.getElementById('pinlist');
   if (!pins.length){ list.innerHTML = `<section class="panel"><p class="muted" style="margin:0">還沒有關注的縣市。點上方的縣市名稱加入，或在總覽的縣市詳情按「☆ 加入關注」。</p></section>`; return; }
-  list.innerHTML = pins.map((c,k)=>{ const r=DATA.races[c], s=r.series[day], lp=partyOf(c,s.lead);
+  const lw=cw(list,1000)-36, W=Math.max(280, lw>760? (lw-16)/2 : lw);
+  list.innerHTML = pins.map((c,k)=>{ const r=DATA.races[c], L=leadInfo(c,day), v=swing(c,day);
     return `<section class="panel pincard" aria-label="${c}">
       <div class="ph"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span class="num muted">${k+1}</span><h2 style="font-size:23px">${c}</h2>
-        <span class="pill" style="background:var(--${PVAR[lp]})">${PARTY[lp]}${tierName(s.wp)}</span>
-        <span class="rating">${esc(s.lead)} 勝率 <b class="num">${Math.round(s.wp*100)}%</b>・差距 <b class="num">${pct(s.m)}</b> 點</span></div>
+        <span class="pill" style="background:var(--${L.v})">${PARTY[L.p]}${tierName(L.wp)}</span>
+        <span class="rating">${esc(L.s.lead)} 勝率 <b class="num">${Math.round(L.wp*100)}%</b>・差距 <b class="num">${pct(L.s.m)}</b> 點${v!=null?`・與 2022 比 <b class="num" style="color:${v<0?'var(--dpp)':'var(--kmt)'}">${swingWord(c,day,v)} ${pct(Math.abs(v))}</b>`:''}${flipped(c,day)?'<span class="tag flipt">易手</span>':''}</span></div>
         <div class="ctl"><button type="button" class="pinbtn" data-act="up" data-c="${c}" aria-label="上移 ${c}" ${k===0?'disabled':''}>↑</button><button type="button" class="pinbtn" data-act="down" data-c="${c}" aria-label="下移 ${c}" ${k===pins.length-1?'disabled':''}>↓</button><button type="button" class="pinbtn" data-act="open" data-c="${c}">完整詳情</button><button type="button" class="pinbtn" data-act="rm" data-c="${c}" aria-label="移除 ${c}">✕</button></div></div>
       ${trendBlock(c)}
-      <div class="charts"><div class="chart"><h3 style="margin-bottom:4px">${S0} 以來得票率</h3>${lineChart(c)}</div>${wpChart(c)}</div>
+      <div class="charts"><div class="chart"><h3 style="margin-bottom:4px">${S0} 以來得票率</h3>${lineChart(c,W)}</div>${wpChart(c,W)}</div>
     </section>`; }).join('');
   list.querySelectorAll('button[data-act]').forEach(b=>b.addEventListener('click',()=>{ const c=b.dataset.c, a=b.dataset.act;
-    if(a==='up') movePin(c,-1); else if(a==='down') movePin(c,1); else if(a==='rm') togglePin(c); else { sel=c; showView('overview'); select(c); document.getElementById('detail').scrollIntoView({block:'start'}); } }));
+    if(a==='up') movePin(c,-1); else if(a==='down') movePin(c,1); else if(a==='rm') togglePin(c); else { showView('overview'); goDetail(c); } }));
 }
 let view='overview';
 function showView(v){ view=v;
@@ -519,26 +811,31 @@ function showView(v){ view=v;
   document.getElementById('view-pinned').hidden = v!=='pinned';
   document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected', t.dataset.view===v));
   try{ history.replaceState(null,'','#'+v); }catch(e){}
-  if (v==='pinned') drawPinned(); }
+  if (v==='pinned') drawPinned(); else render(); }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>showView(t.dataset.view)));
 
-function render(){ drawMap(); drawSeats(); drawNat(); drawDetail(); drawTable(); if (view==='pinned') drawPinned(); else document.getElementById('pincount').textContent = pins.length? `(${pins.length})` : '';
-  document.getElementById('tldate').textContent = DATA.national[day].d.replaceAll('-','/');
-  document.getElementById('slider').value = day; }
-function select(c){ sel=c; try{localStorage.setItem('sel',c);}catch(e){} drawMap(); drawDetail(); }
+function render(){
+  document.getElementById('tldate').textContent = fmtD(DATA.national[day].d);
+  document.getElementById('slider').value = day;
+  if (view==='pinned'){ drawPinned(); return; }
+  drawHero(); drawNat(); drawMap(); drawDetail(); drawDumbbell(); drawTable(); drawPinned(); }
+function select(c){ sel=c; try{localStorage.setItem('sel',c);}catch(e){} drawMap(); drawDetail(); drawDumbbell(); }
+function goDetail(c){ select(c); const d=document.getElementById('detail'); const top=d.getBoundingClientRect().top+scrollY-70; scrollTo({top,behavior:'smooth'}); }
 
 const slider = document.getElementById('slider'); slider.max = N-1;
 slider.addEventListener('input',()=>{ day=+slider.value; render(); });
 const play = document.getElementById('play');
+function stopPlay(){ clearInterval(timer); timer=null; play.textContent='▶ 播放'; }
 play.addEventListener('click',()=>{
-  if (timer){ clearInterval(timer); timer=null; play.textContent='▶ 播放 6/1 至今'; return; }
+  if (timer){ stopPlay(); return; }
   if (day>=N-1) day=0; play.textContent='❚❚ 暫停';
-  timer=setInterval(()=>{ day++; render(); if(day>=N-1){clearInterval(timer);timer=null;play.textContent='▶ 播放 6/1 至今';} },90);
+  timer=setInterval(()=>{ day++; render(); if(day>=N-1) stopPlay(); },90);
 });
+let rz=null, lastW=innerWidth;
+addEventListener('resize',()=>{ if (innerWidth===lastW) return; lastW=innerWidth; clearTimeout(rz); rz=setTimeout(render,150); });
 try{ const s=localStorage.getItem('sel'); if(s&&DATA.races[s]) sel=s; }catch(e){}
-const today = new Date(DATA.today), eday = new Date(DATA.eday);
-document.getElementById('days').textContent = Math.round((eday-today)/864e5)+' 天';
+document.getElementById('days').textContent = EDAYS+' 天';
 document.getElementById('updated').textContent = DATA.today.replaceAll('-','/');
 document.getElementById('foot').textContent = DATA.today.replaceAll('-','/');
-drawPollTable(); render(); showView(location.hash==='#pinned'?'pinned':'overview');
+drawPollTable(); showView(location.hash==='#pinned'?'pinned':'overview');
 </script>

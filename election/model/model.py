@@ -27,7 +27,7 @@ R = {
  '台東縣': dict(c=[('吳秀華','K',58),('陳瑩','D',40),('其他','I',2)], note='饒慶鈴卸任；10/20 起吳秀華家族涉農路弊案，聲量轉負。'),
  '花蓮縣': dict(c=[('游淑貞','K',44),('魏嘉賢','I',32),('張峻','I',21),('羅佩秦','I',3)], note='徐榛蔚卸任；國民黨提名游淑貞，反傅陣營張峻、魏嘉賢分別參選。'),
  '澎湖縣': dict(c=[('陳振中','K',47),('吳淑瑾','D',44),('其他','I',9)], note='陳光復受傷無法參選，妻吳淑瑾代夫出征。'),
- '金門縣': dict(c=[('陳玉珍','K',62),('李文良','I',14),('洪和成','I',12),('其他','I',12)], note='楊鎮浯卸任；藍營立委陳玉珍參選。'),
+ '金門縣': dict(c=[('陳玉珍','K',62),('李文良','I',14),('洪和成','I',12),('其他','I',12)], note='現任陳福海（2022 年以無黨籍當選）未登記參選；藍營立委陳玉珍參選。'),
  '連江縣': dict(c=[('王忠銘','K',58),('曹爾元','I',42)], note='王忠銘尋求連任。'),
 }
 
@@ -70,6 +70,57 @@ P = [
  dict(r='基隆市', org='大地民意（鏡新聞委託）', fe=D(2026,10,21), rel=D(2026,10,23), n=1075, t='phone', v={'童子瑋':37.0,'謝國樑':36.3,'魏造文':0.8}, url='https://setn.com/news/1927095'),
  dict(r='台中市', org='世新大學民調中心（國民黨台中議會黨團委託）', fe=D(2026,10,16), rel=D(2026,10,17), n=1070, t='phone', sp='K', v={'江啓臣':39.8,'何欣純':28.7,'洪麗華':1.0}, url='https://www.ettoday.net/news/20261024/3260334.htm'),
 ]
+
+# ---- 2022 年縣市長選舉結果（維基百科 2022 Taiwanese local elections，前兩名）----
+# e=選舉人數, t=投票率, w/r=(姓名, 政黨, 得票率%)；政黨依當年實際所屬
+PREV = {
+ '新北市':dict(e=3316517,t=56.60,w=('侯友宜','K',62.42),r=('林佳龍','D',37.58)),
+ '台北市':dict(e=2026769,t=67.70,w=('蔣萬安','K',42.29),r=('陳時中','D',31.93)),
+ '桃園市':dict(e=1825127,t=59.46,w=('張善政','K',52.02),r=('鄭運鵬','D',40.03)),
+ '台中市':dict(e=2274107,t=60.01,w=('盧秀燕','K',59.35),r=('蔡其昌','D',38.93)),
+ '台南市':dict(e=1548203,t=58.68,w=('黃偉哲','D',48.80),r=('謝龍介','K',43.63)),
+ '高雄市':dict(e=2282623,t=58.61,w=('陳其邁','D',58.10),r=('柯志恩','K',40.16)),
+ '宜蘭縣':dict(e=374779,t=64.28,w=('林姿妙','K',50.76),r=('江聰淵','D',41.13)),
+ '新竹縣':dict(e=452720,t=58.98,w=('楊文科','K',63.36),r=('周江杰','D',32.40)),
+ '苗栗縣':dict(e=443908,t=67.20,w=('鍾東錦','I',42.66),r=('徐定禎','D',31.24)),
+ '彰化縣':dict(e=1028606,t=64.90,w=('王惠美','K',56.75),r=('黃秀芳','D',41.94)),
+ '南投縣':dict(e=406195,t=69.08,w=('許淑華','K',55.99),r=('蔡培慧','D',42.83)),
+ '雲林縣':dict(e=559273,t=67.35,w=('張麗善','K',56.57),r=('劉建國','D',41.60)),
+ '嘉義縣':dict(e=422568,t=67.32,w=('翁章梁','D',62.85),r=('王育敏','K',37.15)),
+ '屏東縣':dict(e=679330,t=67.18,w=('周春米','D',49.09),r=('蘇清泉','K',46.59)),
+ '台東縣':dict(e=177853,t=64.79,w=('饒慶鈴','K',61.22),r=('劉櫂豪','D',36.65)),
+ '花蓮縣':dict(e=266058,t=57.56,w=('徐榛蔚','K',64.73),r=('Kolas Yotaka','D',32.04)),
+ '澎湖縣':dict(e=90360,t=58.51,w=('陳光復','D',36.64),r=('賴峰偉','K',33.33)),
+ '基隆市':dict(e=307913,t=60.16,w=('謝國樑','K',52.92),r=('蔡適應','D',39.01)),
+ '新竹市':dict(e=350758,t=62.94,w=('高虹安','T',45.02),r=('沈慧虹','D',35.68)),
+ '嘉義市':dict(e=213000,t=44.04,w=('黃敏惠','K',63.82),r=('李俊俋','D',34.95), note='2022 年因候選人過世延至 12/18 投票，投票率偏低；選舉人數為約略值'),
+ '金門縣':dict(e=122294,t=39.32,w=('陳福海','I',49.34),r=('楊鎮浯','K',41.05)),
+ '連江縣':dict(e=11810,t=72.99,w=('王忠銘','K',50.99),r=('曹爾元','I',42.12)),
+}
+PREV_NATIONAL = {'K':50.03,'D':41.62}  # 2022 全國縣市長總得票率（中選會統計，約略）
+BLUE_ALLIED = {'張啓楷','吳品叡'}  # 藍營共推或禮讓的非國民黨候選人，計入藍營得票
+
+def camp(name, party):
+    if name=='其他': return 'X'
+    if party=='D': return 'G'
+    if party=='K' or name in BLUE_ALLIED: return 'B'
+    return 'O'
+
+def margin_og(shares, parties):
+    """在野（非民進黨）最高者減民進黨最高者；沒有民進黨候選人時回傳 None"""
+    g=[v for n,v in shares.items() if parties.get(n)=='D']
+    o=[v for n,v in shares.items() if n!='其他' and parties.get(n)!='D']
+    if not g or not o: return None
+    return round(max(o)-max(g),2)
+
+# 2026 投票率估計：以 2022 為基準，嘉義市改用正常年份水準；選情越接近，動員越強
+def turnout_est(county, wp):
+    base = 62.0 if county=='嘉義市' else PREV[county]['t']
+    bump = 2.0 if wp<0.65 else 1.0 if wp<0.85 else 0.0
+    return round(base+bump,2)
+ELECTORATE_GROWTH = 1.005   # 選舉人數年增約略估計
+VALID_RATIO = 0.985          # 有效票比例
+
 TYPE_W = {'phone':1.0,'online':0.6,'ai':0.35}
 
 # 9 月以前民調／資料，只用於設定 AI 基準（不進入每日民調平均）
@@ -143,7 +194,7 @@ def daterange(a,b):
 def seeded(name):
     return random.Random(sum(ord(ch)*(i+1) for i,ch in enumerate(name)))
 
-out = {'start':START.isoformat(),'today':TODAY.isoformat(),'eday':EDAY.isoformat(),'races':{},'national':[]}
+out = {'prev_national':PREV_NATIONAL,'start':START.isoformat(),'today':TODAY.isoformat(),'eday':EDAY.isoformat(),'races':{},'national':[]}
 DATES=list(daterange(START,TODAY))
 
 for county,cfg in R.items():
@@ -199,10 +250,23 @@ for county,cfg in R.items():
         s0=6.0 if wsum>0 else 8.5
         sigma=math.sqrt(s0**2+0.12*days(d,EDAY))
         wp=phi(m/sigma)
-        series.append(dict(d=d.isoformat(), s={n:round(sh[n],2) for n in names}, adj={n:round(adj[n],2) for n in names},
+        series.append(dict(d=d.isoformat(), og=margin_og(sh,party), s={n:round(sh[n],2) for n in names}, adj={n:round(adj[n],2) for n in names},
                            pa={n:round(pollavg[n],2) for n in names} if pollavg else None, pw=round(pw,3),
                            lead=lead, m=round(m,2), wp=round(wp,4)))
-    out['races'][county]=dict(cands=[{'n':n,'p':party[n],'prior':prior[n]} for n in names], note=cfg['note'],
+    pv=PREV[county]; last=series[-1]
+    to=turnout_est(county,last['wp']); el=round(pv['e']*ELECTORATE_GROWTH)
+    valid=el*to/100*VALID_RATIO
+    sig=math.sqrt((6.0 if any(p['rel']<=TODAY for p in polls) else 8.5)**2+0.12*days(TODAY,EDAY))
+    proj={n:dict(pct=round(last['s'][n],2), votes=int(round(valid*last['s'][n]/100,-2)),
+                lo=round(max(0,last['s'][n]-0.64*sig),1), hi=round(min(100,last['s'][n]+0.64*sig),1)) for n in names}
+    pm={'w':pv['w'][1],'r':pv['r'][1]}
+    m22 = None
+    tops={pv['w'][0]:pv['w'],pv['r'][0]:pv['r']}
+    g22=[x[2] for x in tops.values() if x[1]=='D']; o22=[x[2] for x in tops.values() if x[1]!='D']
+    if g22 and o22: m22=round(max(o22)-max(g22),2)
+    out['races'][county]=dict(cands=[{'n':n,'p':party[n],'prior':prior[n],'camp':camp(n,party[n])} for n in names], note=cfg['note'],
+        prev=dict(e=pv['e'],t=pv['t'],w=pv['w'],r=pv['r'],m=m22,note=pv.get('note')),
+        turnout=dict(t=to,base=(62.0 if county=='嘉義市' else pv['t']),electorate=el,valid=int(round(valid,-2)),sig=round(sig,2)), proj=proj,
         polls=[dict(org=p['org'],fe=p['fe'].isoformat(),rel=p['rel'].isoformat(),n=p['n'],t=p['t'],sp=p.get('sp'),est=p.get('est',False),v=p['v'],url=p['url']) for p in polls],
         base_ref=BASE_REF.get(county,[]), events=[dict(d=e[1].isoformat(),n=e[2],k=e[3],t=e[4]) for e in EV if e[0]==county],
         buzz=buzz, series=series)
@@ -215,7 +279,14 @@ for i,d in enumerate(DATES):
         seats[pmap[s['lead']]]+=1
         exp[pmap[s['lead']]]+=s['wp']
         order=sorted(s['s'],key=lambda n:-s['s'][n]); exp[pmap[order[1]]]+=1-s['wp']
-    out['national'].append(dict(d=d.isoformat(),seats=seats,exp={k:round(v,2) for k,v in exp.items()}))
+    vb=vg=vt=0.0
+    for county,r in out['races'].items():
+        s=r['series'][i]; w=r['turnout']['valid']
+        for c in r['cands']:
+            if c['camp']=='B': vb+=w*s['s'][c['n']]/100
+            elif c['camp']=='G': vg+=w*s['s'][c['n']]/100
+        vt+=w
+    out['national'].append(dict(d=d.isoformat(),seats=seats,exp={k:round(v,2) for k,v in exp.items()},vb=round(vb/vt*100,2),vg=round(vg/vt*100,2)))
 
 json.dump(out,open('data.json','w'),ensure_ascii=False)
 last=out['national'][-1]; print('today',last)
