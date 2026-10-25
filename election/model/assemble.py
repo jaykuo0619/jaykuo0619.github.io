@@ -15,7 +15,7 @@ for r in j['races'].values():
     for k in ('buzz', 'base_ref', 'note', 'proj'): r.pop(k, None)
     for x in r['series']:
         for k in ('adj', 'pa'): x.pop(k, None)
-simple = open('simple.html', encoding='utf-8').read().replace('__DATA__', json.dumps(j, ensure_ascii=False, separators=(',', ':')))
+simple = open('simple.html', encoding='utf-8').read().replace('__SHAPES__', open('shapes.json', encoding='utf-8').read()).replace('__DATA__', json.dumps(j, ensure_ascii=False, separators=(',', ':')))
 open('../index.html', 'w', encoding='utf-8').write(wrap(simple, '<div class="wrap">'))
 full = open('template.html', encoding='utf-8').read().replace('__DATA__', d).replace('__SHAPES__', open('shapes.json', encoding='utf-8').read())
 open('../full.html', 'w', encoding='utf-8').write(wrap(full, '<div class="wrap">'))

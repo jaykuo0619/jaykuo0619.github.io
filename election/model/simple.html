@@ -74,16 +74,6 @@ h1 .seat{font-family:var(--f-num);font-weight:600;font-size:1.08em}
 @media (min-width:780px){.board{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}}
 .mapcol{display:flex;flex-direction:column;gap:14px}
 .mapcol h2,.card h2{font-family:var(--f-display);font-weight:900;margin:0;font-size:22px}
-.tiles{container-type:inline-size;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-rows:1fr;gap:6px;max-width:520px;width:100%;margin:0 auto}
-.tile{aspect-ratio:1;position:relative;border:0;border-radius:10px;cursor:pointer;font:inherit;color:#fff;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow:hidden;transition:transform .15s,background .35s;line-height:1.15}
-.tile:hover{transform:scale(1.04)}
-.tile .nm{font-weight:900;font-size:clamp(11px,4.3cqi,21px)}
-@container (max-width:340px){.tile .ld{display:none}}
-.tile .ld{font-size:clamp(10px,2.5cqi,13px);opacity:.92;white-space:nowrap}
-.tile.light{color:var(--ink)}
-.tile.sel{outline:3px solid var(--ink);outline-offset:2px}
-.tile .was{position:absolute;top:0;right:0;width:36%;height:36%;clip-path:polygon(0 0,100% 0,100% 100%);box-shadow:none}
-.tile .was::before{content:"";position:absolute;inset:0}
 .isle{font-size:11px;color:var(--muted);align-self:end;justify-self:center;grid-column:1}
 .key{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12.5px;color:var(--muted);justify-content:center}
 .key span{display:inline-flex;align-items:center;gap:6px}
@@ -152,8 +142,6 @@ header{grid-area:h;min-width:0} .rope{grid-area:r;min-width:0} .mapcol{grid-area
 .board{display:contents}
 .mapcol{min-height:0;min-width:0;gap:6px}
 .tilebox{flex:1;min-height:0;container-type:size;display:flex;align-items:center;justify-content:center}
-.tiles{width:min(100cqw,calc(100cqh * 5 / 6));aspect-ratio:5/6;max-width:none;grid-template-rows:repeat(6,minmax(0,1fr));grid-auto-rows:auto;margin:0}
-.tile{aspect-ratio:auto;border-radius:8px}
 h1{font-size:clamp(22px,min(6.6vw,4.4vh),46px);margin:2px 0 4px}
 .kicker{font-size:12px}
 .kicker a{font-weight:700;color:var(--ink)}
@@ -178,7 +166,6 @@ footer .full{font-size:13.5px}
   .rope{padding:8px 14px 4px}
   .key{font-size:10.5px}
   .find .kbd{display:none}
-  .tiles{--sc:1}
   .time{gap:6px}
   .time .btn,.dimbtn,.find{padding:5px 10px}
   footer .note{display:none}
@@ -200,35 +187,31 @@ footer .full{font-size:13.5px}
   html,body{height:auto} body{overflow:auto} .wrap{height:auto} .tilebox{height:min(90vw,520px);flex:none}
 }
 
-/* ===== 3D 立體柱狀地圖：柱子越高＝勝率越穩；可拖曳旋轉、手機可傾斜 ===== */
-.tile{background:none!important}
-.tile .top{position:absolute;inset:0;border-radius:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px;overflow:hidden;transition:background .35s}
-.tile .sd{display:none}
+/* ===== 台灣地圖 ===== */
 .tilebox{position:relative}
-.is3d .tilebox{perspective:1100px;cursor:grab;touch-action:none}
-.is3d .tilebox.drag{cursor:grabbing}
-.is3d .tiles{transform-style:preserve-3d;transform:rotateX(var(--rx,50deg)) rotateZ(var(--rz,-12deg)) scale(var(--sc,.86));transition:transform .25s ease-out}
-.is3d .tilebox.drag .tiles{transition:none}
-.is3d .tile{transform-style:preserve-3d;overflow:visible;border-radius:3px;transform:translateZ(var(--h,0px));transition:transform .7s cubic-bezier(.34,1.35,.64,1)}
-.is3d .tile:hover{transform:translateZ(calc(var(--h,0px) + 10px))}
-.is3d .tile.sel{outline:none;transform:translateZ(calc(var(--h,0px) + 18px))}
-.is3d .tile.sel .top{box-shadow:0 0 0 3px var(--ink),0 0 18px var(--focus)}
-.is3d .tile .sd{display:block;position:absolute;background:var(--side)}
-.is3d .tile .s1{left:0;right:0;top:100%;height:var(--h,0px);transform-origin:top;transform:rotateX(-90deg);filter:brightness(.72)}
-.is3d .tile .s2{top:0;bottom:0;left:100%;width:var(--h,0px);transform-origin:left;transform:rotateY(90deg);filter:brightness(.56)}
-.is3d .tile .s3{top:0;bottom:0;right:100%;width:var(--h,0px);transform-origin:right;transform:rotateY(-90deg);filter:brightness(.85)}
-.is3d .tile .s4{left:0;right:0;bottom:100%;height:var(--h,0px);transform-origin:bottom;transform:rotateX(90deg);filter:brightness(.6)}
-.is3d .tile:hover{transform:translateZ(calc(var(--h,0px) + 10px))}
-.dimbtn{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
-.dimbtn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.rot-hint{position:absolute;right:4px;bottom:2px;font-size:11px;color:var(--muted);pointer-events:none;opacity:.9}
-:not(.is3d)>.wrap .rot-hint{display:none}
+.twmap{width:100%;height:100%;display:block;overflow:visible}
+.twmap .land{filter:drop-shadow(0 6px 10px rgba(15,23,42,.18)) drop-shadow(0 1px 1px rgba(15,23,42,.2))}
+.twmap path.cty{stroke:var(--paper);stroke-width:.8;stroke-linejoin:round;cursor:pointer;transform-box:fill-box;transform-origin:center;
+  transition:fill .35s,transform .25s cubic-bezier(.34,1.56,.64,1),filter .25s,opacity .5s;outline:none}
+.twmap path.cty:hover,.twmap path.cty:focus-visible{transform:translateY(-2px) scale(1.035);filter:drop-shadow(0 4px 6px rgba(15,23,42,.35));stroke:var(--ink);stroke-width:1.2}
+.twmap path.cty.flip{stroke:var(--focus);stroke-width:1.8;stroke-dasharray:4 2}
+.twmap path.cty.sel{stroke:var(--ink);stroke-width:2.4;stroke-dasharray:none;transform:translateY(-3px) scale(1.05);filter:drop-shadow(0 6px 8px rgba(15,23,42,.4))}
+.twmap path.cty.pre{opacity:0;transform:translateY(-14px)}
+.twmap text{font-family:var(--f-display);font-weight:900;text-anchor:middle;pointer-events:none;paint-order:stroke;stroke-linejoin:round}
+.twmap text .pc{font-family:var(--f-num);font-weight:600;font-size:.78em}
+.twmap text.on-dark{fill:#fff;stroke:rgba(0,0,0,.25);stroke-width:2px}
+.twmap text.on-light{fill:var(--ink);stroke:color-mix(in srgb,var(--paper) 70%,transparent);stroke-width:2.5px}
+.twmap text.out{fill:var(--ink);stroke:var(--bg);stroke-width:3px}
+.twmap .lead{stroke:var(--muted);stroke-width:.7;fill:none}
+.twmap .inset{fill:none;stroke:var(--line);stroke-dasharray:3 3}
+.twmap .insetlab{font-size:10px;fill:var(--muted);font-weight:600;font-family:inherit;text-anchor:start;stroke:none}
+.maptip{position:absolute;pointer-events:none;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.15);white-space:nowrap;z-index:3}
+@media (max-width:779px){.twmap text .pc{display:none}.maptip{display:none}}
+@media (prefers-reduced-motion:reduce){.twmap path.cty{transition:fill .35s}}
+.tilebox{position:relative}
 .knot{transition:left .8s cubic-bezier(.34,1.56,.64,1)!important}
-@media (prefers-reduced-motion:reduce){.is3d .tile,.is3d .tiles{transition:none}}
 
 /* ===== 互動細節：玻璃質感、游標聚光、指令面板、View Transitions ===== */
-.is3d .tiles{gap:10px}
-.is3d .tile::after{content:"";position:absolute;inset:6%;transform:translateZ(calc(-1 * var(--h,0px)));background:rgba(0,0,0,.18);filter:blur(6px);border-radius:6px;pointer-events:none}
 .rope{position:relative}
 @media (min-width:780px){.card{position:relative!important;top:0!important}}
 .rope::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;opacity:0;transition:opacity .3s;
@@ -292,16 +275,15 @@ footer .full{font-size:13.5px}
 <section class="board">
   <div class="mapcol">
     <h2>22 個縣市，誰領先？</h2>
-    <div class="tilebox" id="tilebox"><div class="tiles" id="tiles" role="group" aria-label="縣市方塊地圖"></div><span class="rot-hint">拖曳可旋轉</span></div>
+    <div class="tilebox" id="tilebox"><svg class="twmap" id="twmap" role="group" aria-label="台灣縣市地圖"></svg><div class="maptip" id="maptip" hidden></div></div>
     <div class="key">
       <span><i style="background:var(--dpp)"></i><i style="background:var(--kmt)"></i>穩定領先</span>
       <span><i style="background:var(--dpp-l)"></i><i style="background:var(--kmt-l)"></i>小幅領先</span>
       <span><i style="background:repeating-linear-gradient(135deg,var(--dpp-l) 0 4px,var(--kmt-l) 4px 8px)"></i>難分勝負</span>
-      <span>% 是勝率・3D 柱越高越穩</span>
-      <span><i style="background:var(--soft)"><span style="position:absolute;top:0;right:0;width:9px;height:9px;background:var(--kmt);clip-path:polygon(0 0,100% 0,100% 100%)"></span></i>角落＝2022 執政黨，代表可能翻盤</span>
+      <span>% 是勝率</span>
+      <span><i style="background:var(--soft);outline:2px dashed var(--focus);outline-offset:-2px"></i>虛線框＝和 2022 不同黨，可能翻盤</span>
     </div>
     <div class="time">
-      <button class="dimbtn" id="dim" type="button" aria-pressed="true">3D</button>
       <button class="find" id="find" type="button" aria-label="搜尋縣市">⌕ <span class="kbd">/</span></button>
       <button class="btn" id="play" type="button" title="從 6/1 重播到今天（空白鍵）">▶ 重播</button>
       <input type="range" id="slider" min="0" max="0" aria-label="選擇日期">
@@ -323,13 +305,6 @@ footer .full{font-size:13.5px}
 const DATA = __DATA__;
 const PARTY = {K:'國民黨',D:'民進黨',T:'民眾黨',I:'無黨籍'};
 const PV = {K:'kmt',D:'dpp',T:'tpp',I:'ind'};
-// 方塊地圖座標（欄, 列），大致依地理位置排列
-const GRID = {'連江縣':[1,1],'金門縣':[1,2],'澎湖縣':[1,5],
-  '台北市':[4,1],'基隆市':[5,1],'桃園市':[3,2],'新北市':[4,2],'宜蘭縣':[5,2],
-  '新竹市':[2,3],'新竹縣':[3,3],'苗栗縣':[4,3],
-  '彰化縣':[2,4],'台中市':[3,4],'南投縣':[4,4],'花蓮縣':[5,4],
-  '雲林縣':[2,5],'嘉義市':[3,5],'嘉義縣':[4,5],'台東縣':[5,5],
-  '台南市':[2,6],'高雄市':[3,6],'屏東縣':[4,6]};
 const C = Object.keys(DATA.races), N = DATA.national.length;
 let day = N-1, sel = null, timer = null;
 
@@ -354,7 +329,7 @@ function drawHead(){
   const dg=st.G-SEATS22.G, db=st.B-SEATS22.B, fl=C.filter(c=>flipped(c,day));
   const n = x => x>0?`多 ${x}`:x<0?`少 ${-x}`:'持平';
   document.getElementById('sub').innerHTML = `和 2022 年比，綠營${n(dg)}${dg?' 席':''}、藍營${n(db)}${db?' 席':''}${st.O?`，其他 ${st.O} 席`:''}。`+
-    (fl.length? `<span class="fl">可能翻盤的有 ${fl.length} 個縣市：${fl.map(c=>`<button type="button" data-c="${c}">${short(c)}</button>`).join('、')}。</span><span class="fs" style="display:none">${fl.length} 個縣市可能翻盤（方塊右上角三角形）。</span>` : '目前沒有縣市翻盤。');
+    (fl.length? `<span class="fl">可能翻盤的有 ${fl.length} 個縣市：${fl.map(c=>`<button type="button" data-c="${c}">${short(c)}</button>`).join('、')}。</span><span class="fs" style="display:none">${fl.length} 個縣市可能翻盤（地圖上虛線框）。</span>` : '目前沒有縣市翻盤。');
   document.querySelectorAll('#sub button').forEach(b=>b.addEventListener('click',()=>open(b.dataset.c)));
 }
 
@@ -378,28 +353,49 @@ function drawRope(){
   document.getElementById('cap').innerHTML = `22 縣市合計，${lead}。和 2022 年藍營領先 ${pct(pb-pg)} 點相比，繩子往<b class="${move>0?'g':'b'}">${move>0?'綠營':'藍營'}拉過去 ${pct(Math.abs(move))} 點</b>。`;
 }
 
-// ===== 3. 方塊地圖 =====
-const tiles=document.getElementById('tiles');
-tiles.innerHTML = C.map(c=>{ const [x,y]=GRID[c]; return `<button type="button" class="tile" data-c="${c}" style="grid-column:${x};grid-row:${y}"><span class="sd s4"></span><span class="sd s3"></span><span class="sd s1"></span><span class="sd s2"></span><span class="top"><span class="nm">${short(c)}</span><span class="ld"></span></span></button>`; }).join('');
-tiles.querySelectorAll('.tile').forEach(t=>t.addEventListener('click',e=>{ if(dragged){e.preventDefault();return;} open(t.dataset.c); }));
+// ===== 3. 台灣地圖 =====
+const SHAPES = __SHAPES__;
+const svg=document.getElementById('twmap'), mtip=document.getElementById('maptip');
+svg.setAttribute('viewBox','8 92 552 576');
+// 面積太小的縣市，名字拉到海上並畫引線
+const CALL={'連江縣':[76,141,'middle',1],'金門縣':[76,311,'middle',1],'澎湖縣':[178,349,'middle',1],'台北市':[452,111,'end'],'基隆市':[527,121,'start'],'新竹市':[372,184,'end'],'嘉義市':[247,393,'end']};
+const NUDGE={'新北市':[30,24],'桃園市':[-6,4],'新竹縣':[8,4]};
+(()=>{ let h='<defs id="pats"></defs>';
+  for (const [n,[x0,y0,x1,y1]] of Object.entries(SHAPES.insets)) h+=`<rect class="inset" x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" rx="4"></rect>`;
+  h+='<g class="land">'+C.map(c=>`<path class="cty pre" data-c="${c}" d="${SHAPES.shapes[c]}" tabindex="0" role="button"></path>`).join('')+'</g>';
+  for (const c of C){ let [x,y]=SHAPES.labels[c];
+    if (CALL[c]){ const [lx,ly,an,nolead]=CALL[c]; h+=(nolead?'':`<line class="lead" x1="${x}" y1="${y}" x2="${lx+(an==='end'?3:-3)}" y2="${ly-4}"></line>`)+`<text class="out" data-l="${c}" x="${lx}" y="${ly}" style="text-anchor:${an};font-size:12px">${short(c)} <tspan class="pc"></tspan></text>`; continue; }
+    if (NUDGE[c]){ x+=NUDGE[c][0]; y+=NUDGE[c][1]; }
+    const big=!SHAPES.insets[c];
+    h+=`<text data-l="${c}" x="${x}" y="${y}" style="font-size:${big?13:12}px">${short(c)}<tspan class="pc" x="${x}" dy="1.15em"></tspan></text>`; }
+  svg.innerHTML=h; })();
+const paths=[...svg.querySelectorAll('path.cty')];
+paths.forEach(p=>{ const c=p.dataset.c;
+  p.addEventListener('click',()=>open(c));
+  p.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(c); } });
+  p.addEventListener('pointermove',e=>{ if(e.pointerType!=='mouse') return; const s=DATA.races[c].series[day], box=tbox.getBoundingClientRect();
+    mtip.innerHTML=`<b>${c}</b>　${esc(s.lead)} 領先 <span class="num">${pct(s.m)}</span> 點・勝率 <b>${Math.round(s.wp*100)}%</b>${flipped(c,day)?'・<b style="color:var(--focus)">可能翻盤</b>':''}`;
+    mtip.hidden=false; let x=e.clientX-box.left+14, y=e.clientY-box.top+14;
+    if (x+mtip.offsetWidth>box.width) x=e.clientX-box.left-mtip.offsetWidth-10;
+    mtip.style.left=x+'px'; mtip.style.top=y+'px'; });
+  p.addEventListener('pointerleave',()=>mtip.hidden=true); });
+function patFor(a,b){ const id=`st-${a}-${b}`; if(!document.getElementById(id))
+  document.getElementById('pats').insertAdjacentHTML('beforeend',`<pattern id="${id}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" style="fill:var(--${a}-l)"></rect><rect width="3.5" height="7" style="fill:var(--${b}-l)"></rect></pattern>`);
+  return `url(#${id})`; }
 function tileStyle(c){
   const s=DATA.races[c].series[day], p=cand(c,s.lead).p, [a,b]=top2(c,day), pb=cand(c,b).p;
-  if (s.wp<0.6) return {bg:`repeating-linear-gradient(135deg,var(--${PV[p]}-l) 0 7px,var(--${PV[pb]}-l) 7px 14px)`,light:true};
+  if (s.wp<0.6) return {bg:patFor(PV[p],PV[pb]),light:true};
   if (s.wp<0.85) return {bg:`var(--${PV[p]}-l)`,light:true};
   return {bg:`var(--${PV[p]})`,light:false};
 }
 function drawTiles(){
-  tiles.querySelectorAll('.tile').forEach(t=>{ const c=t.dataset.c, r=DATA.races[c], s=r.series[day], st=tileStyle(c);
-    const top=t.querySelector('.top'); top.style.background=st.bg; t.classList.toggle('light',st.light); t.classList.toggle('sel',c===sel);
-    t.style.setProperty('--side',`var(--${PV[cand(c,s.lead).p]})`);
-    t.style.setProperty('--h', intro? '0px' : colH(s.wp));
-    t.querySelector('.ld').textContent = `${s.lead} ${Math.round(s.wp*100)}%`;
-    let w=t.querySelector('.was');
-    if (flipped(c,day)){ if(!w){ w=document.createElement('span'); w.className='was'; top.appendChild(w); }
-      w.style.background=`var(--${PV[r.prev.w[1]]})`; }
-    else if (w) w.remove();
-    t.setAttribute('aria-label',`${c}：${s.lead} 領先，勝率 ${Math.round(s.wp*100)}%${flipped(c,day)?'，可能翻盤':''}`);
-  });
+  for (const p of paths){ const c=p.dataset.c, s=DATA.races[c].series[day], st=tileStyle(c);
+    p.style.fill=st.bg; p.classList.toggle('flip',flipped(c,day)); p.classList.toggle('sel',c===sel);
+    p.setAttribute('aria-label',`${c}：${s.lead} 領先，勝率 ${Math.round(s.wp*100)}%${flipped(c,day)?'，可能翻盤':''}`);
+    const t=svg.querySelector(`text[data-l="${c}"]`);
+    if (!t.classList.contains('out')) t.setAttribute('class',st.light?'on-light':'on-dark');
+    t.querySelector('.pc').textContent=Math.round(s.wp*100)+'%'; }
+  const sp=paths.find(p=>p.dataset.c===sel); if (sp && sp.nextSibling) sp.parentNode.appendChild(sp);   // 選取的縣市移到最上層，外框才不被蓋住
 }
 
 // ===== 4. 縣市卡 =====
@@ -502,32 +498,7 @@ function drawCard(){
   card.querySelector('.x').addEventListener('click',()=>{ card.classList.remove('open'); });
 }
 
-// ===== 3D：柱高、拖曳旋轉、手機傾斜、開場升起動畫 =====
-let dragged=false, intro=true, is3d=true, rx=50, rz=-12, tiltX=0, tiltZ=0;
-try{ const v=localStorage.getItem('dim'); if(v==='2d') is3d=false; }catch(e){}
 const tbox=document.getElementById('tilebox');
-function colH(wp){ const w=(tiles.querySelector('.tile')||{}).offsetWidth||60; return Math.round(w*(0.1+0.5*Math.max(0,Math.min(1,(wp-0.5)*2))))+'px'; }
-function applyRot(){ tiles.style.setProperty('--rx',(rx+tiltX)+'deg'); tiles.style.setProperty('--rz',(rz+tiltZ)+'deg'); }
-function setDim(v){ is3d=v; document.body.classList.toggle('is3d',v); const b=document.getElementById('dim'); b.setAttribute('aria-pressed',v); b.textContent=v?'3D':'2D';
-  try{localStorage.setItem('dim',v?'3d':'2d');}catch(e){} }
-document.getElementById('dim').addEventListener('click',()=>{ setDim(!is3d); askTilt(); });
-let p0=null;
-tbox.addEventListener('pointerdown',e=>{ if(!is3d) return; p0={x:e.clientX,y:e.clientY,rx,rz}; dragged=false; });
-addEventListener('pointermove',e=>{ if(!p0) return; const dx=e.clientX-p0.x, dy=e.clientY-p0.y;
-  if(!dragged && Math.hypot(dx,dy)>6){ dragged=true; tbox.classList.add('drag'); }
-  if(dragged){ rz=p0.rz+dx*0.35; rx=Math.max(0,Math.min(68,p0.rx-dy*0.3)); applyRot(); } });
-addEventListener('pointerup',()=>{ if(!p0) return; p0=null; tbox.classList.remove('drag'); setTimeout(()=>dragged=false,0); });
-tbox.addEventListener('dblclick',()=>{ rx=50; rz=-12; applyRot(); });
-// 手機傾斜（iOS 需要使用者點一下才能授權）
-let tiltOn=false;
-function onTilt(e){ if(e.beta==null) return; tiltX=Math.max(-12,Math.min(12,(e.beta-45)*0.25)); tiltZ=Math.max(-15,Math.min(15,e.gamma*0.35)); if(is3d) applyRot(); }
-function askTilt(){ if(tiltOn || !('DeviceOrientationEvent' in window)) return;
-  const go=()=>{ tiltOn=true; addEventListener('deviceorientation',onTilt); };
-  if (typeof DeviceOrientationEvent.requestPermission==='function') DeviceOrientationEvent.requestPermission().then(r=>{ if(r==='granted') go(); }).catch(()=>{});
-  else go(); }
-if (typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission!=='function') askTilt();
-else tbox.addEventListener('touchstart',askTilt,{once:true,passive:true});
-setDim(is3d); applyRot();
 
 function open(c){ buzz(8);
   const go=()=>{ sel=c; drawTiles(); drawCard(); document.getElementById('card').classList.add('open'); };
@@ -583,9 +554,8 @@ document.addEventListener('keydown',e=>{
 slider.addEventListener('input',()=>{ if (DATA.national[day].d.endsWith('-01')) buzz(12); });
 
 render();
-// 開場：柱子依序升起
-requestAnimationFrame(()=>{ intro=false; const ts=[...tiles.querySelectorAll('.tile')];
-  ts.forEach((t,i)=>t.style.transitionDelay=(i*35)+'ms'); drawTiles();
-  setTimeout(()=>ts.forEach(t=>t.style.transitionDelay=''),1600); });
-addEventListener('resize',()=>drawTiles());
+// 開場：縣市由北到南依序落下
+requestAnimationFrame(()=>{ const ord=[...paths].sort((x,y)=>SHAPES.labels[x.dataset.c][1]-SHAPES.labels[y.dataset.c][1]);
+  ord.forEach((p,i)=>{ p.style.transitionDelay=(i*30)+'ms'; p.classList.remove('pre'); });
+  setTimeout(()=>paths.forEach(p=>p.style.transitionDelay=''),1500); });
 </script>
