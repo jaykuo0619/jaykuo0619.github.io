@@ -66,6 +66,13 @@ P = [
  dict(r='宜蘭縣', org='藍白合整合民調（機構未載明）', fe=D(2026,5,2), rel=D(2026,5,4), n=None, t='phone', sp='K', est=True, v={'林國漳':28.9,'吳宗憲':27.6}, url='https://news.tvbs.com.tw/politics/3194681'),
  dict(r='台東縣', org='匯流新聞網民調中心（兩人對決題）', fe=D(2026,5,28), rel=D(2026,6,1), n=905, t='phone', v={'吳秀華':51.3,'陳瑩':22.4}, url='https://n.yam.com/Article/20260601432941'),
  dict(r='花蓮縣', org='風傳媒民調中心', fe=D(2026,7,23), rel=D(2026,7,29), n=1068, t='phone', v={'游淑貞':30.1,'魏嘉賢':22.1,'張峻':12.5}, url='https://www.storm.mg/article/11152459'),
+ # ---- 10/27 戴立安 10 月國政民調（全國 1075 人，分區「想讓哪個政黨在你的縣市執政」；n 為依選舉人數推估的分區樣本）----
+ dict(r='台北市', org='戴立安台灣民心調查（畢肯執行，台北＋新北分區）', fe=D(2026,10,22), rel=D(2026,10,27), n=112, t='party', v={'蔣萬安': 31.8, '沈伯洋': 47.1}, url='https://newtalk.tw/news/view/2026-10-27/1067619'),
+ dict(r='新北市', org='戴立安台灣民心調查（畢肯執行，台北＋新北分區）', fe=D(2026,10,22), rel=D(2026,10,27), n=183, t='party', v={'李四川': 31.8, '蘇巧慧': 47.1}, url='https://newtalk.tw/news/view/2026-10-27/1067619'),
+ dict(r='桃園市', org='戴立安台灣民心調查（畢肯執行，桃園分區）', fe=D(2026,10,22), rel=D(2026,10,27), n=101, t='party', v={'張善政': 41.6, '黃世杰': 27.7}, url='https://newtalk.tw/news/view/2026-10-27/1067619'),
+ dict(r='台中市', org='戴立安台灣民心調查（畢肯執行，台中分區）', fe=D(2026,10,22), rel=D(2026,10,27), n=125, t='party', v={'江啓臣': 24.2, '何欣純': 43.9}, url='https://newtalk.tw/news/view/2026-10-27/1067619'),
+ dict(r='台南市', org='戴立安台灣民心調查（畢肯執行，台南＋高雄分區）', fe=D(2026,10,22), rel=D(2026,10,27), n=85, t='party', v={'謝龍介': 20.3, '陳亭妃': 58.5}, url='https://newtalk.tw/news/view/2026-10-27/1067619'),
+ dict(r='高雄市', org='戴立安台灣民心調查（畢肯執行，台南＋高雄分區）', fe=D(2026,10,22), rel=D(2026,10,27), n=126, t='party', v={'柯志恩': 20.3, '賴瑞隆': 58.5}, url='https://newtalk.tw/news/view/2026-10-27/1067619'),
  # ---- 10/23 新增 ----
  dict(r='基隆市', org='雨晴指標行銷（謝國樑競辦公布）', fe=D(2026,10,18), rel=D(2026,10,24), n=1070, t='phone', sp='K', v={'謝國樑':40.5,'童子瑋':33.2}, url='https://news.nextapple.com/politics/20261024/4D800FD179999C6AD822CF03435163E7'),
  dict(r='花蓮縣', org='風傳媒民調中心', fe=D(2026,10,18), rel=D(2026,10,25), n=1068, t='phone', v={'游淑貞':29.6,'張峻':17.8,'魏嘉賢':13.8}, url='https://tw.news.yahoo.com/%E8%8A%B1%E8%93%AE%E6%9C%80%E6%96%B0%E6%B0%91%E8%AA%BF-%E6%B8%B8%E6%B7%91%E8%B2%9E29-6-%E5%B1%85%E9%A6%96-3%E8%87%B310%E6%9C%88%E5%85%AD%E9%80%A3%E5%86%A0-065300349.html'),
@@ -123,7 +130,7 @@ def turnout_est(county, wp):
 ELECTORATE_GROWTH = 1.005   # 選舉人數年增約略估計
 VALID_RATIO = 0.985          # 有效票比例
 
-TYPE_W = {'phone':1.0,'online':0.6,'ai':0.35}
+TYPE_W = {'phone':1.0,'online':0.6,'ai':0.35,'party':0.4}  # party＝全國民調的分區「想讓哪黨執政」題，不是候選人對決題
 
 # 9 月以前民調／資料，只用於設定 AI 基準（不進入每日民調平均）
 BASE_REF = {
@@ -142,6 +149,7 @@ BASE_REF = {
 # 民調數字本身另外算進民調平均；這裡的「民調公布」只算公布後的聲量與話題效應。
 # 格式：(縣市, 日期, 受影響候選人, 強度 -1~+1, 說明, 來源網址, 類型 news/poll)
 EV = [
+ ('台北市', D(2026,10,27),'沈伯洋', 0.3,'戴立安國政民調：沈伯洋好感度 47.8%，領先蔣萬安 10.9 點，蔣兩個月跌 10.9 點','https://www.storm.mg/article/11175935','poll'),
  ('基隆市', D(2026,10,24),'謝國樑', 0.3,'謝國樑競辦公布民調領先 7.3 點，反擊鏡新聞民調','https://news.nextapple.com/politics/20261024/4D800FD179999C6AD822CF03435163E7','poll'),
  ('花蓮縣', D(2026,10,25),'游淑貞', 0.2,'風傳媒民調游淑貞 29.6% 連續居首','https://tw.news.yahoo.com/%E8%8A%B1%E8%93%AE%E6%9C%80%E6%96%B0%E6%B0%91%E8%AA%BF-%E6%B8%B8%E6%B7%91%E8%B2%9E29-6-%E5%B1%85%E9%A6%96-3%E8%87%B310%E6%9C%88%E5%85%AD%E9%80%A3%E5%86%A0-065300349.html','poll'),
  ('花蓮縣', D(2026,10,25),'張峻', 0.3,'風傳媒民調張峻 17.8% 超車魏嘉賢','https://tw.news.yahoo.com/%E8%8A%B1%E8%93%AE%E6%9C%80%E6%96%B0%E6%B0%91%E8%AA%BF-%E6%B8%B8%E6%B7%91%E8%B2%9E29-6-%E5%B1%85%E9%A6%96-3%E8%87%B310%E6%9C%88%E5%85%AD%E9%80%A3%E5%86%A0-065300349.html','poll'),
@@ -242,6 +250,12 @@ AUDIT={
  ('嘉義市','2026-07-12'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='媒體轉述，抽樣與加權未完整說明。'),
  ('宜蘭縣','2026-05-02'):dict(fr='none',wt=None,disc=0,und=None,qw=False,fl=['adv'],note='藍白整合用的協調民調，執行機構與方法都未公開。'),
  ('台東縣','2026-05-28'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='兩人對決題、樣本 905 偏小，時間較早。'),
+ ('台北市','2026-10-22'):dict(fr='dual',wt=True,disc=2,und=21.1,qw=True,fl=[],note='全國 1075 人電訪（市話 696＋手機 379 雙底冊）、raking 加權，方法完整；但這是「台北＋新北」分區的政黨執政偏好，不是候選人對決，分區樣本只有約 112 人，且戴立安民調長期比同期他家偏綠，只以低權重參考。'),
+ ('新北市','2026-10-22'):dict(fr='dual',wt=True,disc=2,und=21.1,qw=True,fl=[],note='全國 1075 人電訪（市話 696＋手機 379 雙底冊）、raking 加權，方法完整；但這是「台北＋新北」分區的政黨執政偏好，不是候選人對決，分區樣本只有約 183 人，且戴立安民調長期比同期他家偏綠，只以低權重參考。'),
+ ('桃園市','2026-10-22'):dict(fr='dual',wt=True,disc=2,und=30.7,qw=True,fl=[],note='全國 1075 人電訪（市話 696＋手機 379 雙底冊）、raking 加權，方法完整；但這是「桃園」分區的政黨執政偏好，不是候選人對決，分區樣本只有約 101 人，且戴立安民調長期比同期他家偏綠，只以低權重參考。'),
+ ('台中市','2026-10-22'):dict(fr='dual',wt=True,disc=2,und=31.9,qw=True,fl=[],note='全國 1075 人電訪（市話 696＋手機 379 雙底冊）、raking 加權，方法完整；但這是「台中」分區的政黨執政偏好，不是候選人對決，分區樣本只有約 125 人，且戴立安民調長期比同期他家偏綠，只以低權重參考。'),
+ ('台南市','2026-10-22'):dict(fr='dual',wt=True,disc=2,und=21.2,qw=True,fl=[],note='全國 1075 人電訪（市話 696＋手機 379 雙底冊）、raking 加權，方法完整；但這是「台南＋高雄」分區的政黨執政偏好，不是候選人對決，分區樣本只有約 85 人，且戴立安民調長期比同期他家偏綠，只以低權重參考。'),
+ ('高雄市','2026-10-22'):dict(fr='dual',wt=True,disc=2,und=21.2,qw=True,fl=[],note='全國 1075 人電訪（市話 696＋手機 379 雙底冊）、raking 加權，方法完整；但這是「台南＋高雄」分區的政黨執政偏好，不是候選人對決，分區樣本只有約 126 人，且戴立安民調長期比同期他家偏綠，只以低權重參考。'),
  ('基隆市','2026-10-18'):dict(fr='land',wt=True,disc=2,und=None,qw=False,fl=['adv'],note='市話分層比例抽樣、依行政區／年齡／性別加權、樣本 1070，程序有交代；但由謝國樑競辦挑選公布，未表態比例與題目未公開，只打市話也偏向年長選民，可能高估謝國樑。'),
  ('花蓮縣','2026-10-18'):dict(fr='tel',wt=True,disc=2,und=33.5,qw=False,fl=[],note='分層隨機抽樣、依性別／戶籍／年齡／教育加權、樣本 1068；未說明是否含手機、題目未公布；未表態 33.5%，三人差距可信度有限。'),
  ('花蓮縣','2026-07-23'):dict(fr='tel',wt=None,disc=1,und=29.2,qw=False,fl=[],note='CATI、樣本 1068，但抽樣框、加權、題目都未公布；未表態近 3 成。'),
@@ -264,6 +278,7 @@ for p in P:
 # 多次比較的平均偏差再做收縮（k/(k+2)，比較次數少就不太相信），最後從該機構數字中扣掉。
 HOUSES=['雨晴','信民','TVBS','年代','山水','大地','匯流','新台灣國策','ETtoday','TPOC','趨勢','聯合報','鉅聞','關鍵','世新','風傳媒','震傳媒','藍白合']
 def house(org):
+    if '戴立安' in org: return '信民'   # 同一位設計者（戴立安），視為同一機構估偏差
     for h in HOUSES:
         if h in org: return '山水' if h=='震傳媒' else h
     return org
@@ -276,8 +291,8 @@ def gmb(p):
 HE_RAW={}
 for p in P:
     m=gmb(p)
-    if m is None: continue
-    others=[q for q in P if q['r']==p['r'] and q is not p and house(q['org'])!=house(p['org']) and abs((q['fe']-p['fe']).days)<=45 and gmb(q) is not None]
+    if m is None or p['t']=='party': continue   # 政黨偏好題和候選人對決題問法不同，不拿來估機構偏差
+    others=[q for q in P if q['r']==p['r'] and q is not p and q['t']!='party' and house(q['org'])!=house(p['org']) and abs((q['fe']-p['fe']).days)<=45 and gmb(q) is not None]
     if not others: continue
     ws=[TYPE_W[q['t']]*q['q']*math.exp(-abs((q['fe']-p['fe']).days)/40) for q in others]
     ref=sum(w*gmb(q) for w,q in zip(ws,others))/sum(ws)

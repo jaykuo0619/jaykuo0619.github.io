@@ -503,7 +503,7 @@ function newsBlock(c){
         <span class="fx ${now>=0?'up':'dn'}">${sg(now)} 點<small>最大 ${sg(peak)}</small></span></li>`; }).join('')}</ul></div>`;
 }
 // 民調採納：每份民調的權重與校正（和模型同一套算法）
-const TW={phone:1,online:.6,ai:.35}, TN={phone:'電話',online:'網路問卷',ai:'AI 模擬'};
+const TW={phone:1,online:.6,ai:.35,party:.4}, TN={phone:'電話',online:'網路問卷',ai:'AI 模擬',party:'政黨執政偏好題'};
 function pollW(p,d){ const age=(new Date(d)-new Date(p.fe))/864e5; const sz=p.n? Math.sqrt(Math.min(Math.max(p.n,400),2000)/1000):0.8;
   return {w:TW[p.t]*(p.sp?0.7:1)*sz*(p.q||1)*(p.cf||1)*Math.exp(-age/40), age:Math.round(age), sz}; }
 // AI 方法評分（0–100）與趨勢一致性標籤
