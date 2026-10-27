@@ -37,6 +37,7 @@ P = [
  dict(r='台北市', org='信民兩岸研究協會（戴立安）／畢肯', fe=D(2026,9,18), rel=D(2026,9,22), n=1076, t='phone', v={'蔣萬安':41.7,'沈伯洋':40.5}, url='https://www.mirrormedia.mg/external/setn_1911133'),
  dict(r='台北市', org='TVBS 民調中心', fe=D(2026,10,7), rel=D(2026,10,9), n=1120, t='phone', v={'蔣萬安':49,'沈伯洋':41}, url='https://udn.com/news/story/124652/9803622'),
  dict(r='台北市', org='信民兩岸研究協會（戴立安）', fe=D(2026,10,17), rel=D(2026,10,20), n=None, t='phone', est=True, v={'沈伯洋':50.3,'蔣萬安':33.3}, url='https://news.ltn.com.tw/topic/戴立安民調'),
+ dict(r='台北市', org='ETtoday 民調雲', fe=D(2026,10,25), rel=D(2026,10,27), n=1462, t='online', v={'蔣萬安':48.6,'沈伯洋':41.1}, url='https://www.ettoday.net/news/20261027/3261830.htm'),
  dict(r='台北市', org='山水民意（震傳媒委託）', fe=D(2026,10,19), rel=D(2026,10,22), n=1074, t='phone', v={'沈伯洋':42.8,'蔣萬安':39.0}, url='https://tw.news.yahoo.com/%E5%8F%B0%E5%8C%97%E7%9C%9F%E9%80%86%E9%A2%A8%E4%BA%86-%E6%B2%88%E4%BC%AF%E6%B4%8B%E6%9C%80%E6%96%B0%E6%B0%91%E8%AA%BF%E5%86%8D%E8%B6%85%E8%BB%8A%E8%94%A3%E8%90%AC%E5%AE%89-025949927.html'),
  dict(r='新北市', org='年代民調中心', fe=D(2026,8,26), rel=D(2026,8,28), n=1070, t='phone', v={'蘇巧慧':37.8,'李四川':32.2}, url='https://www.nownews.com/news/6870016'),
  dict(r='新北市', org='TVBS 民調中心（國民黨新北議會黨團公布）', fe=D(2026,10,3), rel=D(2026,10,7), n=1210, t='phone', sp='K', v={'李四川':42.6,'蘇巧慧':35.9}, url='https://www.nownews.com/news/6881356'),
@@ -151,6 +152,7 @@ BASE_REF = {
 # 民調數字本身另外算進民調平均；這裡的「民調公布」只算公布後的聲量與話題效應。
 # 格式：(縣市, 日期, 受影響候選人, 強度 -1~+1, 說明, 來源網址, 類型 news/poll)
 EV = [
+ ('台北市', D(2026,10,27),'蔣萬安', 0.4,'ETtoday 網路民調蔣萬安 48.6% 領先沈伯洋 7.5 點','https://www.ettoday.net/news/20261027/3261830.htm','poll'),
  ('台北市', D(2026,10,27),'沈伯洋', 0.3,'戴立安國政民調：沈伯洋好感度 47.8%，領先蔣萬安 10.9 點，蔣兩個月跌 10.9 點','https://www.storm.mg/article/11175935','poll'),
  ('基隆市', D(2026,10,24),'謝國樑', 0.3,'謝國樑競辦公布民調領先 7.3 點，反擊鏡新聞民調','https://news.nextapple.com/politics/20261024/4D800FD179999C6AD822CF03435163E7','poll'),
  ('花蓮縣', D(2026,10,25),'游淑貞', 0.2,'風傳媒民調游淑貞 29.6% 連續居首','https://tw.news.yahoo.com/%E8%8A%B1%E8%93%AE%E6%9C%80%E6%96%B0%E6%B0%91%E8%AA%BF-%E6%B8%B8%E6%B7%91%E8%B2%9E29-6-%E5%B1%85%E9%A6%96-3%E8%87%B310%E6%9C%88%E5%85%AD%E9%80%A3%E5%86%A0-065300349.html','poll'),
@@ -224,6 +226,7 @@ AUDIT={
  ('台北市','2026-09-18'):dict(fr='dual',wt=True,disc=2,und=None,qw=False,fl=[],note='市話 70%＋手機 30% 雙底冊、CATI、性別／區域／年齡／教育多變數加權，方法是這批裡最完整的之一；但主辦協會立場偏綠，題目原文未公布。'),
  ('台北市','2026-10-07'):dict(fr='land',wt=True,disc=2,und=11,qw=True,fl=[],note='市話尾數隨機、拒訪率 12.8%、多變數加權、未表態僅 11%，程序嚴謹；只打市話，年輕族群代表性不足，可能讓藍營數字偏高。'),
  ('台北市','2026-10-17'):dict(fr='none',wt=None,disc=0,und=None,qw=False,fl=[],note='報導只有結果，沒有樣本數、抽樣框、加權與調查日期；同一機構一個月內從差 1 點變成差 17 點，變動幅度遠超過抽樣誤差，可信度低。'),
+ ('台北市','2026-10-25'):dict(fr='web',wt=True,disc=2,und=8.7,qw=False,fl=[],note='東森自建會員資料庫分層抽樣、簡訊／EDM 邀請填網路問卷，非機率樣本；性別／年齡／行政區／教育 raking 加權，樣本 1462，題目原文未公布。'),
  ('台北市','2026-10-19'):dict(fr='land',wt=True,disc=2,und=None,qw=True,fl=[],note='CATI 市話、區域／性別／年齡／教育加權、樣本 1074，程序完整；只打市話。「一定投票」者沈 51.2 比 38.6，顯示動員差異。'),
  ('台北市','2026-05-25'):dict(fr='land',wt=True,disc=1,und=None,qw=False,fl=[],note='TVBS 例行電訪，方法沿用其標準程序；距今較久，權重已大幅衰減。'),
  ('台北市','2026-06-21'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='報導未完整列出抽樣與加權；時間較早，權重低。'),
