@@ -43,6 +43,7 @@ P = [
  dict(r='新北市', org='年代民調中心', fe=D(2026,8,26), rel=D(2026,8,28), n=1070, t='phone', v={'蘇巧慧':37.8,'李四川':32.2}, url='https://www.nownews.com/news/6870016'),
  dict(r='新北市', org='TVBS 民調中心（國民黨新北議會黨團公布）', fe=D(2026,10,3), rel=D(2026,10,7), n=1210, t='phone', sp='K', v={'李四川':42.6,'蘇巧慧':35.9}, url='https://www.nownews.com/news/6881356'),
  dict(r='新北市', org='信民兩岸研究協會（戴立安）', fe=D(2026,10,10), rel=D(2026,10,13), n=None, t='phone', est=True, v={'蘇巧慧':43.1,'李四川':30.0}, url='https://cna.com.tw/news/aipl/202610130087.aspx'),
+ dict(r='桃園市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,10,26), rel=D(2026,10,28), n=13789, t='ai', v={'張善政':47.2,'黃世杰':34.3}, url='https://ctinews.com/news/items/89xp2VNXWe'),
  dict(r='桃園市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,9,29), rel=D(2026,9,29), n=13789, t='ai', v={'張善政':47.3,'黃世杰':36.5}, url='https://www.mirrormedia.mg/external/mnews_20260930nm005'),
  dict(r='台中市', org='TVBS 民調中心（國民黨台中議會黨團公布）', fe=D(2026,9,12), rel=D(2026,9,14), n=None, t='phone', sp='K', est=True, v={'江啓臣':45.1,'何欣純':32.5}, url='https://www.nownews.com/news/6874941'),
  dict(r='台中市', org='年代民調中心', fe=D(2026,10,4), rel=D(2026,10,6), n=1068, t='phone', v={'江啓臣':37.3,'何欣純':31.3,'洪麗華':1.1}, url='https://www.nownews.com/news/6881349'),
@@ -153,6 +154,7 @@ BASE_REF = {
 # 民調數字本身另外算進民調平均；這裡的「民調公布」只算公布後的聲量與話題效應。
 # 格式：(縣市, 日期, 受影響候選人, 強度 -1~+1, 說明, 來源網址, 類型 news/poll)
 EV = [
+ ('桃園市', D(2026,10,28),'張善政', 0.2,'TPOC AI 模擬民調張善政領先 12.9 點、13 區全勝','https://ctinews.com/news/items/89xp2VNXWe','poll'),
  ('台北市', D(2026,10,28),'沈伯洋', 0.5,'聯合報民調沈伯洋 45% 領先蔣萬安 41%，藍營媒體民調也出現翻轉','https://udn.com/news/story/124652/9840910','poll'),
  ('台北市', D(2026,10,27),'蔣萬安', 0.4,'ETtoday 網路民調蔣萬安 48.6% 領先沈伯洋 7.5 點','https://www.ettoday.net/news/20261027/3261830.htm','poll'),
  ('台北市', D(2026,10,27),'沈伯洋', 0.3,'戴立安國政民調：沈伯洋好感度 47.8%，領先蔣萬安 10.9 點，蔣兩個月跌 10.9 點','https://www.storm.mg/article/11175935','poll'),
@@ -237,6 +239,7 @@ AUDIT={
  ('新北市','2026-10-03'):dict(fr='tel',wt=None,disc=1,und=19.9,qw=False,fl=['adv'],note='由國民黨議會黨團挑選公布，抽樣框與加權未說明；TVBS 執行品質通常穩定，但「委託方決定公不公布」本身就有選擇偏誤。'),
  ('新北市','2026-10-10'):dict(fr='none',wt=None,disc=0,und=None,qw=False,fl=[],note='調查日期、樣本數、抽樣框、加權全部未揭露，只能當參考訊號；與同期其他民調方向相反，差距 13 點也偏大。'),
  ('新北市','2026-06-06'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=['adv'],note='國民黨議會黨團委託並公布，方法揭露有限；時間較早。'),
+ ('桃園市','2026-10-26'):dict(fr='ai',wt=True,disc=2,und=15.0,qw=False,fl=[],note='第四波 AI 矽基樣本模擬（GPT-5.4 mini 扮演 13,789 位選民），依性別／年齡／教育／過去政黨票加權並做黨派偏差後處理；報告自承不是真實民調、可能放大媒體敘事、低估冷感選民。'),
  ('桃園市','2026-09-29'):dict(fr='ai',wt=None,disc=1,und=None,qw=False,fl=[],note='用大型語言模型扮演選民的「矽基樣本」，不是真的問人；沒有對實際選舉結果做過驗證，樣本數再大也不等於準確。'),
  ('台中市','2026-09-12'):dict(fr='none',wt=None,disc=0,und=None,qw=False,fl=['adv'],note='國民黨議會黨團公布，報導沒有任何方法資訊（日期、樣本、抽樣、加權皆無）。'),
  ('台中市','2026-10-04'):dict(fr='tel',wt=True,disc=2,und=29.7,qw=False,fl=[],note='CATI 分層抽樣、性別／年齡／行政區加權；未表態近 3 成，雙方數字都偏低，差距的不確定性較大。'),
