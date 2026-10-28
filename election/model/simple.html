@@ -526,7 +526,7 @@ function pollBlock(c){
       `<span${o.sz<1?' class="bad"':''}>樣本 ${p.n?p.n.toLocaleString():'未載明'}${o.sz.toFixed(2)!=='1.00'?' ×'+o.sz.toFixed(2):''}</span>`,
       `<span${o.age>40?' class="bad"':''}>${o.age} 天前 ×${Math.exp(-o.age/40).toFixed(2)}</span>`,
       Math.abs(p.he)>=0.3?`<span class="bad">${esc(p.house)} 平均偏${p.he>0?'綠':'藍'} ${Math.abs(p.he).toFixed(1)} 點，已校正</span>`:'',
-      `<span class="${QS(p.q)>=85?'good':QS(p.q)<65?'bad':''}">AI 方法評分 ${QS(p.q)}｜${esc(p.frn||'')} ×${(p.q||1).toFixed(2)}</span>`, trendTag(p)].join('');
+      `<span class="${QS(p.qm)>=85?'good':QS(p.qm)<65?'bad':''}">AI 方法評分 ${QS(p.qm)}｜${esc(p.frn||'')}</span>`,`<span class="${p.tr>=80?'good':p.tr<50?'bad':''}" title="${p.trmiss&&p.trmiss.length?'未公布：'+esc(p.trmiss.join('、')):'資料完整揭露'}">透明度 ${p.tr??'—'}${p.trmiss&&p.trmiss.length?'（缺'+esc(p.trmiss.join('、'))+'）':''} ×${(p.tf||1).toFixed(2)}</span>`, trendTag(p)].join('');
     return `<li><span><span class="org">${esc(p.org)}</span> <span class="res">${fmtD(p.fe)}｜${res}</span></span><span class="wt">${share.toFixed(0)}%</span>
       <span class="wbar"><i style="width:${share}%"></i></span><span class="why">${why}</span>${p.note?`<span class="aud">${esc(p.note)}</span>`:''}</li>`; }).join('');
   return `<div class="polls"><h3>民調怎麼被採納</h3>

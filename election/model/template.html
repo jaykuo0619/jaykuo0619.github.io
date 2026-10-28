@@ -891,10 +891,11 @@ document.getElementById('foot').textContent = DATA.today.replaceAll('-','/');
   document.getElementById('auditsum').innerHTML=`<p><b>AI 結論：</b>方法完整揭露（抽樣框、加權、題目都公布）的民調，和同期他家共識平均只差 <b>${grp(a=>a.disc==2)}</b> 點；部分揭露 ${grp(a=>a.disc==1)} 點；完全沒揭露的差到 <b>${grp(a=>a.disc==0)}</b> 點。揭露越完整，越貼近整體趨勢。</p>
   <p>以目前資料看，最符合整體趨勢的是：電話 CATI、依性別／年齡／區域／教育做多變數加權、最好含手機樣本、非政黨委託、並公布題目與未表態比例的民調，例如 ${[...new Set(fit)].slice(0,6).join('、')||'—'}。只打市話的民調長輩比例高，要靠加權補年輕人，常略為偏藍；網路問卷與 AI 模擬沒有機率抽樣，只當輔助。</p>
   <p>偏離共識較大的有：${off.join('、')||'無'}。這些不直接丟掉，但會降權並在卡片上標示。整體趨勢是各縣市和 2022 相比平均${sw<0?'往綠':'往藍'}擺盪約 ${Math.abs(sw).toFixed(0)} 點。</p>
+  <p><b>透明度加權：</b>每份民調依是否公布樣本數、原始數字、抽樣框、加權方式、未表態比例、題目原文、完整方法說明打 0–100 分，權重乘上 0.3＋0.7×(分數/100)^1.5。資料全公開 ×1.00、透明度 50 分約 ×0.55、幾乎不揭露只剩 ×0.30。目前平均透明度 <b>${Math.round(avg(A.map(a=>a.tr||0)))}</b> 分。</p>
   <p class="small">注意：台灣民調普遍不公布原始問卷與加權前資料，AI 評分只能依公開說明判斷；未表態比例高（3 成以上）時，差距本身就不穩。</p>`;
   const tg=a=>a.dev==null?'無對照':Math.abs(a.dev)<4?'✓ 符合':(Math.abs(a.dev)<8?'略偏':'偏離')+(a.dev>0?'綠 ':'藍 ')+Math.abs(a.dev).toFixed(1);
-  document.getElementById('audittbl').innerHTML=`<tr><th>縣市</th><th>機構</th><th>調查結束</th><th>方式</th><th class="r">未表態</th><th class="r">AI 方法分</th><th>趨勢一致性</th><th class="r">權重乘數</th></tr>`+
-    A.map(a=>`<tr><td>${esc(a.r)}</td><td>${esc(a.org)}</td><td class="num">${a.fe.slice(5).replace('-','/')}</td><td>${esc(a.frn)}${a.sp?'・政黨委託':''}</td><td class="r num">${a.und!=null?a.und+'%':'—'}</td><td class="r num">${QS(a.q)}</td><td>${tg(a)}</td><td class="r num">×${(a.q*a.cf).toFixed(2)}</td></tr>`).join('');
+  document.getElementById('audittbl').innerHTML=`<tr><th>縣市</th><th>機構</th><th>調查結束</th><th>方式</th><th class="r">未表態</th><th class="r">AI 方法分</th><th class="r">透明度</th><th>趨勢一致性</th><th class="r">權重乘數</th></tr>`+
+    A.map(a=>`<tr><td>${esc(a.r)}</td><td>${esc(a.org)}</td><td class="num">${a.fe.slice(5).replace('-','/')}</td><td>${esc(a.frn)}${a.sp?'・政黨委託':''}</td><td class="r num">${a.und!=null?a.und+'%':'—'}</td><td class="r num">${QS(a.qm??a.q)}</td><td class="r num">${a.tr??'—'}</td><td>${tg(a)}</td><td class="r num">×${(a.q*a.cf).toFixed(2)}</td></tr>`).join('');
 })();
 (()=>{ const M=DATA.method||{}; const sw=M.swing; if(sw!=null) document.getElementById('swingv').textContent=(sw<0?'往綠 ':'往藍 ')+Math.abs(sw).toFixed(1)+' 點';
   const h=M.house||{}; document.getElementById('housetbl').innerHTML = Object.keys(h).length? `<table><tr><th>機構</th><th class="r">平均偏差（已收縮）</th><th class="r">比較次數</th></tr>${Object.entries(h).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="r num">${v>0?'偏綠 ':v<0?'偏藍 ':''}${Math.abs(v).toFixed(1)}</td><td class="r num">${(M.house_n||{})[k]||''}</td></tr>`).join('')}</table>`:''; })();

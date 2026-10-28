@@ -271,18 +271,31 @@ AUDIT={
  ('花蓮縣','2026-10-18'):dict(fr='tel',wt=True,disc=2,und=33.5,qw=False,fl=[],note='分層隨機抽樣、依性別／戶籍／年齡／教育加權、樣本 1068；未說明是否含手機、題目未公布；未表態 33.5%，三人差距可信度有限。'),
  ('花蓮縣','2026-07-23'):dict(fr='tel',wt=None,disc=1,und=29.2,qw=False,fl=[],note='CATI、樣本 1068，但抽樣框、加權、題目都未公布；未表態近 3 成。'),
 }
-FR_W={'dual':1.10,'land':0.92,'tel':0.95,'web':1.0,'ai':1.0,'none':0.85}
+FR_W={'dual':1.10,'land':0.92,'tel':0.95,'web':1.0,'ai':1.0,'none':0.9}
 FR_N={'dual':'市話＋手機','land':'只打市話','tel':'電話（未說明手機）','web':'網路問卷','ai':'AI 模擬','none':'方法未揭露'}
+# 透明度（0–100）：資料揭露越完整分數越高；不透明的民調權重大幅調低（Jay 10/28 要求）
+TR_ITEMS=[('樣本數',15),('原始報告數字',10),('抽樣框',15),('加權方式',15),('未表態比例',10),('題目原文',15),('完整方法說明',20)]
+def transparency(p,a):
+    pts=[15 if p.get('n') and not p.get('est') else 0,
+         0 if p.get('est') else 10,
+         0 if a['fr']=='none' else 15,
+         15 if a['wt'] else 10 if a['wt'] is False else 0,
+         10 if a.get('und') is not None else 0,
+         15 if a.get('qw') else 0,
+         {2:20,1:8,0:0}[a['disc']]]
+    return sum(pts),[n for (n,_),x in zip(TR_ITEMS,pts) if x==0]
+def tr_factor(t): return round(0.3+0.7*(t/100)**1.5,3)
 def audit_q(a):
-    q=FR_W[a['fr']]*(1.0 if a['wt'] else 0.92)*{2:1.0,1:0.9,0:0.7}[a['disc']]
-    u=a.get('und'); q*=0.95 if u is None else 0.85 if u>=40 else 0.92 if u>=30 else 0.97 if u>=20 else 1.0
-    if a.get('qw'): q*=1.03
+    # 方法本身的品質（抽樣框、未表態、樣本失衡、業配）；揭露程度另由透明度處理
+    q=FR_W[a['fr']]
+    u=a.get('und'); q*=1.0 if u is None else 0.85 if u>=40 else 0.92 if u>=30 else 0.97 if u>=20 else 1.0
     if 'skew' in a['fl']: q*=0.9
     if 'adv' in a['fl']: q*=0.95
-    return round(max(0.4,min(1.15,q)),3)
+    return round(q,3)
 for p in P:
     a=next((v for k,v in AUDIT.items() if len(k)==3 and k[:2]==(p['r'],p['fe'].isoformat()) and k[2] in p['org']),None) or AUDIT.get((p['r'],p['fe'].isoformat()),dict(fr='tel' if p['t']=='phone' else p['t'] if p['t']=='ai' else 'web',wt=None,disc=1,und=None,qw=False,fl=[],note='方法說明尚未查核。'))
-    p['au']=a; p['q']=audit_q(a)
+    p['au']=a; p['qm']=audit_q(a); p['tr'],p['trmiss']=transparency(p,a); p['tf']=tr_factor(p['tr'])
+    p['q']=round(max(0.25,min(1.15,p['qm']*p['tf'])),3)
 
 # ===== 民調校正 1：機構偏差（house effect）=====
 # 同一縣市、前後 45 天內，拿每家機構的「綠營減藍營」差距和其他機構的加權平均比；
@@ -438,7 +451,7 @@ for county,cfg in R.items():
     out['races'][county]=dict(cands=[{'n':n,'p':party[n],'prior':round(prior[n],2),'prior_ai':prior_ai[n],'camp':camp(n,party[n])} for n in names], fund_og=fund_og, note=cfg['note'],
         prev=dict(e=pv['e'],t=pv['t'],w=pv['w'],r=pv['r'],m=m22,note=pv.get('note')),
         turnout=dict(t=to,base=(62.0 if county=='嘉義市' else pv['t']),electorate=el,valid=int(round(valid,-2)),sig=round(sig,2)), proj=proj,
-        polls=[dict(org=p['org'],house=house(p['org']),he=p['he'],fe=p['fe'].isoformat(),rel=p['rel'].isoformat(),n=p['n'],t=p['t'],sp=p.get('sp'),est=p.get('est',False),v=p['v'],url=p['url'],q=p['q'],cf=p['cf'],dev=p['dev'],res=p['res'],nd=(None if gmb_c(p) is None or m22_of(county) is None else round(-gmb_c(p)-m22_of(county)-SWING,2)),fr=p['au']['fr'],frn=FR_N[p['au']['fr']],wt=p['au']['wt'],disc=p['au']['disc'],und=p['au'].get('und'),fl=p['au']['fl'],note=p['au']['note']) for p in polls],
+        polls=[dict(org=p['org'],house=house(p['org']),he=p['he'],fe=p['fe'].isoformat(),rel=p['rel'].isoformat(),n=p['n'],t=p['t'],sp=p.get('sp'),est=p.get('est',False),v=p['v'],url=p['url'],q=p['q'],qm=p['qm'],tr=p['tr'],tf=p['tf'],trmiss=p['trmiss'],cf=p['cf'],dev=p['dev'],res=p['res'],nd=(None if gmb_c(p) is None or m22_of(county) is None else round(-gmb_c(p)-m22_of(county)-SWING,2)),fr=p['au']['fr'],frn=FR_N[p['au']['fr']],wt=p['au']['wt'],disc=p['au']['disc'],und=p['au'].get('und'),fl=p['au']['fl'],note=p['au']['note']) for p in polls],
         base_ref=BASE_REF.get(county,[]), events=evout,
         buzz=buzz, series=series)
 
@@ -490,7 +503,7 @@ TREND_EV=[
 ]
 for c,r in out['races'].items(): r['pres24']=PRES24[c]
 out['trend']=dict(pts=TREND,ev=TREND_EV)
-out['method']=dict(house={h:v for h,v in sorted(HOUSE_EFFECT.items(),key=lambda x:-abs(x[1]))},house_n={h:len(v) for h,v in HE_RAW.items()},swing=SWING,audit=[dict(r=p['r'],org=p['org'],house=house(p['org']),fe=p['fe'].isoformat(),t=p['t'],sp=p.get('sp'),q=p['q'],cf=p['cf'],dev=p['dev'],res=p['res'],frn=FR_N[p['au']['fr']],disc=p['au']['disc'],und=p['au'].get('und')) for p in sorted(P,key=lambda x:x['fe'],reverse=True)])
+out['method']=dict(house={h:v for h,v in sorted(HOUSE_EFFECT.items(),key=lambda x:-abs(x[1]))},house_n={h:len(v) for h,v in HE_RAW.items()},swing=SWING,audit=[dict(r=p['r'],org=p['org'],house=house(p['org']),fe=p['fe'].isoformat(),t=p['t'],sp=p.get('sp'),q=p['q'],qm=p['qm'],tr=p['tr'],tf=p['tf'],cf=p['cf'],dev=p['dev'],res=p['res'],frn=FR_N[p['au']['fr']],disc=p['au']['disc'],und=p['au'].get('und')) for p in sorted(P,key=lambda x:x['fe'],reverse=True)])
 json.dump(out,open('data.json','w'),ensure_ascii=False)
 last=out['national'][-1]; print('today',last)
 for c,r in out['races'].items():
