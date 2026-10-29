@@ -323,7 +323,11 @@ const PV = {K:'kmt',D:'dpp',T:'tpp',I:'ind'};
 const C = Object.keys(DATA.races), N = DATA.national.length;
 let day = N-1, sel = null, timer = null;
 // 動畫開頭的歷史畫面：2022 縣市長結果 → 2024 總統大選 → 接 2026/6/1 以後每日預測
-const PRE=[{d:'2022-11-26',lab:'2022/11',name:'2022 縣市長選舉'},{d:'2024-01-13',lab:'2024/1',name:'2024 總統大選'}];
+const BR=DATA.bridge||[], TEV=((DATA.trend||{}).ev||[]).filter(e=>e[0]<DATA.start);
+const ymd=iso=>{const [y,m,d]=iso.split('-');return `${y}/${+m}/${+d}`;};
+// 每週一格：2022 結果 → 2026/6 前（依 2022 結果＋全國民意走勢推估），事件週停一下
+const PRE=[{d:'2022-11-26',lab:'2022/11/26',name:'2022 縣市長選舉'}, ...BR.slice(1).map((b,i)=>{const nx=(BR[i+2]||{d:DATA.start}).d;
+  return {d:b.d,lab:ymd(b.d),name:'推估',b,ev:TEV.find(e=>e[0]>=b.d&&e[0]<nx)};})];
 const NP=PRE.length; let pos=NP+N-1;
 
 const fmtD = iso => { const [,m,d]=iso.split('-'); return `${+m}/${+d}`; };
@@ -431,7 +435,7 @@ paths.forEach(p=>{ const c=p.dataset.c;
   p.addEventListener('click',()=>open(c));
   p.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(c); } });
   p.addEventListener('pointermove',e=>{ if(e.pointerType!=='mouse') return; const s=DATA.races[c].series[day], box=tbox.getBoundingClientRect();
-    if(pos<NP){ const w=preWin(c,pos); mtip.innerHTML=`<b>${c}</b>　${PRE[pos].name}：${esc(w.who)} 贏 <span class="num">${pct(w.m)}</span> 點`; } else mtip.innerHTML=`<b>${c}</b>　${esc(s.lead)} 領先 <span class="num">${pct(s.m)}</span> 點・勝率 <b>${Math.round(s.wp*100)}%</b>${flipped(c,day)?'・<b style="color:var(--focus)">可能翻盤</b>':''}`;
+    if(pos<NP){ const w=preWin(c,pos); mtip.innerHTML=pos===0?`<b>${c}</b>　${PRE[pos].name}：${esc(w.who)} 贏 <span class="num">${pct(w.m)}</span> 點`:`<b>${c}</b>　${PRE[pos].lab} 推估：${esc(w.who)}領先 <span class="num">${pct(w.m)}</span> 點`; } else mtip.innerHTML=`<b>${c}</b>　${esc(s.lead)} 領先 <span class="num">${pct(s.m)}</span> 點・勝率 <b>${Math.round(s.wp*100)}%</b>${flipped(c,day)?'・<b style="color:var(--focus)">可能翻盤</b>':''}`;
     mtip.hidden=false; let x=e.clientX-box.left+14, y=e.clientY-box.top+14;
     if (x+mtip.offsetWidth>box.width) x=e.clientX-box.left-mtip.offsetWidth-10;
     mtip.style.left=x+'px'; mtip.style.top=y+'px'; });
@@ -571,8 +575,8 @@ function open(c){ buzz(8);
 // ===== 歷史畫面（2022、2024）=====
 function preWin(c,f){ const r=DATA.races[c];
   if(f===0){ const pv=r.prev; return {p:pv.w[1],q:pv.r[1],m:pv.w[2]-pv.r[2],who:pv.w[0]}; }
-  const [d,k,t]=r.pres24||[0,0,0], arr=[['D',d,'賴清德'],['K',k,'侯友宜'],['T',t,'柯文哲']].sort((a,b)=>b[1]-a[1]);
-  return {p:arr[0][0],q:arr[1][0],m:arr[0][1]-arr[1][1],who:arr[0][2]}; }
+  const [p,m]=PRE[f].b.c[c], NM={D:'綠營',K:'藍營',T:'民眾黨',I:'無黨籍'};
+  return {p,q:p==='D'?'K':'D',m,who:NM[p]||p}; }
 function preStyle(c,f){ const w=preWin(c,f);
   if (w.m<4) return {bg:patFor(PV[w.p],PV[w.q]),light:true};
   if (w.m<10) return {bg:`var(--${PV[w.p]}-l)`,light:true};
@@ -582,20 +586,21 @@ function preRender(f){
   if(f===0){ const o=22-SEATS22.G-SEATS22.B;
     document.getElementById('headline').innerHTML=`2022 縣市長選舉結果，<br><span class="g nw">綠營 <span class="seat">${SEATS22.G}</span> 席</span>、<span class="b nw">藍營 <span class="seat">${SEATS22.B}</span> 席</span>`;
     document.getElementById('sub').innerHTML=`這是起點：民進黨大敗，只守住 ${SEATS22.G} 席${o?`，其他 ${o} 席`:''}。按 ▶ 重播看之後怎麼變。`; }
-  else { const cnt={D:0,K:0,T:0}; C.forEach(c=>cnt[preWin(c,1).p]++);
-    document.getElementById('headline').innerHTML=`2024 總統大選，<br><span class="g nw">賴清德贏 <span class="seat">${cnt.D}</span> 縣市</span>、<span class="b nw">侯友宜 <span class="seat">${cnt.K}</span></span>${cnt.T?`、柯文哲 <span class="seat">${cnt.T}</span>`:''}`;
-    document.getElementById('sub').innerHTML=`賴清德以 40.1% 當選，但柯文哲拿 26.5%，藍白合計約 6 成；立法院藍白過半。`; }
-  const g=f===0?DATA.prev_national.D:40.05, b=f===0?DATA.prev_national.K:33.49;
+  else { const S=P.b.seats;
+    document.getElementById('headline').innerHTML=`${P.lab} 推估，<br><span class="g nw">綠營 <span class="seat">${S.G}</span> 席</span>、<span class="b nw">藍營 <span class="seat">${S.B}</span> 席</span>`;
+    const last=[...PRE.slice(1,f+1)].reverse().find(x=>x.ev);
+    document.getElementById('sub').innerHTML=last?`${esc(ymd(last.ev[0]))}　${esc(last.ev[1])}`:'依 2022 結果加上全國民意走勢逐週推估（不是民調）。'; }
+  const g=f===0?DATA.prev_national.D:P.b.vg, b=f===0?DATA.prev_national.K:P.b.vb;
   countTo('pg',g); countTo('pb',b);
-  document.getElementById('vg').textContent=f===0?'2022 民進黨候選人合計':'2024 賴清德';
-  document.getElementById('vb').textContent=f===0?'2022 國民黨候選人合計':'2024 侯友宜（柯文哲另得 26.5%）';
+  document.getElementById('vg').textContent=f===0?'2022 民進黨候選人合計':'推估綠營合計';
+  document.getElementById('vb').textContent=f===0?'2022 國民黨候選人合計':'推估藍營合計';
   const X=d=>50-Math.max(-15,Math.min(15,d))/15*45, now=X(g-b), was=X(DATA.prev_national.D-DATA.prev_national.K);
   const set=(id,x)=>document.getElementById(id).style.left=x+'%'; set('knot',now); set('ktag',now); set('ghost',was); set('gtag',was);
   document.getElementById('ghost').style.visibility=document.getElementById('gtag').style.visibility=f===0?'hidden':'';
   document.getElementById('ktag').innerHTML=`<b>${P.lab}</b>`;
   const ar=document.getElementById('arrow'); if(f===0) ar.style.width='0'; else { const lo=Math.min(now,was),hi=Math.max(now,was); ar.style.left=(lo+1.5)+'%'; ar.style.width=Math.max(0,hi-lo-3)+'%'; ar.className='arrow '+(now<was?'toL':'toR'); }
   document.getElementById('gtag').style.top=Math.abs(now-was)<9?'-4px':'52px';
-  document.getElementById('cap').innerHTML=f===0?'2022 年全國縣市長得票，國民黨領先民進黨 8.4 點。':'2024 總統：賴清德領先侯友宜 6.6 點；但加上柯文哲，在野合計多出近 20 點。';
+  document.getElementById('cap').innerHTML=f===0?'2022 年全國縣市長得票，國民黨領先民進黨 8.4 點。':`推估：${g>=b?'綠營':'藍營'}領先 ${pct(Math.abs(g-b))} 點（2022 是藍營領先 8.4 點）。2026/6 起才是每日民調模型。`;
   for (const p of paths){ const c=p.dataset.c, st=preStyle(c,f), w=preWin(c,f);
     p.style.fill=st.bg; p.classList.remove('flip'); p.classList.toggle('sel',c===sel);
     p.setAttribute('aria-label',`${c}：${P.name} ${w.who} 贏 ${pct(w.m)} 點`);
@@ -612,7 +617,7 @@ slider.addEventListener('input',()=>{ pos=+slider.value; render(); });
 const play=document.getElementById('play');
 const stop=()=>{ clearTimeout(timer); timer=null; play.textContent='▶ 重播'; };
 play.addEventListener('click',()=>{ if(timer){stop();return;} pos=0; play.textContent='❚❚ 暫停'; render();
-  const tick=()=>{ pos++; render(); if(pos>=NP+N-1){ stop(); return; } timer=setTimeout(tick, pos<NP? 1800 : pos===NP? 1400 : 70); };
+  const tick=()=>{ pos++; render(); if(pos>=NP+N-1){ stop(); return; } timer=setTimeout(tick, pos===0? 1800 : pos<NP? (PRE[pos].ev? 1600 : 110) : pos===NP? 1400 : 70); };
   timer=setTimeout(tick,1800); });
 let lw=innerWidth; addEventListener('resize',()=>{ if(innerWidth!==lw){ lw=innerWidth; drawCard(); } });
 document.getElementById('days').textContent = Math.round((new Date(DATA.eday)-new Date(DATA.today))/864e5);

@@ -505,6 +505,46 @@ TREND_EV=[
  ('2026-11-28','2026 縣市長選舉'),
 ]
 for c,r in out['races'].items(): r['pres24']=PRES24[c]
+
+# ===== 2022/11 → 2026/6 銜接（每週一格，讓重播慢慢推進，不突然翻盤）=====
+# 估算方式（不是民調）：各縣市差距＝2022 差距 − 全國擺盪(t) ＋ 候選人因素(t)。
+#  全國擺盪：從 2022 結果線性走到 2026/6/1 模型值，2024 起再疊政大政黨偏好的起伏；
+#  候選人因素（2026/6/1 和「2022＋全國擺盪」的差，例如換人、藍營分裂）在 2024/6 → 2026/6 提名期間用 S 曲線慢慢浮現。
+def _dd(x): return D(*map(int,x.split('-')))
+B0,B1=_dd('2022-11-26'),START
+N0=out['national'][0]; NAT_SHIFT=(N0['vg']-N0['vb'])-(PREV_NATIONAL['D']-PREV_NATIONAL['K'])
+PID=[(_dd('2024-01-13'),0.0),(_dd('2024-12-31'),11.8-12.8),(_dd('2025-06-30'),12.7-12.8),(_dd('2025-12-31'),10.7-12.8),(B1,0.0)]
+def _interp(pts,t):
+    if t<=pts[0][0]: return pts[0][1]
+    for (a,x),(b,y) in zip(pts,pts[1:]):
+        if t<=b: return x+(y-x)*(t-a).days/max(1,(b-a).days)
+    return pts[-1][1]
+def _s(x): x=max(0.0,min(1.0,x)); return x*x*(3-2*x)
+R0,R1=_dd('2024-06-01'),B1
+bridge=[]; t=B0
+while t<B1:
+    lin=(t-B0).days/(B1-B0).days; dev=_interp(PID,t); nat=NAT_SHIFT*lin+dev
+    k=_s((t-R0).days/(R1-R0).days)
+    cs={}; seat={'G':0,'B':0,'O':0}
+    for c,r in out['races'].items():
+        s0=r['series'][0]; m22=m22_of(c); pv=PREV[c]
+        cmap={x['n']:x for x in r['cands']}
+        if m22 is not None and s0['og'] is not None:
+            og=m22-nat+k*(s0['og']-(m22-NAT_SHIFT))
+            if og<0: side='D'; cp='G'
+            else:
+                ld=cmap.get(s0['lead'])
+                if ld and ld['p']!='D': side=ld['p']; cp=ld['camp']
+                else:
+                    top=[x for x in (pv['w'],pv['r']) if x[1]!='D'][0]; side=top[1]; cp='B' if side=='K' else 'O'
+            m=abs(og)
+        else:
+            ld=cmap.get(s0['lead']); side=ld['p'] if ld else pv['w'][1]; cp=ld['camp'] if ld else 'B'
+            m0=r['prev'].get('m') if r['prev'].get('m') is not None else s0['m']; m=abs(m0)+(s0['m']-abs(m0))*k
+        seat[cp]+=1; cs[c]=[side,round(m,1)]
+    bridge.append(dict(d=t.isoformat(),c=cs,seats=seat,vg=round(PREV_NATIONAL['D']+(N0['vg']-PREV_NATIONAL['D'])*lin+dev/2,2),vb=round(PREV_NATIONAL['K']+(N0['vb']-PREV_NATIONAL['K'])*lin-dev/2,2)))
+    t+=dt.timedelta(days=7)
+out['bridge']=bridge
 out['trend']=dict(pts=TREND,ev=TREND_EV)
 out['method']=dict(house={h:v for h,v in sorted(HOUSE_EFFECT.items(),key=lambda x:-abs(x[1]))},house_n={h:len(v) for h,v in HE_RAW.items()},swing=SWING,audit=[dict(r=p['r'],org=p['org'],house=house(p['org']),fe=p['fe'].isoformat(),t=p['t'],sp=p.get('sp'),q=p['q'],qm=p['qm'],tr=p['tr'],tf=p['tf'],cf=p['cf'],dev=p['dev'],res=p['res'],frn=FR_N[p['au']['fr']],disc=p['au']['disc'],und=p['au'].get('und')) for p in sorted(P,key=lambda x:x['fe'],reverse=True)])
 json.dump(out,open('data.json','w'),ensure_ascii=False)
