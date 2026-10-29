@@ -532,6 +532,7 @@ while t<B1:
         if m22 is not None and s0['og'] is not None:
             og=m22-nat+k*(s0['og']-(m22-NAT_SHIFT))
             if og<0: side='D'; cp='G'
+            elif k<0.5 and pv['w'][1]!='D': side=pv['w'][1]; cp='B' if side=='K' else 'O'   # 提名期前沿用 2022 當選人陣營
             else:
                 ld=cmap.get(s0['lead'])
                 if ld and ld['p']!='D': side=ld['p']; cp=ld['camp']
@@ -540,6 +541,7 @@ while t<B1:
             m=abs(og)
         else:
             ld=cmap.get(s0['lead']); side=ld['p'] if ld else pv['w'][1]; cp=ld['camp'] if ld else 'B'
+            if k<0.5: side=pv['w'][1]; cp='G' if side=='D' else 'B' if side=='K' else 'O'
             m0=r['prev'].get('m') if r['prev'].get('m') is not None else s0['m']; m=abs(m0)+(s0['m']-abs(m0))*k
         seat[cp]+=1; cs[c]=[side,round(m,1)]
     bridge.append(dict(d=t.isoformat(),c=cs,seats=seat,vg=round(PREV_NATIONAL['D']+(N0['vg']-PREV_NATIONAL['D'])*lin+dev/2,2),vb=round(PREV_NATIONAL['K']+(N0['vb']-PREV_NATIONAL['K'])*lin-dev/2,2)))
