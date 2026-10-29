@@ -188,6 +188,7 @@ footer .full{font-size:13.5px}
   .time .btn,.dimbtn,.find{padding:5px 10px}
   footer .note{display:none}
   .card{max-height:82dvh}
+  .card.cmpmode{max-height:56dvh}
 }
 @media (min-width:780px){
   .wrap{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;grid-template-areas:"h h" "r r" "m c" "f f";gap:12px 20px}
@@ -624,10 +625,10 @@ function buildPop(){ const pop=document.getElementById('pickpop');
   document.addEventListener('click',e=>{ if(!pop.hidden && !pop.contains(e.target) && e.target!==b) setOpen(false); });
   document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !pop.hidden){ setOpen(false); b.focus(); } }); })();
 // 並排比較：每個縣市一列，綠在中線上、藍在下，⚡＝翻盤
-function drawCompare(card){
+function drawCompare(card){ card.classList.add('cmpmode');
   const TOT=NP+N, W=Math.max(240,(card.clientWidth||360)-36), H=58, mid=H/2;
   const all=picks.map(c=>Array.from({length:TOT},(_,f)=>sv(c,f)));
-  const M=Math.max(8,...all.flat().map(Math.abs)), X=f=>f/(TOT-1)*W, Y=v=>mid-Math.max(-1,Math.min(1,v/M))*(mid-3);
+  const M=Math.max(8,...all.flat().map(Math.abs)), X=f=>f/(TOT-1)*W, Y=v=>mid-Math.sign(v)*Math.sqrt(Math.min(1,Math.abs(v)/M))*(mid-3);
   const xNP=X(NP), xNow=X(pos);
   const rows=picks.map((c,ci)=>{ const v=all[ci], pts=v.map((y,f)=>[X(f),Y(y)]);
     const upto=pts.slice(0,pos+1), rest=pts.slice(pos);
@@ -650,11 +651,11 @@ function drawCompare(card){
         <line x1="${xNow}" x2="${xNow}" y1="0" y2="${H}" stroke="var(--ink)" stroke-width="1.5"/>
       </svg>${flips.length?`<span class="fl">⚡ 翻盤 ${flips.length} 次：${flips.slice(-3).map(f=>(f<NP?PRE[f].lab:fmtD(DATA.national[f-NP].d))+' 翻'+(campAt(c,f)==='G'?'綠':campAt(c,f)==='B'?'藍':'其他')).join('、')}</span>`:''}</div>`; }).join('');
   card.innerHTML=`<div class="chead"><h2>比較 ${picks.length} 個縣市</h2><button type="button" class="x" aria-label="結束比較">✕</button></div>
-    <div class="cmpwrap"><p class="cmpnote">綠色在中線上＝綠營領先，藍色在下＝藍營領先，越高越遠領先越多；⚡＝翻盤。2026/6 以前是政黨走勢推估，之後是每日預測。點縣市名看詳細。</p>
+    <div class="cmpwrap"><p class="cmpnote">綠色在中線上＝綠營領先，藍色在下＝藍營領先，越高越遠領先越多；⚡＝翻盤。2026/6 以前是政黨走勢推估，之後是每日預測。點縣市名看詳細。接近平手的地方刻度放大，翻盤看得更清楚。</p>
     ${rows}<div class="cax"><span>2022/11</span><span>2026/6</span><span>11/28</span></div></div>`;
   card.querySelector('.x').addEventListener('click',()=>{ picks=[]; savePicks(); applyPicks(); drawTiles_(); drawCard(); card.classList.remove('open'); });
   card.querySelectorAll('.cn').forEach(el=>el.addEventListener('click',()=>{ const c=el.dataset.c; picks=[]; savePicks(); applyPicks(); open(c); })); }
-function drawCard(){
+function drawCard(){ document.getElementById('card').classList.remove('cmpmode');
   if(picks.length>=2){ drawCompare(document.getElementById('card')); return; }
   const card=document.getElementById('card'); const c=sel||'台北市';
   const r=DATA.races[c], s=r.series[day], pv=r.prev, to=r.turnout, [a,b]=top2(c,day);
