@@ -637,7 +637,7 @@ function drawEv(){ const el=document.getElementById('evline'); let h='';
     const sc=e=>Math.max(0,...(e.eff||[0]).map(Math.abs));
     const e=pool.sort((x,y)=>sc(y)-sc(x)||y.i0-x.i0)[0];
     if(e){ const v=(e.eff||[0]).reduce((x,y)=>Math.abs(y)>Math.abs(x)?y:x,0), G=(cand_(e.c,e.n).camp==='G')===(v>=0);
-      h=`<span class="d">${fmtD(e.d)}</span><span class="t"><b>${esc(e.c.replace(/[市縣]$/,''))}</b>　${esc(e.t)}</span>${evDir(G,sc(e))}`; }
+      h=`<span class="d">${fmtD(e.d)}</span><span class="t"><b>${esc(/^(新竹|嘉義)/.test(e.c)?e.c:e.c.replace(/[市縣]$/,''))}</b>　${esc(e.t)}</span>${evDir(G,sc(e))}`; }
     else h=`<span class="t" style="color:var(--muted)">這幾天沒有影響選情的大事件</span>`; }
   el.innerHTML=h; }
 function render(){ day=Math.max(0,pos-NP);
