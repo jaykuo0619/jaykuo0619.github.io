@@ -627,6 +627,7 @@ function buildPop(){ const pop=document.getElementById('pickpop');
 (()=>{ const b=document.getElementById('pickbtn'), pop=document.getElementById('pickpop');
   const setOpen=o=>{ pop.hidden=!o; b.setAttribute('aria-expanded',o); if(o) buildPop(); };
   b.addEventListener('click',e=>{ e.stopPropagation(); setOpen(pop.hidden); });
+  pop.addEventListener('click',e=>e.stopPropagation());
   document.addEventListener('click',e=>{ if(!pop.hidden && !pop.contains(e.target) && e.target!==b) setOpen(false); });
   document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !pop.hidden){ setOpen(false); b.focus(); } }); })();
 // 並排比較：每個縣市一列，綠在中線上、藍在下，⚡＝翻盤
