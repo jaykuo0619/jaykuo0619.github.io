@@ -509,7 +509,8 @@ for c,r in out['races'].items(): r['pres24']=PRES24[c]
 # ===== 2022/11 → 2026/6 銜接（每週一格，讓重播慢慢推進，不突然翻盤）=====
 # 估算方式（不是民調）：各縣市差距＝2022 差距 − 全國擺盪(t) ＋ 候選人因素(t)。
 #  全國擺盪：從 2022 結果線性走到 2026/6/1 模型值，2024 起再疊政大政黨偏好的起伏；
-#  候選人因素（2026/6/1 和「2022＋全國擺盪」的差，例如換人、藍營分裂）在 2024/6 → 2026/6 提名期間用 S 曲線慢慢浮現。
+#  沒有候選人民調之前只用政黨（2022 結果＋全國政黨支持走勢）來估（Jay 10/29 要求）；
+#  候選人因素（2026/6/1 和「政黨估計」的差，例如換人、藍營分裂）在該縣市第一份候選人民調前 8 週才用 S 曲線浮現。
 def _dd(x): return D(*map(int,x.split('-')))
 B0,B1=_dd('2022-11-26'),START
 N0=out['national'][0]; NAT_SHIFT=(N0['vg']-N0['vb'])-(PREV_NATIONAL['D']-PREV_NATIONAL['K'])
@@ -520,13 +521,14 @@ def _interp(pts,t):
         if t<=b: return x+(y-x)*(t-a).days/max(1,(b-a).days)
     return pts[-1][1]
 def _s(x): x=max(0.0,min(1.0,x)); return x*x*(3-2*x)
-R0,R1=_dd('2024-06-01'),B1
+FIRSTPOLL={}
+for _p in P: FIRSTPOLL[_p['r']]=min(FIRSTPOLL.get(_p['r'],B1),_p['fe'],B1)
 bridge=[]; t=B0
 while t<B1:
     lin=(t-B0).days/(B1-B0).days; dev=_interp(PID,t); nat=NAT_SHIFT*lin+dev
-    k=_s((t-R0).days/(R1-R0).days)
     cs={}; seat={'G':0,'B':0,'O':0}
     for c,r in out['races'].items():
+        R1=FIRSTPOLL.get(c,B1); R0=R1-dt.timedelta(days=56); k=_s((t-R0).days/(R1-R0).days)
         s0=r['series'][0]; m22=m22_of(c); pv=PREV[c]
         cmap={x['n']:x for x in r['cands']}
         if m22 is not None and s0['og'] is not None:

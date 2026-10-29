@@ -89,10 +89,10 @@ h1 .seat{font-family:var(--f-num);font-weight:600;font-size:1.08em}
 .key span{display:inline-flex;align-items:center;gap:6px}
 .key i{width:16px;height:16px;border-radius:4px;display:inline-block;position:relative;overflow:hidden}
 .key i.grad{width:92px;height:12px;border-radius:6px;background:linear-gradient(90deg,var(--dpp),var(--neu),var(--kmt))}
-.evline{display:flex;align-items:center;gap:8px;min-height:26px;margin:4px 0 6px;font-size:12.5px;color:var(--ink);overflow:hidden}
+.evline{display:flex;align-items:center;gap:8px;min-height:28px;margin:4px 0 6px;font-size:14.5px;color:var(--ink);overflow:hidden}
 .evline .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
 .evline .d{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-.evline .dir{white-space:nowrap;font-weight:700;padding:2px 8px;border-radius:999px;font-size:12px}
+.evline .dir{white-space:nowrap;font-weight:700;padding:2px 9px;border-radius:999px;font-size:13.5px}
 .evline .dir.G{background:color-mix(in srgb,var(--dpp) 18%,transparent);color:var(--dpp)}
 .evline .dir.B{background:color-mix(in srgb,var(--kmt) 18%,transparent);color:var(--kmt)}
 .evline .dir.N{background:var(--soft);color:var(--muted)}
@@ -161,20 +161,20 @@ header{grid-area:h;min-width:0} .rope{grid-area:r;min-width:0} .mapcol{grid-area
 .mapcol{min-height:0;min-width:0;gap:6px}
 .tilebox{flex:1;min-height:0;container-type:size;display:flex;align-items:center;justify-content:center}
 h1{font-size:clamp(22px,min(6.6vw,4.4vh),46px);margin:2px 0 4px}
-.kicker{font-size:12px}
+.kicker{font-size:13px}
 .kicker a{font-weight:700;color:var(--ink)}
 .sub{font-size:clamp(13px,min(3.6vw,1.9vh),16px);line-height:1.5}
 .rope{padding:10px 16px 10px;border-radius:12px}
-.side .who{font-size:13px}
+.side .who{font-size:14.5px}
 .side .pct{font-size:clamp(24px,min(7vw,4.6vh),46px)}
 .side .v{font-size:11.5px}
 .track{margin:4px 0 0;height:68px}
-.rope .cap{margin:2px 0 0;font-size:12.5px}
-.key{font-size:11px;gap:2px 12px}
+.rope .cap{margin:2px 0 0;font-size:14px}
+.key{font-size:13px;gap:2px 12px}
 .key i{width:12px;height:12px;border-radius:3px}
-.mapcol h2{font-size:17px}
+.mapcol h2{font-size:19px}
 .time{max-width:none}
-footer{padding-top:6px;font-size:11.5px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:4px 14px;flex-wrap:wrap}
+footer{padding-top:6px;font-size:12.5px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:4px 14px;flex-wrap:wrap}
 footer .full{font-size:13.5px}
 @media (max-width:779px){
   .mapcol h2,.hint,.kicker .u,.sub .fl,.rope .cap,.side .v{display:none}
@@ -182,7 +182,7 @@ footer .full{font-size:13.5px}
   h1{font-size:clamp(20px,6.4vw,30px)}
   .track{height:56px;margin:0}
   .rope{padding:8px 14px 4px}
-  .key{font-size:10.5px}
+  .key{font-size:12px}
   .find .kbd{display:none}
   .time{gap:6px}
   .time .btn,.dimbtn,.find{padding:5px 10px}
@@ -205,6 +205,35 @@ footer .full{font-size:13.5px}
   html,body{height:auto} body{overflow:auto} .wrap{height:auto} .tilebox{height:min(90vw,520px);flex:none}
 }
 
+/* ===== 比較縣市、翻盤效果 ===== */
+.maphead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.picker{position:relative}
+.pickbtn{font:inherit;font-size:14.5px;font-weight:700;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer;max-width:min(78vw,420px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pickbtn[aria-expanded="true"]{background:var(--ink);color:var(--paper)}
+.pickpop{position:absolute;z-index:20;top:calc(100% + 6px);left:0;width:min(92vw,400px);max-height:min(70dvh,520px);overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.25);padding:12px 14px}
+.pickpop .quick{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.pickpop .quick button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+.pickpop .grp{margin:8px 0 2px;font-size:12.5px;color:var(--muted);font-weight:700}
+.pickpop .opts{display:flex;flex-wrap:wrap;gap:6px}
+.pickpop label{display:inline-flex;align-items:center;gap:5px;font-size:15px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;cursor:pointer;user-select:none}
+.pickpop label:has(input:checked){background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pickpop input{position:absolute;opacity:0;pointer-events:none}
+.pickpop .hint2{font-size:12.5px;color:var(--muted);margin-top:8px}
+.twmap.cmp path.cty:not(.pick){opacity:.28}
+.twmap path.cty.pick{stroke:var(--ink);stroke-width:2.2}
+@keyframes flipfx{0%{transform:scale(1)}25%{transform:scale(1.22);filter:drop-shadow(0 0 14px var(--fxc)) brightness(1.3)}60%{transform:scale(.97)}100%{transform:scale(1)}}
+.twmap path.cty.flipfx{animation:flipfx 1.1s cubic-bezier(.34,1.56,.64,1);stroke:var(--fxc);stroke-width:3}
+.fliptoast{position:absolute;top:6px;left:50%;transform:translate(-50%,-8px);opacity:0;z-index:5;pointer-events:none;padding:8px 16px;border-radius:999px;color:#fff;font-weight:900;font-size:18px;font-family:var(--f-display);box-shadow:0 10px 30px rgba(0,0,0,.3);transition:opacity .25s,transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap}
+.fliptoast.on{opacity:1;transform:translate(-50%,0)}
+.cmpwrap{display:flex;flex-direction:column;gap:10px}
+.cmpnote{font-size:13px;color:var(--muted);margin:0}
+.crow{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:baseline;border-top:1px solid var(--line);padding-top:8px}
+.crow .cn{font-family:var(--f-display);font-weight:900;font-size:18px;cursor:pointer}
+.crow .cv{font-size:14px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.crow svg{grid-column:1/-1;width:100%;height:58px;display:block;overflow:visible}
+.crow .fl{font-size:12.5px;color:var(--focus);font-weight:700;grid-column:1/-1}
+.cax{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+
 /* ===== 台灣地圖 ===== */
 .tilebox{position:relative}
 .twmap{width:100%;height:100%;display:block;overflow:visible}
@@ -222,8 +251,8 @@ footer .full{font-size:13.5px}
 .twmap text.out{fill:var(--ink);stroke:var(--bg);stroke-width:3px}
 .twmap .lead{stroke:var(--muted);stroke-width:.7;fill:none}
 .twmap .inset{fill:none;stroke:var(--line);stroke-dasharray:3 3}
-.twmap .insetlab{font-size:10px;fill:var(--muted);font-weight:600;font-family:inherit;text-anchor:start;stroke:none}
-.maptip{position:absolute;pointer-events:none;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.15);white-space:nowrap;z-index:3}
+.twmap .insetlab{font-size:12px;fill:var(--muted);font-weight:600;font-family:inherit;text-anchor:start;stroke:none}
+.maptip{position:absolute;pointer-events:none;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:7px 12px;font-size:15px;box-shadow:0 10px 30px rgba(0,0,0,.15);white-space:nowrap;z-index:3}
 @media (max-width:779px){.twmap text .pc{display:none}.maptip{display:none}}
 @media (prefers-reduced-motion:reduce){.twmap path.cty{transition:fill .35s}}
 .tilebox{position:relative}
@@ -297,8 +326,10 @@ footer .full{font-size:13.5px}
 
 <section class="board">
   <div class="mapcol">
-    <h2>22 個縣市，誰領先？</h2>
-    <div class="tilebox" id="tilebox"><svg class="twmap" id="twmap" role="group" aria-label="台灣縣市地圖"></svg><div class="maptip" id="maptip" hidden></div></div>
+    <div class="maphead"><h2>22 個縣市，誰領先？</h2>
+      <div class="picker"><button type="button" class="pickbtn" id="pickbtn" aria-haspopup="dialog" aria-expanded="false">選縣市・可多選比較 ▾</button>
+        <div class="pickpop" id="pickpop" role="dialog" aria-label="選擇縣市" hidden></div></div></div>
+    <div class="tilebox" id="tilebox"><svg class="twmap" id="twmap" role="group" aria-label="台灣縣市地圖"></svg><div class="maptip" id="maptip" hidden></div><div class="fliptoast" id="fliptoast" aria-live="assertive"></div></div>
     <div class="evline" id="evline" aria-live="polite"></div>
     <div class="key">
       <span>綠 <i class="grad"></i> 藍　顏色越深領先越多，中間是拉鋸</span>
@@ -432,14 +463,14 @@ const NUDGE={'新北市':[30,24],'桃園市':[-6,4],'新竹縣':[8,4]};
   for (const [n,[x0,y0,x1,y1]] of Object.entries(SHAPES.insets)) h+=`<rect class="inset" x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" rx="4"></rect>`;
   h+='<g class="land">'+C.map(c=>`<path class="cty pre" data-c="${c}" d="${SHAPES.shapes[c]}" tabindex="0" role="button"></path>`).join('')+'</g>';
   for (const c of C){ let [x,y]=SHAPES.labels[c];
-    if (CALL[c]){ const [lx,ly,an,nolead]=CALL[c]; h+=(nolead?'':`<line class="lead" x1="${x}" y1="${y}" x2="${lx+(an==='end'?3:-3)}" y2="${ly-4}"></line>`)+`<text class="out" data-l="${c}" x="${lx}" y="${ly}" style="text-anchor:${an};font-size:12px">${short(c)} <tspan class="pc"></tspan></text>`; continue; }
+    if (CALL[c]){ const [lx,ly,an,nolead]=CALL[c]; h+=(nolead?'':`<line class="lead" x1="${x}" y1="${y}" x2="${lx+(an==='end'?3:-3)}" y2="${ly-4}"></line>`)+`<text class="out" data-l="${c}" x="${lx}" y="${ly}" style="text-anchor:${an};font-size:15px">${short(c)} <tspan class="pc"></tspan></text>`; continue; }
     if (NUDGE[c]){ x+=NUDGE[c][0]; y+=NUDGE[c][1]; }
     const big=!SHAPES.insets[c];
-    h+=`<text data-l="${c}" x="${x}" y="${y}" style="font-size:${big?13:12}px">${short(c)}<tspan class="pc" x="${x}" dy="1.15em"></tspan></text>`; }
+    h+=`<text data-l="${c}" x="${x}" y="${y}" style="font-size:${big?16.5:14}px">${short(c)}<tspan class="pc" x="${x}" dy="1.15em"></tspan></text>`; }
   svg.innerHTML=h; })();
 const paths=[...svg.querySelectorAll('path.cty')];
 paths.forEach(p=>{ const c=p.dataset.c;
-  p.addEventListener('click',()=>open(c));
+  p.addEventListener('click',()=>{ if(picks.length>=2) togglePick(c); else open(c); });
   p.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(c); } });
   p.addEventListener('pointermove',e=>{ if(e.pointerType!=='mouse') return; const s=DATA.races[c].series[day], box=tbox.getBoundingClientRect();
     if(pos<NP){ const w=preWin(c,pos); mtip.innerHTML=pos===0?`<b>${c}</b>　${PRE[pos].name}：${esc(w.who)} 贏 <span class="num">${pct(w.m)}</span> 點`:`<b>${c}</b>　${PRE[pos].lab} 推估：${esc(w.who)}領先 <span class="num">${pct(w.m)}</span> 點`; } else mtip.innerHTML=`<b>${c}</b>　${esc(s.lead)} 領先 <span class="num">${pct(s.m)}</span> 點・勝率 <b>${Math.round(s.wp*100)}%</b>${flipped(c,day)?'・<b style="color:var(--focus)">可能翻盤</b>':''}`;
@@ -549,7 +580,81 @@ function pollBlock(c){
     <p class="net">這天的預測有 <b>${Math.round(s.pw*100)}%</b> 來自民調、${100-Math.round(s.pw*100)}% 來自基準（${base}）。右邊百分比是每份民調在民調部分占的權重：電話調查、非政黨委託、樣本大、越新的權重越高；機構若長期比同期其他民調偏藍或偏綠，先扣掉偏差再算。每份民調另經 AI 查核抽樣方式、加權、揭露程度與未表態比例給方法分，和同期他家差太多的也會降權。</p>
     <ul>${rows}</ul></div>`;
 }
+
+// ===== 多選比較、翻盤效果 =====
+const GROUPS=[['六都',['台北市','新北市','桃園市','台中市','台南市','高雄市']],['北部',['基隆市','新竹市','新竹縣','宜蘭縣']],['中部',['苗栗縣','彰化縣','南投縣','雲林縣']],['南部',['嘉義市','嘉義縣','屏東縣']],['東部',['花蓮縣','台東縣']],['離島',['澎湖縣','金門縣','連江縣']]];
+let picks=[]; try{ picks=JSON.parse(localStorage.getItem('cmpPicks')||'[]').filter(c=>C.includes(c)); }catch(e){}
+const savePicks=()=>{ try{ localStorage.setItem('cmpPicks',JSON.stringify(picks)); }catch(e){} };
+// 每一格的藍綠差距（正＝綠營領先）
+function sv(c,f){ const r=DATA.races[c];
+  if(f===0){ const pv=r.prev; return (pv.w[1]==='D'?1:-1)*(pv.w[2]-pv.r[2]); }
+  if(f<NP){ const [p,m]=PRE[f].b.c[c]; return p==='D'?m:-m; }
+  const s=r.series[f-NP]; if(s.og!=null) return -s.og; return (camp(c,s.lead)==='G'?1:-1)*s.m; }
+function campAt(c,f){ if(f===0) return camp22(DATA.races[c].prev.w[1]); if(f<NP){ const p=PRE[f].b.c[c][0]; return camp22(p); } return camp(c,DATA.races[c].series[f-NP].lead); }
+let lastCamps=null, lastPos=null, fxHit=false, toastT=null;
+function flipFx(){ fxHit=false; const now={}; C.forEach(c=>now[c]=campAt(c,pos));
+  if(lastCamps && lastPos!=null && pos>lastPos && pos-lastPos<=3){
+    const fl=C.filter(c=>now[c]!==lastCamps[c]);
+    if(fl.length){ fxHit=true; buzz([20,40,20]);
+      for(const c of fl){ const p=paths.find(x=>x.dataset.c===c), g=now[c]==='G';
+        p.style.setProperty('--fxc',g?'var(--dpp)':now[c]==='B'?'var(--kmt)':'var(--ind)'); p.classList.remove('flipfx'); void p.getBBox(); p.classList.add('flipfx');
+        setTimeout(()=>p.classList.remove('flipfx'),1200); }
+      const t=document.getElementById('fliptoast'), g=now[fl[0]]==='G';
+      t.textContent=`⚡ ${fl.map(short).join('、')} 翻${g?'綠':now[fl[0]]==='B'?'藍':'盤'}！`; t.style.background=g?'var(--dpp)':now[fl[0]]==='B'?'var(--kmt)':'var(--ind)';
+      t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),1700); } }
+  lastCamps=now; lastPos=pos; }
+function applyPicks(){ svg.classList.toggle('cmp',picks.length>=2); paths.forEach(p=>p.classList.toggle('pick',picks.length>=2&&picks.includes(p.dataset.c)));
+  const b=document.getElementById('pickbtn'); b.textContent=picks.length? `比較 ${picks.length}：${picks.slice(0,3).map(short).join('、')}${picks.length>3?'…':''} ▾` : '選縣市・可多選比較 ▾'; }
+function togglePick(c){ picks=picks.includes(c)?picks.filter(x=>x!==c):[...picks,c].slice(-8); savePicks(); buildPop(); applyPicks();
+  if(picks.length>=2){ sel=null; document.getElementById('card').classList.add('open'); } else if(picks.length===1) sel=picks[0];
+  drawTiles_(); drawCard(); }
+function drawTiles_(){ if(pos<NP) preRender(pos); else drawTiles(); applyPicks(); }
+function buildPop(){ const pop=document.getElementById('pickpop');
+  pop.innerHTML=`<div class="quick"><button type="button" data-q="six">六都</button><button type="button" data-q="flip">可能翻盤</button><button type="button" data-q="close">最接近的 5 個</button><button type="button" data-q="clear">清除</button></div>`+
+    GROUPS.map(([g,cs])=>`<div class="grp">${g}</div><div class="opts">${cs.map(c=>`<label><input type="checkbox" value="${c}"${picks.includes(c)?' checked':''}>${short(c)}</label>`).join('')}</div>`).join('')+
+    `<div class="hint2">選 2 個以上會並排比較走勢（最多 8 個）；比較時點地圖也能加減縣市。</div>`;
+  pop.querySelectorAll('input').forEach(i=>i.addEventListener('change',()=>togglePick(i.value)));
+  pop.querySelectorAll('[data-q]').forEach(b=>b.addEventListener('click',()=>{ const q=b.dataset.q;
+    picks= q==='six'?GROUPS[0][1].slice() : q==='flip'?C.filter(c=>flipped(c,N-1)).slice(0,8) : q==='close'?[...C].sort((a,b)=>DATA.races[a].series[N-1].wp-DATA.races[b].series[N-1].wp).slice(0,5) : [];
+    savePicks(); buildPop(); applyPicks(); if(picks.length>=2) document.getElementById('card').classList.add('open'); drawTiles_(); drawCard(); })); }
+(()=>{ const b=document.getElementById('pickbtn'), pop=document.getElementById('pickpop');
+  const setOpen=o=>{ pop.hidden=!o; b.setAttribute('aria-expanded',o); if(o) buildPop(); };
+  b.addEventListener('click',e=>{ e.stopPropagation(); setOpen(pop.hidden); });
+  document.addEventListener('click',e=>{ if(!pop.hidden && !pop.contains(e.target) && e.target!==b) setOpen(false); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !pop.hidden){ setOpen(false); b.focus(); } }); })();
+// 並排比較：每個縣市一列，綠在中線上、藍在下，⚡＝翻盤
+function drawCompare(card){
+  const TOT=NP+N, W=Math.max(240,(card.clientWidth||360)-36), H=58, mid=H/2;
+  const all=picks.map(c=>Array.from({length:TOT},(_,f)=>sv(c,f)));
+  const M=Math.max(8,...all.flat().map(Math.abs)), X=f=>f/(TOT-1)*W, Y=v=>mid-Math.max(-1,Math.min(1,v/M))*(mid-3);
+  const xNP=X(NP), xNow=X(pos);
+  const rows=picks.map((c,ci)=>{ const v=all[ci], pts=v.map((y,f)=>[X(f),Y(y)]);
+    const upto=pts.slice(0,pos+1), rest=pts.slice(pos);
+    const area=a=>a.length<2?'':`M${a[0][0]},${mid}`+a.map(([x,y])=>`L${x.toFixed(1)},${y.toFixed(1)}`).join('')+`L${a[a.length-1][0].toFixed(1)},${mid}Z`;
+    const line=a=>a.length<2?'':'M'+a.map(([x,y])=>`${x.toFixed(1)},${y.toFixed(1)}`).join('L');
+    const flips=[]; for(let f=1;f<=pos;f++){ if(campAt(c,f)!==campAt(c,f-1)) flips.push(f); }
+    const cur=v[pos], lead=cur>=0?'綠營':'藍營';
+    const extra=pos>=NP?(()=>{ const s=DATA.races[c].series[pos-NP]; return `${esc(s.lead)} +${pct(s.m)}・勝率 ${Math.round(s.wp*100)}%`; })():`${lead}領先 ${pct(Math.abs(cur))}${pos>0?'（推估）':''}`;
+    const id='cl'+ci;
+    return `<div class="crow"><span class="cn" data-c="${c}">${c}</span><span class="cv" style="color:var(--${cur>=0?'dpp':'kmt'})">${extra}</span>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-label="${c} 藍綠差距走勢">
+        <defs><clipPath id="${id}u"><rect x="0" y="0" width="${W}" height="${mid}"/></clipPath><clipPath id="${id}d"><rect x="0" y="${mid}" width="${W}" height="${mid}"/></clipPath></defs>
+        <line x1="0" x2="${W}" y1="${mid}" y2="${mid}" stroke="var(--line)" stroke-width="1"/>
+        <line x1="${xNP}" x2="${xNP}" y1="0" y2="${H}" stroke="var(--line)" stroke-dasharray="3 3"/>
+        <path d="${line(rest)}" fill="none" stroke="var(--muted)" stroke-opacity=".35" stroke-width="1.2"/>
+        <path d="${area(upto)}" fill="var(--dpp)" fill-opacity=".85" clip-path="url(#${id}u)"/>
+        <path d="${area(upto)}" fill="var(--kmt)" fill-opacity=".85" clip-path="url(#${id}d)"/>
+        <path d="${line(upto)}" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
+        ${flips.map(f=>`<g transform="translate(${X(f).toFixed(1)},${mid})"><circle r="6" fill="var(--focus)" stroke="var(--paper)" stroke-width="1.5"/><text y="3.5" font-size="9" text-anchor="middle" fill="#fff">⚡</text></g>`).join('')}
+        <line x1="${xNow}" x2="${xNow}" y1="0" y2="${H}" stroke="var(--ink)" stroke-width="1.5"/>
+      </svg>${flips.length?`<span class="fl">⚡ 翻盤 ${flips.length} 次：${flips.slice(-3).map(f=>(f<NP?PRE[f].lab:fmtD(DATA.national[f-NP].d))+' 翻'+(campAt(c,f)==='G'?'綠':campAt(c,f)==='B'?'藍':'其他')).join('、')}</span>`:''}</div>`; }).join('');
+  card.innerHTML=`<div class="chead"><h2>比較 ${picks.length} 個縣市</h2><button type="button" class="x" aria-label="結束比較">✕</button></div>
+    <div class="cmpwrap"><p class="cmpnote">綠色在中線上＝綠營領先，藍色在下＝藍營領先，越高越遠領先越多；⚡＝翻盤。2026/6 以前是政黨走勢推估，之後是每日預測。點縣市名看詳細。</p>
+    ${rows}<div class="cax"><span>2022/11</span><span>2026/6</span><span>11/28</span></div></div>`;
+  card.querySelector('.x').addEventListener('click',()=>{ picks=[]; savePicks(); applyPicks(); drawTiles_(); drawCard(); card.classList.remove('open'); });
+  card.querySelectorAll('.cn').forEach(el=>el.addEventListener('click',()=>{ const c=el.dataset.c; picks=[]; savePicks(); applyPicks(); open(c); })); }
 function drawCard(){
+  if(picks.length>=2){ drawCompare(document.getElementById('card')); return; }
   const card=document.getElementById('card'); const c=sel||'台北市';
   const r=DATA.races[c], s=r.series[day], pv=r.prev, to=r.turnout, [a,b]=top2(c,day);
   const pa=cand(c,a).p, pb=cand(c,b).p, wp=Math.round(s.wp*100);
@@ -581,7 +686,7 @@ function drawCard(){
 const tbox=document.getElementById('tilebox');
 
 function open(c){ buzz(8);
-  const go=()=>{ sel=c; drawTiles(); drawCard(); document.getElementById('card').classList.add('open'); };
+  const go=()=>{ sel=c; drawTiles_(); drawCard(); document.getElementById('card').classList.add('open'); };
   if (document.startViewTransition && !timer) document.startViewTransition(go); else go(); }
 
 // ===== 歷史畫面（2022、2024）=====
@@ -636,14 +741,14 @@ function drawEv(){ const el=document.getElementById('evline'); let h='';
 function render(){ day=Math.max(0,pos-NP);
   document.getElementById('keypc').textContent=pos<NP?'＋數字＝第一名贏幾點':'% 是勝率';
   if (pos<NP) preRender(pos); else { document.getElementById('ghost').style.visibility=document.getElementById('gtag').style.visibility=''; document.getElementById('ktag').innerHTML='<b>現在</b>'; drawHead(); drawRope(); drawTiles(); }
-  drawCard(); drawEv();
+  applyPicks(); flipFx(); drawCard(); drawEv();
   document.getElementById('date').textContent = pos<NP? PRE[pos].lab : fmtD(DATA.national[day].d); document.getElementById('slider').value=pos; }
 const slider=document.getElementById('slider'); slider.max=NP+N-1;
 slider.addEventListener('input',()=>{ pos=+slider.value; render(); });
 const play=document.getElementById('play');
 const stop=()=>{ clearTimeout(timer); timer=null; play.textContent='▶ 重播'; };
 play.addEventListener('click',()=>{ if(timer){stop();return;} pos=0; play.textContent='❚❚ 暫停'; render();
-  const tick=()=>{ pos++; render(); if(pos>=NP+N-1){ stop(); return; } timer=setTimeout(tick, pos===0? 1800 : pos<NP? (PRE[pos].ev? 1600 : 110) : pos===NP? 1400 : 70); };
+  const tick=()=>{ pos++; render(); if(pos>=NP+N-1){ stop(); return; } timer=setTimeout(tick, fxHit? 1500 : pos===0? 1800 : pos<NP? (PRE[pos].ev? 1600 : 110) : pos===NP? 1400 : 70); };
   timer=setTimeout(tick,1800); });
 let lw=innerWidth; addEventListener('resize',()=>{ if(innerWidth!==lw){ lw=innerWidth; drawCard(); } });
 document.getElementById('days').textContent = Math.round((new Date(DATA.eday)-new Date(DATA.today))/864e5);
