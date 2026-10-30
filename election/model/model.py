@@ -256,7 +256,7 @@ AUDIT={
  ('基隆市','2026-08-24'):dict(fr='land',wt=True,disc=1,und=None,qw=False,fl=[],note='山水市話電訪，媒體委託；時間較早。'),
  ('基隆市','2026-10-09'):dict(fr='land',wt=True,disc=2,und=None,qw=False,fl=['adv','skew'],note='電話簿＋尾數隨機、raking 加權；國民黨市黨部委託，且未公布原始未表態比例，報導指樣本中民進黨支持者多於國民黨。'),
  ('基隆市','2026-10-21'):dict(fr='land',wt=True,disc=2,und=25.9,qw=True,fl=[],note='依行政區比例抽市話、raking 加權、候選人順序隨機、公布題目，程序是這批裡最嚴謹的之一；未表態 25.9%，兩人差距在誤差內。'),
- ('新竹縣','2026-10-26'):dict(fr='land',wt=True,disc=2,und=15.9,qw=False,fl=[],note='只打市話（中華電信住宅電話尾數隨機、分層比例抽樣），依戶籍／性別／年齡／教育多重反覆加權，樣本 1070；未含手機、委託者不明、題目原文未公布；純市話通常偏向年長、偏藍。'),
+ ('新竹縣','2026-10-26'):dict(fr='land',wt=True,disc=1,und=15.9,qw=False,spn=False,fl=[],note='只打市話（中華電信住宅電話尾數隨機、分層比例抽樣），匯流報導寫有加權但聯合報版本沒提；由「台灣公共政策學會」等團體記者會公布，委託出資者不明；題目原文、朱定瑀支持度都沒公布；純市話通常偏向年長、偏藍。'),
  ('新竹縣','2026-10-18'):dict(fr='web',wt=True,disc=1,und=11.2,qw=False,fl=['adv'],note='網路主動發放、非機率樣本，競辦委託並公布；有性別／年齡／居住地加權但未公布題目，網路族群可能偏綠。'),
  ('新竹縣','2026-09-21'):dict(fr='web',wt=True,disc=1,und=None,qw=False,fl=['adv'],note='同一系列 9 月波次，數字由競辦公布的增減推算，非機率樣本。'),
  ('新竹縣','2026-09-18'):dict(fr='tel',wt=True,disc=2,und=29.2,qw=True,fl=[],note='分層隨機抽樣、性別／年齡／鄉鎮加權、公布題目；未表態近 3 成，部分鄉鎮樣本只有個位數。'),
@@ -280,7 +280,7 @@ AUDIT={
 FR_W={'dual':1.10,'land':0.92,'tel':0.95,'web':1.0,'ai':1.0,'none':0.9}
 FR_N={'dual':'市話＋手機','land':'只打市話','tel':'電話（未說明手機）','web':'網路問卷','ai':'AI 模擬','none':'方法未揭露'}
 # 透明度（0–100）：資料揭露越完整分數越高；不透明的民調權重大幅調低（Jay 10/28 要求）
-TR_ITEMS=[('樣本數',15),('原始報告數字',10),('抽樣框',15),('加權方式',15),('未表態比例',10),('題目原文',15),('完整方法說明',20)]
+TR_ITEMS=[('樣本數',15),('原始報告數字',10),('抽樣框',15),('加權方式',15),('未表態比例',10),('題目原文',15),('委託者',10),('完整方法說明',10)]
 def transparency(p,a):
     pts=[15 if p.get('n') and not p.get('est') else 0,
          0 if p.get('est') else 10,
@@ -288,7 +288,8 @@ def transparency(p,a):
          15 if a['wt'] else 10 if a['wt'] is False else 0,
          10 if a.get('und') is not None else 0,
          15 if a.get('qw') else 0,
-         {2:20,1:8,0:0}[a['disc']]]
+         0 if a.get('spn') is False or a['fr']=='none' else 10,
+         {2:10,1:4,0:0}[a['disc']]]
     return sum(pts),[n for (n,_),x in zip(TR_ITEMS,pts) if x==0]
 def tr_factor(t): return round(0.3+0.7*(t/100)**1.5,3)
 def audit_q(a):
