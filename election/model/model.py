@@ -53,7 +53,7 @@ P = [
  dict(r='新北市', org='信民兩岸研究協會（戴立安）', fe=D(2026,10,8), rel=D(2026,10,13), n=1073, t='phone', v={'蘇巧慧':43.1,'李四川':30.0}, url='https://cna.com.tw/news/aipl/202610130087.aspx'),
  dict(r='桃園市', org='信民兩岸研究協會（戴立安）／畢肯', fe=D(2026,11,6), rel=D(2026,11,10), n=1074, t='phone', v={'張善政':36.9,'黃世杰':32.8}, url='https://n.yam.com/Article/20261110275616'),
  dict(r='桃園市', org='ETtoday 民調雲（網路問卷）', fe=D(2026,11,1), rel=D(2026,11,4), n=1190, t='online', v={'張善政':47.4,'黃世杰':36.0}, url='https://www.ettoday.net/news/20261104/3265740.htm'),
- dict(r='台北市', org='信民兩岸研究協會（戴立安）／畢肯（封關）', fe=D(2026,11,13), rel=D(2026,11,16), n=1072, t='phone', v={'沈伯洋':48.6,'蔣萬安':33.8}, url='https://www.ettoday.net/news/20261116/3272828.htm'),
+ dict(r='台北市', org='信民兩岸研究協會（戴立安）／畢肯（封關）', fe=D(2026,11,13), rel=D(2026,11,16), n=1072, t='phone', v={'沈伯洋':50.0,'蔣萬安':50.25}, proj=True, raw={'沈伯洋':48.6,'蔣萬安':33.8}, url='https://www.ettoday.net/news/20261116/3272828.htm'),  # 11/16 改用戴立安自己的得票率推估中點（沈 48–52、蔣 48.3–52.2），見 AUDIT 說明
  dict(r='台北市', org='鋒燦傳媒（台大張佑宗主持，市話＋網路樣本）', fe=D(2026,11,9), rel=D(2026,11,16), n=2026, t='phone', v={'沈伯洋':44.7,'蔣萬安':43.0,'其他':0.2}, url='https://newtalk.tw/news/view/2026-11-16/1071318'),
  dict(r='台北市', org='新台灣國策智庫（凱達格蘭基金會出資，趨勢執行）', fe=D(2026,11,12), rel=D(2026,11,15), n=1071, t='phone', sp='D', v={'沈伯洋':46.3,'蔣萬安':42.2,'其他':0.9}, url='https://newtalk.tw/news/view/2026-11-15/1071216'),
  dict(r='台北市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,11,10), rel=D(2026,11,11), n=17550, t='ai', v={'蔣萬安':45.9,'沈伯洋':43.1}, url='https://ctinews.com/news/items/p5W9mjAAWo'),
@@ -87,7 +87,7 @@ P = [
  dict(r='台中市', org='匯流新聞網民調中心', fe=D(2026,5,12), rel=D(2026,5,14), n=1070, t='phone', v={'江啓臣':40.6,'何欣純':24.4}, url='https://www.nownews.com/news/6836161'),
  dict(r='高雄市', org='山水民意（上報委託）', fe=D(2026,4,29), rel=D(2026,5,6), n=2027, t='phone', v={'賴瑞隆':47,'柯志恩':30.7}, url='https://news.tvbs.com.tw/politics/3196526'),
  dict(r='高雄市', org='新台灣國策智庫（凱達格蘭基金會出資）', fe=D(2026,6,10), rel=D(2026,6,12), n=1094, t='phone', sp='D', v={'賴瑞隆':46.2,'柯志恩':28.4}, url='https://www.storm.mg/lifestyle/11140883'),
- dict(r='高雄市', org='鉅聞天下（方法未載明）', fe=D(2026,8,8), rel=D(2026,8,10), n=None, t='online', est=True, v={'賴瑞隆':47.78,'柯志恩':46.14}, url='https://udn.com/news/story/124652/9681827'),
+ dict(r='高雄市', org='皮爾森數據（鉅聞天下委託，網路非機率樣本）', fe=D(2026,8,1), rel=D(2026,8,10), n=None, t='online', est=True, v={'賴瑞隆':47.78,'柯志恩':46.14}, url='https://udn.com/news/story/124652/9681827'),
  dict(r='新竹市', org='TVBS 民調中心（文化大學陳毓麒教授委託）', fe=D(2026,10,31), rel=D(2026,11,5), n=1098, t='phone', v={'高虹安':46,'莊競程':31,'何志勇':2}, url='https://www.setn.com/news/1933866'),
  dict(r='新竹市', org='循證民調（Newtalk 新聞委託）', fe=D(2026,10,29), rel=D(2026,11,3), n=1068, t='phone', v={'高虹安':38.1,'莊競程':36.1}, url='https://newtalk.tw/news/view/2026-11-03/1069051'),
  dict(r='新竹市', org='匯流新聞網民調中心', fe=D(2026,9,13), rel=D(2026,9,22), n=1070, t='phone', v={'高虹安':49.5,'莊競程':25.7,'何志勇':6.1}, url='https://news.tvbs.com.tw/politics/4025748'),
@@ -119,6 +119,36 @@ P = [
  dict(r='基隆市', org='大地民意（鏡新聞委託）', fe=D(2026,10,21), rel=D(2026,10,23), n=1075, t='phone', v={'童子瑋':37.0,'謝國樑':36.3,'魏造文':0.8}, url='https://setn.com/news/1927095'),
  dict(r='台中市', org='世新大學民調中心（國民黨台中議會黨團委託）', fe=D(2026,11,7), rel=D(2026,11,9), n=1068, t='phone', sp='K', v={'江啓臣':39.2,'何欣純':30.0,'洪麗華':1.3}, url='https://news.tvbs.com.tw/politics/4047918'),
  dict(r='台中市', org='世新大學民調中心（國民黨台中議會黨團委託）', fe=D(2026,10,16), rel=D(2026,10,17), n=1070, t='phone', sp='K', v={'江啓臣':39.8,'何欣純':28.7,'洪麗華':1.0}, url='https://www.ettoday.net/news/20261024/3260334.htm'),
+ # ===== 11/16 完整盤點補收（先前漏收的 6～11 月民調）=====
+ dict(r='新北市', org='新台灣國策智庫（凱達格蘭基金會出資）', fe=D(2026,7,14), rel=D(2026,7,16), n=1080, t='phone', sp='D', v={'李四川':40.0,'蘇巧慧':40.2}, url='https://www.ettoday.net/news/20260716/3202058.htm'),
+ dict(r='新北市', org='TVBS 民調中心（國民黨新北議會黨團委託）', fe=D(2026,7,23), rel=D(2026,7,29), n=1303, t='phone', sp='K', v={'李四川':43.7,'蘇巧慧':36.8}, url='https://www.nownews.com/news/6861114'),
+ dict(r='新北市', org='ETtoday 民調雲（網路問卷）', fe=D(2026,8,13), rel=D(2026,8,15), n=None, t='online', est=True, v={'蘇巧慧':37.3,'李四川':39.3}, url='https://taiwanpoliticalzoo.com/polls/'),
+ dict(r='新北市', org='信民兩岸研究協會（戴立安）／畢肯', fe=D(2026,8,28), rel=D(2026,9,1), n=1071, t='phone', v={'蘇巧慧':35.2,'李四川':34.7}, url='https://www.nownews.com/news/6871043'),
+ dict(r='新北市', org='TVBS 民調中心（委託者未核對）', fe=D(2026,8,30), rel=D(2026,9,1), n=None, t='phone', est=True, v={'蘇巧慧':33.1,'李四川':39.8}, url='https://taiwanpoliticalzoo.com/polls/'),
+ dict(r='新北市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,9,15), rel=D(2026,9,16), n=26771, t='ai', v={'李四川':37.9,'蘇巧慧':31.5}, url='https://www.mirrormedia.mg/external/mnews_20260915nm018'),
+ dict(r='新北市', org='山水民意（震傳媒委託）', fe=D(2026,9,21), rel=D(2026,9,23), n=1076, t='phone', v={'蘇巧慧':38.2,'李四川':37.1,'蘇輝湟':2.6}, url='https://www.setn.com/ampnews/1911643'),
+ dict(r='新北市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,9,30), rel=D(2026,9,30), n=26771, t='ai', v={'李四川':45.8,'蘇巧慧':42.6}, url='https://www.mirrormedia.mg/external/mnews_20260930nm003'),
+ dict(r='新北市', org='山水民意（震傳媒委託，原始報導未取得）', fe=D(2026,10,1), rel=D(2026,10,3), n=None, t='phone', est=True, v={'蘇巧慧':39.1,'李四川':34.5}, url='https://taiwanpoliticalzoo.com/polls/'),
+ dict(r='基隆市', org='民進黨內參民調（機構未載明）', fe=D(2026,7,27), rel=D(2026,7,30), n=None, t='phone', sp='D', est=True, v={'謝國樑':38.5,'童子瑋':36.0}, url='https://taiwanpoliticalzoo.com/polls/'),
+ dict(r='基隆市', org='山水民意（原始報導未取得）', fe=D(2026,9,21), rel=D(2026,9,23), n=None, t='phone', est=True, v={'謝國樑':38.0,'童子瑋':34.2,'魏造文':1.7}, url='https://taiwanpoliticalzoo.com/polls/'),
+ dict(r='台中市', org='艾普羅民調（原始報導未取得）', fe=D(2026,8,5), rel=D(2026,8,7), n=None, t='phone', est=True, v={'江啓臣':38.2,'何欣純':24.1}, url='https://taiwanpoliticalzoo.com/polls/'),
+ dict(r='台中市', org='新台灣國策智庫（凱達格蘭基金會出資）', fe=D(2026,8,13), rel=D(2026,8,18), n=1159, t='phone', sp='D', v={'江啓臣':42.8,'何欣純':36.1}, url='https://braintrust.tw/wp-content/uploads/2026/08/2605098-4台中市長選情評估_選項報表.pdf'),
+ dict(r='台中市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,9,22), rel=D(2026,9,23), n=18971, t='ai', v={'江啓臣':44.5,'何欣純':32.4}, url='https://www.mirrormedia.mg/external/mnews_20260923nm010'),
+ dict(r='台中市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,9,29), rel=D(2026,9,30), n=18971, t='ai', v={'江啓臣':47.6,'何欣純':40.4}, url='https://www.mirrormedia.mg/external/mnews_20260930nm004'),
+ dict(r='台中市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,10,26), rel=D(2026,10,28), n=18971, t='ai', v={'江啓臣':46.1,'何欣純':35.5}, url='https://www.mirrormedia.mg/external/mnews_20261028nm005'),
+ dict(r='台南市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,9,29), rel=D(2026,9,30), n=15453, t='ai', v={'陳亭妃':48.5,'謝龍介':38.3}, url='https://www.mirrormedia.mg/external/mnews_20260930nm007'),
+ dict(r='台南市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,10,26), rel=D(2026,10,28), n=15453, t='ai', v={'陳亭妃':45.2,'謝龍介':34.1}, url='https://www.mirrormedia.mg/external/mnews_20261028nm006'),
+ dict(r='桃園市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,9,15), rel=D(2026,9,16), n=13789, t='ai', v={'張善政':37.9,'黃世杰':29.4}, url='https://www.mirrormedia.mg/external/mnews_20260915nm014'),
+ dict(r='高雄市', org='TVBS 民調中心（原始報導未取得）', fe=D(2026,6,1), rel=D(2026,6,3), n=None, t='phone', est=True, v={'賴瑞隆':40.3,'柯志恩':39.7}, url='https://udn.com/news/story/124652/9567033'),
+ dict(r='高雄市', org='大地民意研究（鏡新聞委託）', fe=D(2026,6,9), rel=D(2026,6,15), n=1116, t='phone', v={'賴瑞隆':45.1,'柯志恩':24.8}, url='https://udn.com/news/story/124652/9567033'),
+ dict(r='高雄市', org='皮爾森數據（鉅聞天下委託，網路，原始報導未取得）', fe=D(2026,7,19), rel=D(2026,7,22), n=None, t='online', est=True, v={'賴瑞隆':46.01,'柯志恩':46.67}, url='https://taiwanpoliticalzoo.com/polls/'),
+ dict(r='高雄市', org='山水民意（震傳媒委託）', fe=D(2026,7,20), rel=D(2026,7,23), n=1069, t='phone', v={'賴瑞隆':39.6,'柯志恩':31.6}, url='https://udn.com/news/story/124652/9646902'),
+ dict(r='高雄市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,11,3), rel=D(2026,11,4), n=20299, t='ai', v={'賴瑞隆':44.0,'柯志恩':37.0}, url='https://www.mirrormedia.mg/external/amp/mnews_20261104nm003'),
+ dict(r='高雄市', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,11,10), rel=D(2026,11,11), n=20299, t='ai', v={'賴瑞隆':47.6,'柯志恩':42.0}, url='https://www.mirrormedia.mg/external/amp/mnews_20261111nm007'),
+ dict(r='新竹縣', org='TPOC 台灣議題研究中心（AI 矽基樣本模擬）', fe=D(2026,9,22), rel=D(2026,9,23), n=4678, t='ai', v={'徐欣瑩':35.8,'鄭朝方':27.2,'朱定瑀':13.8}, url='https://www.mirrormedia.mg/external/amp/mnews_20260923nm012'),
+ dict(r='彰化縣', org='ETtoday 民調雲（網路問卷）', fe=D(2026,8,17), rel=D(2026,8,18), n=1133, t='online', v={'陳素月':36.4,'魏平政':19.4,'邱建富':12.7}, url='https://www.storm.mg/article/11157587'),
+ dict(r='花蓮縣', org='風傳媒民調中心', fe=D(2026,8,22), rel=D(2026,8,28), n=1068, t='phone', v={'游淑貞':29.1,'張峻':19.4,'魏嘉賢':18.4}, url='https://hao.cnyes.com/post/265030'),
+ dict(r='金門縣', org='雨晴指標行銷（國民黨委託）', fe=D(2026,9,11), rel=D(2026,9,17), n=1071, t='phone', sp='K', v={'陳玉珍':45.4,'李文良':10.7,'洪和成':1.1,'其他':5.2}, url='https://www.nownews.com/news/6875808'),
 ]
 
 # ---- 2022 年縣市長選舉結果（維基百科 2022 Taiwanese local elections，前兩名）----
@@ -315,7 +345,7 @@ AUDIT={
  ('桃園市','2026-10-26'):dict(fr='ai',wt=True,disc=2,und=15.0,qw=False,fl=[],note='第四波 AI 矽基樣本模擬（GPT-5.4 mini 扮演 13,789 位選民），依性別／年齡／教育／過去政黨票加權並做黨派偏差後處理；報告自承不是真實民調、可能放大媒體敘事、低估冷感選民。'),
  ('桃園市','2026-09-29'):dict(fr='ai',wt=None,disc=1,und=None,qw=False,fl=[],note='用大型語言模型扮演選民的「矽基樣本」，不是真的問人；沒有對實際選舉結果做過驗證，樣本數再大也不等於準確。'),
  ('台中市','2026-10-06'):dict(fr='tel',wt=None,disc=1,und=32.2,qw=False,fl=['adv'],note='（補登 10/12 公布的民調）台中市信賴之友會出資、循證民調 10/5–6 CATI 電訪 1071 份，誤差 ±2.99%；只說「電話資料庫隨機抽樣」，沒寫市話／手機比例，也沒提加權，題目原文未公布。記者會由民進黨籍議員主持，屬綠營友好團體挑選公布；未表態高達 32.2%。'),
- ('台北市','2026-11-13'):dict(fr='dual',wt=True,disc=2,und=12.1,qw=True,fl=['skew'],note='信民協會出資、戴立安設計分析、畢肯 11/11–13 電訪 1072 份：市話 750（系統隨機抽樣＋隨機跳號）＋手機 322（字首編碼＋後 5 碼隨機）雙底冊，依台北市府公布的性別／行政區／年齡／教育做 raking 加權，誤差 ±3%；公布題目原文，不投票或廢票 4.5%、未明確回答 12.1%，也公布政黨樣本比例。方法揭露完整（11/16 依三立完整新聞稿更正，先前只看到簡版報導）。但樣本政黨比例綠 40.8、藍 24.8、白 4.8、中立 20.9，綠多藍少明顯，與台北一般政黨認同分布不符，可能高估沈伯洋；戴立安自己的得票推估也只有五五波。'),
+ ('台北市','2026-11-13'):dict(fr='dual',wt=True,disc=1,und=12.1,qw=True,fl=[],note='信民協會出資、戴立安設計分析、畢肯 11/11–13 電訪 1072 份：市話 750＋手機 322 雙底冊，依性別／行政區／年齡／教育 raking 加權，誤差 ±3%；公布題目原文與政黨樣本比例。原始支持度沈 48.6、蔣 33.8，但樣本政黨比例綠 40.8、藍 24.8，綠多藍少明顯。11/16 起模型改用戴立安自己的得票率推估中點（沈 50.0、蔣 50.25，原區間沈 48–52、蔣 48.3–52.2），理由：他 2022 台北、2024 總統的封關支持度都高估綠營（換算後差距分別多估綠營約 2.6、5.1 點），這次樣本又明顯偏綠。推估本身已含他的校正，所以不再扣機構偏差；推估方法完全未公開（只在黃暐瀚臉書圖卡寫蔣最高 52.2、沈最高 52，可能蔣領先 4.2 或沈領先 3.7；投票率、未表態分配、政黨傾向投票率都沒交代），所以完整揭露分降為 1。拿掉這份民調、只用其他民調，台北結果幾乎一樣，表示推估和其他民調一致。'),
  ('台北市','2026-11-09'):dict(fr='land',wt=True,disc=1,und=12,qw=False,fl=[],note='鋒燦傳媒委託台大政治系張佑宗設計，11/4–9 市話 1008 份（全方位市調，行政區分層比例）＋網路 1018 份（台大動態民意平台、創市際會員），1:1 合併後依性別／年齡／行政區加權，誤差 ±2.18%；未表態 12%。網路部分是會員樣本、不是機率抽樣，市話沒有手機；這次報導沒附題目原文。沈伯洋僅領先 1.7 點。'),
  ('台北市','2026-11-12'):dict(fr='land',wt=True,disc=1,und=8.6,qw=False,fl=['adv'],note='凱達格蘭基金會出資、新台灣國策智庫委託趨勢民調，11/10–12 晚間只打市話（中華電信號碼簿分層比例抽樣、末兩碼隨機）1071 份，依戶籍地／性別／年齡／教育多重反覆加權，誤差 ±2.99%。無法選出 8.6%、不投票 2%；題目原文沒公布。綠營智庫出資並自行公布，可能偏綠；只有市話。沈伯洋領先 4.1 點，與 10/25 聯合報（沈 +4）接近。'),
  ('台北市','2026-11-10'):dict(fr='ai',wt=True,disc=1,und=None,qw=False,fl=[],note='TPOC 第八波 AI 矽基樣本模擬，影響力數據出資，GPT-5.4 mini 生成 17,550 個虛擬選民，依性別／年齡／教育／過去政黨票／行政區比對母體並做黨派偏差後處理，11/10 執行。不是真實受訪者，報告自承可能低估未表態族群；沒寫未表態比例、沒公布題目原文。蔣萬安領先 2.8 點。'),
@@ -339,7 +369,7 @@ AUDIT={
  ('高雄市','2026-10-19'):dict(fr='ai',wt=None,disc=1,und=None,qw=False,fl=[],note='AI 矽基樣本模擬，以 2024 年選民結構為底，沒有實際受訪者，無法驗證。（重新核對：未公布整體未表態比例與模型名稱。）'),
  ('高雄市','2026-04-29'):dict(fr='tel',wt=None,disc=1,und=None,qw=False,fl=[],note='樣本 2027 較大；時間很早，權重已衰減。'),
  ('高雄市','2026-06-10'):dict(fr='land',wt=True,disc=1,und=None,qw=False,fl=[],note='綠營智庫電訪，時間較早。'),
- ('高雄市','2026-08-08'):dict(spn=False,fr='none',wt=None,disc=0,und=None,qw=False,fl=[],note='機構與方法都未載明，參考價值很低。'),
+ ('高雄市','2026-08-01'):dict(spn=False,fr='web',wt=None,disc=0,und=4.24,qw=False,fl=[],note='11/16 更正：民調彙整站顯示這份與皮爾森 7/27–8/1 網路調查數字完全相同，改列皮爾森執行、鉅聞天下委託；網路非機率樣本，樣本數與加權未核對，未表態只有 4%，與電訪差很多。'),
  ('基隆市','2026-08-24'):dict(fr='tel',wt=True,disc=1,und=None,qw=False,fl=[],note='山水市話電訪，媒體委託；時間較早。（重新核對：抽樣框、未表態比例、題目未公布。）'),
  ('基隆市','2026-10-09'):dict(fr='land',wt=True,disc=2,und=None,qw=False,fl=['adv','skew'],note='電話簿＋尾數隨機、raking 加權；國民黨市黨部委託，且未公布原始未表態比例，報導指樣本中民進黨支持者多於國民黨。（重新核對：只公布換算後的得票率，原始未表態比例與題目未公布。）'),
  ('基隆市','2026-10-21'):dict(fr='land',wt=True,disc=2,und=25.9,qw=True,fl=[],note='依行政區比例抽市話、raking 加權、候選人順序隨機、公布題目，程序是這批裡最嚴謹的之一；未表態 25.9%，兩人差距在誤差內。'),
@@ -375,6 +405,36 @@ AUDIT={
  ('花蓮縣','2026-10-27'):dict(fr='land',wt=True,disc=1,und=28.5,qw=False,fl=[],note='Lai 傳媒出資、關鍵調查 10/24–27 晚間市話電訪 1202 份，分層比例隨機抽樣，依性別／年齡／戶籍地加權，誤差 ±2.83%；只打市話，題目原文沒公布。張峻比風傳媒 10/18 民調高出約 8 點，「一定投票」者游 31.4、張 29.6。'),
  ('花蓮縣','2026-10-18'):dict(fr='tel',wt=True,disc=1,und=33.5,qw=False,fl=[],note='分層隨機抽樣、依性別／戶籍／年齡／教育加權、樣本 1068；未說明是否含手機、題目未公布；未表態 33.5%，三人差距可信度有限。（重新核對：抽樣框未說明。）'),
  ('花蓮縣','2026-07-23'):dict(fr='tel',wt=None,disc=1,und=29.2,qw=False,fl=[],note='CATI、樣本 1068，但抽樣框、加權、題目都未公布；未表態近 3 成。'),
+ # ===== 11/16 完整盤點補收 =====
+ ('新北市','2026-07-14'):dict(fr='land',wt=True,disc=1,und=19.8,qw=False,fl=['adv'],note='新台灣國策智庫（凱達格蘭基金會出資）7/12–14 市話 1080 份，號碼簿＋末兩碼隨機、分層比例抽樣，依戶籍／性別／年齡／教育 raking 加權，誤差 ±2.98%；只打市話、題目沒公布，綠營智庫自行公布。'),
+ ('新北市','2026-07-23'):dict(fr='tel',wt=True,disc=1,und=17.4,qw=False,fl=['adv'],note='國民黨新北議會黨團委託 TVBS，7/20–23 電訪 1303 份，依性別／年齡／行政區／教育加權，誤差 ±2.7%；抽樣框未說明、題目沒公布，黨團挑選公布。'),
+ ('新北市','2026-08-13'):dict(spn=False,fr='web',wt=None,disc=0,und=23.4,qw=False,fl=[],note='只在民調彙整站看到（8/5–13），原始報導未取得，樣本數與方法都無法核對；ETtoday 網路問卷是會員非機率樣本。'),
+ ('新北市','2026-08-28'):dict(fr='dual',wt=None,disc=1,und=None,qw=False,fl=[],note='信民協會委託、戴立安設計分析、畢肯 8/26–28 電訪 1071 份（市話 749＋手機 322 雙底冊），誤差 ±3%；這則報導沒寫加權方式、未表態比例與題目原文。'),
+ ('新北市','2026-08-30'):dict(spn=False,fr='tel',wt=None,disc=0,und=27.1,qw=False,fl=[],note='只在民調彙整站看到（TVBS 8/28–30），原始報導未取得，委託者、樣本數與方法都無法核對。'),
+ ('新北市','2026-09-15'):dict(fr='ai',wt=None,disc=1,und=19.9,qw=False,fl=[],note='TPOC AI 矽基樣本模擬，26,771 個虛擬代理人，9/15 執行；不是真實受訪者。'),
+ ('新北市','2026-09-21'):dict(fr='land',wt=True,disc=1,und=None,qw=False,fl=[],note='震傳媒委託山水民意 9/20–21 住宅市話 1076 份，系統抽樣＋末兩碼隨機，依年齡／地區／性別／教育加權，誤差 ±2.99%；沒有手機、題目與未表態比例沒公布。'),
+ ('新北市','2026-09-30'):dict(fr='ai',wt=None,disc=1,und=None,qw=False,fl=[],note='TPOC AI 矽基樣本模擬（含傾向），26,771 個虛擬代理人，9/30 執行；不是真實受訪者，未表態沒寫。'),
+ ('新北市','2026-10-01'):dict(spn=False,fr='tel',wt=None,disc=0,und=None,qw=False,fl=[],note='只在民調彙整站看到（山水 9/30–10/1），原始報導未取得，樣本數與方法都無法核對。'),
+ ('基隆市','2026-07-27'):dict(spn=False,fr='none',wt=None,disc=0,und=25.5,qw=False,fl=['adv'],note='只在民調彙整站看到的民進黨內參（7/24–27），機構、樣本與方法都未載明。'),
+ ('基隆市','2026-09-21'):dict(spn=False,fr='tel',wt=None,disc=0,und=None,qw=False,fl=[],note='只在民調彙整站看到（山水 9/20–21），原始報導未取得，委託者、樣本數與方法都無法核對。'),
+ ('台中市','2026-08-05'):dict(spn=False,fr='tel',wt=None,disc=0,und=37.7,qw=False,fl=[],note='只在民調彙整站看到（艾普羅 8/3–5），原始報導未取得，委託者、樣本數與方法都無法核對。'),
+ ('台中市','2026-08-13'):dict(fr='land',wt=True,disc=2,und=21.1,qw=True,fl=['adv'],note='新台灣國策智庫 8/11–13 電訪 1159 份，以市話號碼簿為母體，依行政區／性別／年齡／教育加權，誤差 ±2.88%；公布完整選項報表（含題目）。只打市話、綠營智庫自行公布。'),
+ ('台中市','2026-09-22'):dict(fr='ai',wt=None,disc=1,und=7.9,qw=False,fl=[],note='TPOC AI 矽基樣本模擬，18,971 個虛擬代理人，9/22 執行；不是真實受訪者。'),
+ ('台中市','2026-09-29'):dict(fr='ai',wt=None,disc=1,und=4.1,qw=False,fl=[],note='TPOC AI 矽基樣本模擬，18,971 個虛擬代理人，9/29 執行；不是真實受訪者。'),
+ ('台中市','2026-10-26'):dict(fr='ai',wt=None,disc=1,und=14.7,qw=False,fl=[],note='TPOC AI 矽基樣本模擬，18,971 個虛擬代理人，10/26 執行；不是真實受訪者。'),
+ ('台南市','2026-09-29'):dict(fr='ai',wt=None,disc=1,und=None,qw=False,fl=[],note='TPOC AI 矽基樣本模擬（含傾向），15,453 個虛擬代理人，9/29 執行；不是真實受訪者。'),
+ ('台南市','2026-10-26'):dict(fr='ai',wt=None,disc=1,und=16.0,qw=False,fl=[],note='TPOC AI 矽基樣本模擬，15,453 個虛擬代理人，10/26 執行，有做黨性偏誤後處理；不是真實受訪者。'),
+ ('桃園市','2026-09-15'):dict(fr='ai',wt=None,disc=1,und=20.5,qw=False,fl=[],note='TPOC AI 矽基樣本模擬，13,789 個虛擬代理人，9/15 執行；不是真實受訪者。'),
+ ('高雄市','2026-06-01'):dict(spn=False,fr='tel',wt=None,disc=0,und=None,qw=False,fl=[],note='只在其他報導中被引述（TVBS 6/3 公布），原始報告未取得，日期、樣本與方法都無法核對。'),
+ ('高雄市','2026-06-09'):dict(fr='land',wt=None,disc=1,und=29.3,qw=False,fl=[],note='鏡新聞委託大地民意 6/8–9 市話 1116 份，依行政區母體比例抽樣，誤差 ±2.93%；沒有手機、加權與題目都沒寫。'),
+ ('高雄市','2026-07-19'):dict(spn=False,fr='web',wt=None,disc=0,und=None,qw=False,fl=[],note='只在民調彙整站看到（皮爾森 7/13–19，非機率網路樣本），原始報導未取得。'),
+ ('高雄市','2026-07-20'):dict(fr='land',wt=None,disc=1,und=28.8,qw=False,fl=[],note='震傳媒出資、山水民意 7/18–20 住宅電話 1069 份（系統抽樣＋末兩碼隨機），誤差 ±3%；沒有手機、加權與題目都沒寫。'),
+ ('高雄市','2026-11-03'):dict(fr='ai',wt=None,disc=1,und=15.3,qw=False,fl=[],note='TPOC AI 矽基樣本模擬，20,299 個虛擬代理人，11/3 執行；不是真實受訪者。'),
+ ('高雄市','2026-11-10'):dict(fr='ai',wt=True,disc=1,und=7.4,qw=False,fl=[],note='TPOC AI 矽基樣本模擬，20,299 個虛擬代理人，11/10 執行，依性別／年齡 raking；不是真實受訪者，報告自承可能低估未表態。'),
+ ('新竹縣','2026-09-22'):dict(fr='ai',wt=None,disc=1,und=14.6,qw=False,fl=[],note='TPOC AI 矽基樣本模擬，4,678 個虛擬代理人，9/22 執行；不是真實受訪者。'),
+ ('彰化縣','2026-08-17'):dict(spn=False,fr='web',wt=None,disc=1,und=27.9,qw=False,fl=[],note='ETtoday 民調雲 8/10–17，簡訊邀請填封閉式網路問卷 1133 份，誤差 ±2.9%；會員非機率樣本，加權與題目沒寫。'),
+ ('花蓮縣','2026-08-22'):dict(fr='land',wt=None,disc=1,und=29.6,qw=False,spn=False,fl=[],note='風傳媒民調中心 8/20–22 住宅電話 1068 份（分層隨機＋末兩碼 RDD），誤差 ±3%；沒有手機、加權與題目都沒寫。'),
+ ('金門縣','2026-09-11'):dict(fr='land',wt=True,disc=1,und=37.6,qw=False,fl=['adv'],note='國民黨委託雨晴 9/7–11 住宅電話 1071 份，分層比例＋末兩碼隨機，依鄉鎮／年齡／性別加權，誤差 ±3%；只打市話、題目沒公布、未表態近 4 成，國民黨自行公布。'),
 }
 FR_W={'dual':1.10,'land':0.92,'tel':0.95,'web':1.0,'ai':1.0,'none':0.9}
 FR_N={'dual':'市話＋手機','land':'只打市話','tel':'電話（未說明手機）','web':'網路問卷','ai':'AI 模擬','none':'方法未揭露'}
@@ -421,7 +481,7 @@ def gmb(p):
 HE_RAW={}
 for p in P:
     m=gmb(p)
-    if m is None or p['t']=='party': continue   # 政黨偏好題和候選人對決題問法不同，不拿來估機構偏差
+    if m is None or p['t']=='party' or p.get('proj'): continue   # 政黨偏好題和候選人對決題問法不同、得票率推估已含機構自己的校正，都不拿來估機構偏差
     others=[q for q in P if q['r']==p['r'] and q is not p and q['t']!='party' and house(q['org'])!=house(p['org']) and abs((q['fe']-p['fe']).days)<=45 and gmb(q) is not None]
     if not others: continue
     ws=[TYPE_W[q['t']]*q['q']*math.exp(-abs((q['fe']-p['fe']).days)/40) for q in others]
@@ -431,7 +491,7 @@ for p in P:
 HOUSE_EFFECT={h:round(sum(d*q for d,q in v)/(sum(q for d,q in v)+2),2) for h,v in HE_RAW.items()}
 for p in P:
     he=HOUSE_EFFECT.get(house(p['org']),0.0); cs=CANDS[p['r']]; tot=sum(p['v'].values())
-    p['he']=he if gmb(p) is not None else 0.0
+    p['he']=he if gmb(p) is not None and not p.get('proj') else 0.0   # 得票率推估已是機構自己校正後的數字，不再扣機構偏差，避免重複校正
     p['vc']={n:(v-p['he']/2*tot/100 if n in cs and cs[n][1]=='D' else v+p['he']/2*tot/100 if n in cs and camp(n,cs[n][1])=='B' else v) for n,v in p['v'].items()}
 
 # ===== 民調校正 3：趨勢一致性 =====
