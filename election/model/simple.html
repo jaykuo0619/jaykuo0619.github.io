@@ -349,7 +349,7 @@ footer .full{font-size:13.5px}
 </section>
 
 <footer>
-  <span class="note">這是預測，不是結果。民調加權＋AI 基準＋重大新聞調整；票數依 2022 投票率推估，非大數據模型。藍營含藍白合推薦。</span>
+  <span class="note">這是預測，不是結果。11/16 起改用新模型：民調貝氏整合＋跨縣市機構偏差校正＋4 萬次模擬（走勢圖今天之前仍是舊模型）；票數依 2022 投票率推估，非大數據模型。藍營含藍白合推薦。</span>
   <a class="full" href="full.html">完整數據與方法 →</a>
 </footer>
 <div class="palette" id="palette" hidden><div class="box" role="dialog" aria-label="搜尋縣市"><input id="q" placeholder="輸入縣市或候選人，例如：台北、徐欣瑩" autocomplete="off"><ul id="qres" role="listbox"></ul></div></div>
@@ -532,6 +532,7 @@ function spark(c,W){
     <line x1="${x(day)}" x2="${x(day)}" y1="${T}" y2="${H-B}" stroke="var(--ink)" stroke-dasharray="2 3" opacity=".5"/>
     ${r.events.filter(e=>e.i0<=day).map(e=>{ const cx=x(e.i0), cy=y(ms[e.i0]), up=e.k>0; const col=`var(--${PV[cand(c,e.n).p]})`;
       return `<path d="M${cx-5},${up?cy-9:cy+9} L${cx+5},${up?cy-9:cy+9} L${cx},${up?cy-3:cy+3} Z" transform="rotate(${up?180:0} ${cx} ${up?cy-6:cy+6})" fill="${col}"><title>${fmtD(e.d)} ${esc(e.n)}：${esc(e.t)}</title></path>`; }).join('')}
+    ${(()=>{ const i=r.series.findIndex(s=>s.pro); if(i<0||i>day) return ''; return `<line x1="${x(i)}" x2="${x(i)}" y1="${T}" y2="${H-B}" stroke="var(--muted)" stroke-width="1"/><text x="${x(i)-3}" y="${H-B-3}" text-anchor="end" style="font-size:10px;fill:var(--muted)">模型改版</text>`; })()}
     <circle cx="${x(day)}" cy="${y(ms[day])}" r="4.5" fill="var(--${PV[ms[day]>=0?pa:pb]})" stroke="var(--paper)" stroke-width="2"/>
     <text x="${L}" y="12" style="fill:var(--${PV[pa]});font-weight:700">↑ ${esc(a)} 領先</text><text x="${L}" y="${H-3}" style="fill:var(--${PV[pb]});font-weight:700">↓ ${esc(b)} 領先</text>
     <text x="${W-R}" y="12" text-anchor="end">6/1 → ${fmtD(r.series[day].d)}</text></svg>`;
@@ -560,10 +561,34 @@ function trendTag(p){ if(p.dev==null) return '<span>無同期他家民調可對�
   const a=Math.abs(p.dev), dir=p.dev>0?'綠':'藍';
   if(a<4) return `<span class="good">符合趨勢（差 ${a.toFixed(1)} 點）</span>`;
   return `<span class="bad">${a<8?'略偏':'偏離'}趨勢：比共識偏${dir} ${a.toFixed(1)} 點${p.cf<1?' ×'+p.cf.toFixed(2):''}</span>`; }
+// 11/16 起「今天」的預估改用專業版模型：貝氏整合＋跨縣市機構偏差＋蒙地卡羅
+function proPollBlock(c,r,ps,d){
+  const P=r.pro, HE=(DATA.method.pro&&DATA.method.pro.he)||{}, sg=v=>(v>=0?'+':'−')+Math.abs(v).toFixed(1);
+  let comp='';
+  if(P.A&&P.post!=null){
+    comp=`<p class="net">以「${esc(P.A)} 減 ${esc(P.B)}」的差距計算：基準 <b>${sg(P.prior)}</b> 點；${P.pollavg==null?'沒有可用民調':`民調整合（已扣機構偏差）<b>${sg(P.pollavg)}</b> 點，共 ${P.n} 份`}；合併後預估 <b>${sg(P.post)}</b> 點，80% 區間 ${sg(P.lo)} 到 ${sg(P.hi)}。</p>`;
+  } else if(P.post){
+    comp=`<p class="net">三強選區，以得票率模擬：${Object.entries(P.post).sort((a,b)=>b[1]-a[1]).map(([n,v])=>`${esc(n)} ${v.toFixed(0)}%`).join('、')}。</p>`;
+  }
+  const rows=[...ps].filter(p=>p.t!=='party').sort((a,b)=>a.fe<b.fe?1:-1).map(p=>{
+    const res=Object.entries(p.v).map(([n,v])=>`${esc(n)} ${v}`).join('：');
+    const he=HE[p.house], age=Math.round((new Date(d)-new Date(p.fe))/864e5);
+    const why=[`<span${p.t!=='phone'?' class="bad"':''}>${TN[p.t]}${p.t==='ai'?'（視為 ±9 點誤差）':p.t==='online'?'（非機率樣本，誤差加大）':''}</span>`,
+      p.sp?`<span class="bad">${p.sp==='K'?'國民黨':'民進黨'}相關委託（誤差加大）</span>`:'',
+      `<span>樣本 ${p.n?p.n.toLocaleString():'未載明'}</span>`,
+      `<span${age>30?' class="bad"':''}>${age} 天前</span>`,
+      (he!=null&&Math.abs(he)>=0.3&&!(p.org.includes('封關')&&p.org.includes('戴立安')))?`<span class="bad">${esc(p.house)} 相對偏${he>0?'綠':'藍'} ${Math.abs(he).toFixed(1)} 點，已校正</span>`:'',
+      `<span class="${p.tr>=80?'good':p.tr<50?'bad':''}">透明度 ${p.tr??'—'}</span>`].filter(Boolean).join('');
+    return `<li><span><span class="org">${esc(p.org)}</span> <span class="res">${fmtD(p.fe)}｜${res}</span></span><span class="why">${why}</span>${p.note?`<span class="aud">${esc(p.note)}</span>`:''}</li>`; }).join('');
+  return `<div class="polls"><h3>民調怎麼被採納（11/16 起新模型）</h3>${comp}
+    <p class="net">每份民調依樣本數、抽樣方式（網路、AI 模擬、政黨委託誤差較大）與透明度分數算出各自的誤差，越精確權重越高；越舊的民調誤差越大（每天約增加 0.6 點²）。各機構「相對同期他家偏藍或偏綠」的程度跨 22 縣市一起估計後扣掉，同一機構多份民調的總權重有上限。民調再和基準（2022 結果＋全國擺盪＋候選人因素）做貝氏合併，最後模擬 4 萬次投票日誤差（各縣市獨立誤差、全國藍綠同向誤差、未表態越多越不確定）得出勝率。</p>
+    <ul>${rows}</ul></div>`;
+}
 function pollBlock(c){
   const r=DATA.races[c], s=r.series[day], d=s.d;
   const base = r.fund_og!=null? `AI 判斷與「2022 結果＋全國擺盪 ${(DATA.method.swing>0?'往藍 ':'往綠 ')+Math.abs(DATA.method.swing).toFixed(1)} 點」各半` : 'AI 判斷（缺少藍綠對照，無法套用 2022 擺盪）';
   const ps=r.polls.filter(p=>p.rel<=d);
+  if (s.pro && r.pro) return proPollBlock(c,r,ps,d);
   if (!ps.length) return `<div class="polls"><h3>民調怎麼被採納</h3><p class="net">${fmtD(d)} 前沒有公開民調，預測完全來自基準：${base}。</p></div>`;
   const W=ps.map(p=>({p,...pollW(p,d)})), tot=W.reduce((x,o)=>x+o.w,0);
   W.sort((x,y)=>y.w-x.w);

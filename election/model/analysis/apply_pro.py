@@ -33,7 +33,7 @@ for c,r in D['races'].items():
     for n in r['proj']:
         p=r['proj'][n]; p['pct']=round(sh[n],2); p['votes']=int(round(valid*sh[n]/100,-2))
         if n in lohi: p['lo']=round(max(0,lohi[n][0]),1); p['hi']=round(min(100,lohi[n][1]),1)
-    r['pro']=dict(wp=pr['wp'],post=pr.get('post'),lo=pr.get('lo'),hi=pr.get('hi'),prior=pr.get('prior'),pollavg=pr.get('pollavg'),n=pr['n'])
+    r['pro']=dict(A=pr.get('A'),B=pr.get('B'),und=pr.get('und'),wp=pr['wp'],post=pr.get('post'),lo=pr.get('lo'),hi=pr.get('hi'),prior=pr.get('prior'),pollavg=pr.get('pollavg'),n=pr['n'])
 # 全國今日
 nat=D['national'][-1]; seats={'K':0,'D':0,'T':0,'I':0}; exp={k:0.0 for k in seats}; vb=vg=vt=0.0
 for c,r in D['races'].items():
