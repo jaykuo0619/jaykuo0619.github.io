@@ -15,7 +15,8 @@ BASE=dict(
   kappa=0.6,        # 時間漂移：每天增加的差距變異（點²）；依台北 6～11 月約 25 點的實際移動校準
   tau=3.0,          # 民調非抽樣誤差（點，差距單位）
   ai_sd=9.0,        # AI 模擬的總誤差（點）
-  web_extra=4.0,    # 網路非機率樣本額外誤差（點）
+  web_extra=6.0,    # 網路非機率樣本（會員／主動參與）額外誤差（點）；11/17 由 4 提高到 6：國外研究（Pew 2016、2023）發現非機率網路樣本的總誤差約為機率樣本的兩倍
+  webmix_share=0.5, # 市話＋網路會員混合樣本（鋒燦）：網路部分所占比例，額外誤差 = web_extra × 比例
   party_extra=3.0,  # 政黨／競辦委託額外誤差（點）
   deff=1.6,         # 設計效應
   n_default=800,    # 樣本數未公布時
@@ -45,6 +46,7 @@ def poll_sd(p,P):
     var=samp**2+P['tau']**2
     if p['t']=='ai': var=P['ai_sd']**2
     if p['t']=='online': var+=P['web_extra']**2
+    elif 'webmix' in (p['fl'] or []): var+=(P['web_extra']*P['webmix_share'])**2
     if p['sp'] or 'adv' in (p['fl'] or []): var+=P['party_extra']**2
     q=max(0.25,p['q']); var/=q                  # 方法／透明度分數低→變異放大
     return math.sqrt(var)
