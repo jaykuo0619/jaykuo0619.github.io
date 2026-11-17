@@ -573,7 +573,7 @@ function proPollBlock(c,r,ps,d){
   const rows=[...ps].filter(p=>p.t!=='party').sort((a,b)=>a.fe<b.fe?1:-1).map(p=>{
     const res=Object.entries(p.v).map(([n,v])=>`${esc(n)} ${v}`).join('：');
     const he=HE[p.house], age=Math.round((new Date(d)-new Date(p.fe))/864e5);
-    const why=[`<span${p.t!=='phone'?' class="bad"':''}>${TN[p.t]}${p.t==='ai'?'（視為 ±9 點誤差）':p.t==='online'?'（非機率樣本，誤差加大）':''}</span>`,
+    const why=[`<span${p.t!=='phone'?' class="bad"':''}>${TN[p.t]}${p.t==='ai'?'（視為 ±9 點誤差）':p.t==='online'?'（非機率樣本，誤差加大）':(p.fl||[]).includes('webmix')?'（一半是網路會員樣本，誤差加大）':''}</span>`,
       p.sp?`<span class="bad">${p.sp==='K'?'國民黨':'民進黨'}相關委託（誤差加大）</span>`:'',
       `<span>樣本 ${p.n?p.n.toLocaleString():'未載明'}</span>`,
       `<span${age>30?' class="bad"':''}>${age} 天前</span>`,
